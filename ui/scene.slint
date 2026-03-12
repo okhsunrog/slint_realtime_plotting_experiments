@@ -1,0 +1,60 @@
+import { Slider, GroupBox, HorizontalBox, VerticalBox, GridBox, Button } from "std-widgets.slint";
+
+export component App inherits Window {
+    in property <image> texture <=> plot-image.source;
+    out property <int> requested-texture-width: plot-image.width / 1phx;
+    out property <int> requested-texture-height: plot-image.height / 1phx;
+
+    out property <float> amplitude <=> amp-slider.value;
+    out property <float> frequency <=> freq-slider.value;
+    in-out property <bool> paused: false;
+
+    in property <string> status-text: "Initializing...";
+
+    preferred-width: 900px;
+    preferred-height: 650px;
+    title: "ADC Current Sensor - Real-Time Plot";
+
+    VerticalBox {
+        Text {
+            text: "Real-Time ADC Current Sensor Waveform";
+            font-size: 16px;
+            horizontal-alignment: center;
+        }
+
+        plot-image := Image {
+            preferred-width: 800px;
+            preferred-height: 480px;
+            min-width: 320px;
+            min-height: 200px;
+            width: 100%;
+        }
+
+        HorizontalBox {
+            Text {
+                text: root.status-text;
+                vertical-alignment: center;
+            }
+        }
+
+        GroupBox {
+            title: "Signal Controls";
+            GridBox {
+                Row {
+                    Text { text: "Amplitude (A):"; vertical-alignment: center; }
+                    amp-slider := Slider { minimum: 0.1; maximum: 10.0; value: 5.0; }
+                }
+                Row {
+                    Text { text: "Frequency (Hz):"; vertical-alignment: center; }
+                    freq-slider := Slider { minimum: 10.0; maximum: 200.0; value: 50.0; }
+                }
+                Row {
+                    Button {
+                        text: root.paused ? "Resume" : "Pause";
+                        clicked => { root.paused = !root.paused; }
+                    }
+                }
+            }
+        }
+    }
+}
