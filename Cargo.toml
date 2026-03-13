@@ -3,9 +3,21 @@ name = "slint_realtime_plotting_experiments"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+crate-type = ["lib", "cdylib"]
+
+[[bin]]
+name = "slint_realtime_plotting_experiments"
+path = "src/main.rs"
+
+[features]
+default = ["desktop"]
+desktop = ["slint/backend-winit", "slint/renderer-femtovg-wgpu"]
+android = ["slint/backend-android-activity-06"]
+
 [dependencies]
 bytemuck = { version = "1.25.0", features = ["derive"] }
-slint = { git = "https://github.com/slint-ui/slint.git", default-features = false, features = ["std", "backend-winit", "renderer-femtovg-wgpu", "unstable-wgpu-28", "accessibility", "compat-1-2"] }
+slint = { git = "https://github.com/slint-ui/slint.git", default-features = false, features = ["std", "unstable-wgpu-28", "accessibility", "compat-1-2"] }
 wgpu = { version = "28", features = ["wgsl"] }
 
 [build-dependencies]
