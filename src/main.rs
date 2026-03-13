@@ -73,7 +73,7 @@ fn main() {
                 let frequency = app.get_frequency();
 
                 let mut sim = sim_for_timer.borrow_mut();
-                sim.generate_samples(166, amplitude, frequency);
+                sim.generate_samples(160, amplitude, frequency);
 
                 let rms = calculate_rms(&sim.buffer);
                 app.set_status_text(slint::format!(

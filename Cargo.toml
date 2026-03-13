@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 bytemuck = { version = "1.25.0", features = ["derive"] }
-slint = { git = "https://github.com/slint-ui/slint.git", features = ["unstable-wgpu-28"] }
+slint = { git = "https://github.com/slint-ui/slint.git", default-features = false, features = ["std", "backend-winit", "renderer-femtovg-wgpu", "unstable-wgpu-28", "accessibility", "compat-1-2"] }
 wgpu = { version = "28", features = ["wgsl"] }
 
 [build-dependencies]

@@ -27,10 +27,10 @@ impl AdcSimulator {
 
             let noise = self.random_normal() * 0.05 * amplitude;
 
-            let transient = if self.random_u32() % 1000 == 0 {
+            let transient = if self.random_u32().is_multiple_of(1000) {
                 amplitude
                     * 2.0
-                    * if self.random_u32() % 2 == 0 {
+                    * if self.random_u32().is_multiple_of(2) {
                         1.0
                     } else {
                         -1.0

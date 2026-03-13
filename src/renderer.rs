@@ -137,11 +137,7 @@ impl PlotRenderer {
             bytemuck::cast_slice(&simulator.buffer),
         );
 
-        let amplitude_max = simulator
-            .buffer
-            .iter()
-            .fold(0.0f32, |acc, &x| acc.max(x.abs()));
-        let y_range = (amplitude_max * 1.2).max(1.0);
+        let y_range = 15.0;
 
         let params = PlotParams {
             write_pos: simulator.write_pos,
