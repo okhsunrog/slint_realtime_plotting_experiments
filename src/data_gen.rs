@@ -1,17 +1,25 @@
-pub const NUM_SAMPLES: usize = 1024;
+pub const NUM_SAMPLES: usize = 32768;
+pub const NUM_CHANNELS: usize = 3;
 
-pub struct AdcSimulator {
-    pub buffer: [f32; NUM_SAMPLES],
+const PHASE_OFFSETS: [f32; NUM_CHANNELS] = [
+    0.0,
+    2.0 * std::f32::consts::PI / 3.0,
+    4.0 * std::f32::consts::PI / 3.0,
+];
+
+pub struct MotorSimulator {
+    /// Interleaved buffer: [ph1_0, ph2_0, ph3_0, ph1_1, ph2_1, ph3_1, ...]
+    pub buffer: [f32; NUM_SAMPLES * NUM_CHANNELS],
     pub write_pos: u32,
     sample_index: u64,
     sample_rate: f32,
     rng_state: u64,
 }
 
-impl AdcSimulator {
+impl MotorSimulator {
     pub fn new(sample_rate: f32) -> Self {
         Self {
-            buffer: [0.0; NUM_SAMPLES],
+            buffer: [0.0; NUM_SAMPLES * NUM_CHANNELS],
             write_pos: 0,
             sample_index: 0,
             sample_rate,
@@ -22,10 +30,7 @@ impl AdcSimulator {
     pub fn generate_samples(&mut self, count: usize, amplitude: f32, frequency: f32) {
         for _ in 0..count {
             let t = self.sample_index as f32 / self.sample_rate;
-
-            let base = amplitude * (2.0 * std::f32::consts::PI * frequency * t).sin();
-
-            let noise = self.random_normal() * 0.05 * amplitude;
+            let base_angle = 2.0 * std::f32::consts::PI * frequency * t;
 
             let transient = if self.random_u32().is_multiple_of(1000) {
                 amplitude
@@ -39,9 +44,13 @@ impl AdcSimulator {
                 0.0
             };
 
-            let sample = base + noise + transient;
+            let base_idx = self.write_pos as usize * NUM_CHANNELS;
+            for (ch, &offset) in PHASE_OFFSETS.iter().enumerate() {
+                let phase_current = amplitude * (base_angle + offset).sin();
+                let noise = self.random_normal() * 0.05 * amplitude;
+                self.buffer[base_idx + ch] = phase_current + noise + transient;
+            }
 
-            self.buffer[self.write_pos as usize] = sample;
             self.write_pos = (self.write_pos + 1) % NUM_SAMPLES as u32;
             self.sample_index += 1;
         }
@@ -55,7 +64,6 @@ impl AdcSimulator {
     }
 
     fn random_normal(&mut self) -> f32 {
-        // Box-Muller-ish approximation: sum of 6 uniforms - 3
         let mut sum = 0.0f32;
         for _ in 0..6 {
             sum += (self.random_u32() as f32) / (u32::MAX as f32);

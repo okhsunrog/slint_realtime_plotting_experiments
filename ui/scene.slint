@@ -1,4 +1,4 @@
-import { Slider, GroupBox, HorizontalBox, VerticalBox, GridBox, Button } from "std-widgets.slint";
+import { Slider, GroupBox, HorizontalBox, VerticalBox, GridBox, Button, ComboBox, Palette } from "std-widgets.slint";
 
 export component App inherits Window {
     in property <image> texture <=> plot-image.source;
@@ -7,17 +7,19 @@ export component App inherits Window {
 
     out property <float> amplitude <=> amp-slider.value;
     out property <float> frequency <=> freq-slider.value;
+    out property <float> x-zoom <=> zoom-slider.value;
     in-out property <bool> paused: false;
+    out property <bool> dark-mode: Palette.color-scheme == ColorScheme.dark;
 
     in property <string> status-text: "Initializing...";
 
     preferred-width: 900px;
     preferred-height: 650px;
-    title: "ADC Current Sensor - Real-Time Plot";
+    title: "3-Phase Motor Current - Real-Time Plot";
 
     VerticalBox {
         Text {
-            text: "Real-Time ADC Current Sensor Waveform";
+            text: "3-Phase Motor Current Waveform";
             font-size: 16px;
             horizontal-alignment: center;
         }
@@ -38,7 +40,7 @@ export component App inherits Window {
         }
 
         GroupBox {
-            title: "Signal Controls";
+            title: "Controls";
             GridBox {
                 Row {
                     Text { text: "Amplitude (A):"; vertical-alignment: center; }
@@ -46,7 +48,27 @@ export component App inherits Window {
                 }
                 Row {
                     Text { text: "Frequency (Hz):"; vertical-alignment: center; }
-                    freq-slider := Slider { minimum: 10.0; maximum: 200.0; value: 50.0; }
+                    freq-slider := Slider { minimum: 1.0; maximum: 20.0; value: 5.0; }
+                }
+                Row {
+                    Text { text: "X Zoom:"; vertical-alignment: center; }
+                    zoom-slider := Slider { minimum: 0.05; maximum: 1.0; value: 1.0; }
+                }
+                Row {
+                    Text { text: "Theme:"; vertical-alignment: center; }
+                    theme-combo := ComboBox {
+                        model: ["System", "Dark", "Light"];
+                        current-index: 0;
+                        selected => {
+                            if (self.current-index == 0) {
+                                Palette.color-scheme = ColorScheme.unknown;
+                            } else if (self.current-index == 1) {
+                                Palette.color-scheme = ColorScheme.dark;
+                            } else {
+                                Palette.color-scheme = ColorScheme.light;
+                            }
+                        }
+                    }
                 }
                 Row {
                     Button {

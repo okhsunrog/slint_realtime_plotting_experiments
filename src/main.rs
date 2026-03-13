@@ -20,7 +20,7 @@ fn main() {
     wgpu_settings
         .device_required_limits
         .max_storage_buffer_binding_size =
-        (data_gen::NUM_SAMPLES * std::mem::size_of::<f32>()) as u32;
+        (data_gen::NUM_SAMPLES * data_gen::NUM_CHANNELS * std::mem::size_of::<f32>()) as u32;
 
     slint::BackendSelector::new()
         .require_wgpu_28(WGPUConfiguration::Automatic(wgpu_settings))
@@ -29,7 +29,7 @@ fn main() {
 
     let app = App::new().unwrap();
 
-    let simulator = Rc::new(RefCell::new(data_gen::AdcSimulator::new(10000.0)));
+    let simulator = Rc::new(RefCell::new(data_gen::MotorSimulator::new(10000.0)));
 
     let mut plot_renderer: Option<renderer::PlotRenderer> = None;
 
@@ -44,12 +44,16 @@ fn main() {
                 }
             }
             slint::RenderingState::BeforeRendering => {
-                if let (Some(renderer), Some(app)) = (plot_renderer.as_mut(), app_weak.upgrade()) {
+                if let (Some(renderer), Some(app)) =
+                    (plot_renderer.as_mut(), app_weak.upgrade())
+                {
                     let sim = sim_for_render.borrow();
                     let texture = renderer.render(
                         &sim,
                         app.get_requested_texture_width() as u32,
                         app.get_requested_texture_height() as u32,
+                        app.get_dark_mode(),
+                        app.get_x_zoom(),
                     );
                     app.set_texture(slint::Image::try_from(texture).unwrap());
                     app.window().request_redraw();
@@ -75,11 +79,10 @@ fn main() {
                 let mut sim = sim_for_timer.borrow_mut();
                 sim.generate_samples(160, amplitude, frequency);
 
-                let rms = calculate_rms(&sim.buffer);
                 app.set_status_text(slint::format!(
-                    "Sample rate: 10 kHz | RMS: {:.2} A | Write pos: {}",
-                    rms,
-                    sim.write_pos
+                    "3-Phase | {:.0} Hz | {:.1} A | 10 kSa/s",
+                    frequency,
+                    amplitude,
                 ));
             }
             app.window().request_redraw();
@@ -87,9 +90,4 @@ fn main() {
     });
 
     app.run().unwrap();
-}
-
-fn calculate_rms(buffer: &[f32]) -> f32 {
-    let sum_sq: f32 = buffer.iter().map(|x| x * x).sum();
-    (sum_sq / buffer.len() as f32).sqrt()
 }

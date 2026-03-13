@@ -1,7 +1,8 @@
-use crate::data_gen::{AdcSimulator, NUM_SAMPLES};
+use crate::data_gen::{MotorSimulator, NUM_CHANNELS, NUM_SAMPLES};
 use slint::wgpu_28::wgpu;
 
-const SAMPLES_BUFFER_SIZE: u64 = (NUM_SAMPLES * std::mem::size_of::<f32>()) as u64;
+const SAMPLES_BUFFER_SIZE: u64 =
+    (NUM_SAMPLES * NUM_CHANNELS * std::mem::size_of::<f32>()) as u64;
 
 #[repr(C)]
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
@@ -13,7 +14,11 @@ pub struct PlotParams {
     pub grid_x_divisions: f32,
     pub grid_y_divisions: f32,
     pub time_val: f32,
-    pub _padding: f32,
+    pub num_channels: u32,
+    pub is_dark: u32,
+    pub visible_samples: u32,
+    pub texture_width: u32,
+    pub texture_height: u32,
 }
 
 pub struct PlotRenderer {
@@ -123,7 +128,14 @@ impl PlotRenderer {
         })
     }
 
-    pub fn render(&mut self, simulator: &AdcSimulator, width: u32, height: u32) -> wgpu::Texture {
+    pub fn render(
+        &mut self,
+        simulator: &MotorSimulator,
+        width: u32,
+        height: u32,
+        is_dark: bool,
+        x_zoom: f32,
+    ) -> wgpu::Texture {
         let width = width.max(1);
         let height = height.max(1);
 
@@ -147,7 +159,27 @@ impl PlotRenderer {
             grid_x_divisions: 10.0,
             grid_y_divisions: 8.0,
             time_val: self.start_time.elapsed().as_secs_f32(),
-            _padding: 0.0,
+            num_channels: NUM_CHANNELS as u32,
+            is_dark: u32::from(is_dark),
+            visible_samples: ((NUM_SAMPLES as f32 * x_zoom.clamp(0.05, 1.0)) as u32).max(2),
+            texture_width: width,
+            texture_height: height,
+        };
+
+        let clear_color = if is_dark {
+            wgpu::Color {
+                r: 0.06,
+                g: 0.06,
+                b: 0.12,
+                a: 1.0,
+            }
+        } else {
+            wgpu::Color {
+                r: 1.0,
+                g: 1.0,
+                b: 1.0,
+                a: 1.0,
+            }
         };
 
         let mut encoder = self
@@ -164,12 +196,7 @@ impl PlotRenderer {
                         .create_view(&wgpu::TextureViewDescriptor::default()),
                     resolve_target: None,
                     ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color {
-                            r: 0.06,
-                            g: 0.06,
-                            b: 0.12,
-                            a: 1.0,
-                        }),
+                        load: wgpu::LoadOp::Clear(clear_color),
                         store: wgpu::StoreOp::Store,
                     },
                     depth_slice: None,
