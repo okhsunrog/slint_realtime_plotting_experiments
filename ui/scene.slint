@@ -13,6 +13,12 @@ export component App inherits Window {
 
     in property <string> status-text: "Initializing...";
 
+    property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
+    property <color> plot-bg: is-dark ? #0f0f1e : #ffffff;
+    property <color> grid-color: is-dark ? #1a1a30 : #e0e0e0;
+    property <color> axis-color: is-dark ? #5555aa : #808080;
+    property <length> label-width: 45px;
+
     preferred-width: 900px;
     preferred-height: 650px;
     title: "3-Phase Motor Current - Real-Time Plot";
@@ -29,12 +35,66 @@ export component App inherits Window {
             horizontal-alignment: center;
         }
 
-        plot-image := Image {
+        Rectangle {
             preferred-width: 800px;
             preferred-height: 480px;
             min-width: 320px;
             min-height: 200px;
-            width: 100%;
+
+            // Y-axis labels
+            for label[i] in ["15", "10", "5", "0", "-5", "-10", "-15"]: Text {
+                x: 0;
+                y: i * (plot-area.height / 6) + plot-area.y - self.height / 2;
+                width: root.label-width - 4px;
+                horizontal-alignment: right;
+                text: label;
+                font-size: 11px;
+                color: root.axis-color;
+            }
+
+            // Plot area with grid
+            plot-area := Rectangle {
+                x: root.label-width;
+                y: 0;
+                width: parent.width - root.label-width;
+                height: parent.height;
+                background: root.plot-bg;
+                border-width: 1px;
+                border-color: root.axis-color;
+
+                // Vertical grid lines (10 divisions, 9 interior lines)
+                for i in 9: Rectangle {
+                    x: (i + 1) * (parent.width / 10);
+                    y: 0;
+                    width: 1px;
+                    height: parent.height;
+                    background: root.grid-color;
+                }
+
+                // Horizontal grid lines (6 divisions, 5 interior lines)
+                for i in 5: Rectangle {
+                    x: 0;
+                    y: (i + 1) * (parent.height / 6);
+                    width: parent.width;
+                    height: 1px;
+                    background: root.grid-color;
+                }
+
+                // Zero line (center, slightly thicker)
+                Rectangle {
+                    x: 0;
+                    y: parent.height / 2 - 0.5px;
+                    width: parent.width;
+                    height: 1.5px;
+                    background: root.axis-color;
+                }
+
+                // Waveform texture overlay (transparent background)
+                plot-image := Image {
+                    width: parent.width;
+                    height: parent.height;
+                }
+            }
         }
 
         HorizontalBox {

@@ -23,8 +23,6 @@ struct PlotParams {
     num_samples: u32,
     y_min: f32,
     y_max: f32,
-    grid_x_divisions: f32,
-    grid_y_divisions: f32,
     time_val: f32,
     num_channels: u32,
     is_dark: u32,
@@ -37,30 +35,7 @@ var<immediate> params: PlotParams;
 
 @group(0) @binding(0) var<storage, read> samples: array<f32>;
 
-// Dark theme colors
-const DARK_BG: vec3<f32> = vec3<f32>(0.06, 0.06, 0.12);
-const DARK_GRID: vec3<f32> = vec3<f32>(0.15, 0.15, 0.25);
-const DARK_AXIS: vec3<f32> = vec3<f32>(0.4, 0.4, 0.6);
-
-// Light theme colors
-const LIGHT_BG: vec3<f32> = vec3<f32>(1.0, 1.0, 1.0);
-const LIGHT_GRID: vec3<f32> = vec3<f32>(0.85, 0.85, 0.85);
-const LIGHT_AXIS: vec3<f32> = vec3<f32>(0.5, 0.5, 0.5);
-
-fn bg_color() -> vec3<f32> {
-    if params.is_dark == 1u { return DARK_BG; } else { return LIGHT_BG; }
-}
-
-fn grid_color() -> vec3<f32> {
-    if params.is_dark == 1u { return DARK_GRID; } else { return LIGHT_GRID; }
-}
-
-fn axis_color() -> vec3<f32> {
-    if params.is_dark == 1u { return DARK_AXIS; } else { return LIGHT_AXIS; }
-}
-
 fn get_sample(channel: u32, index: u32) -> f32 {
-    // Offset so index 0 = oldest visible sample, visible_samples-1 = newest
     let start = (params.write_pos + params.num_samples - params.visible_samples) % params.num_samples;
     let actual_index = (start + index) % params.num_samples;
     return samples[actual_index * params.num_channels + channel];
@@ -82,7 +57,6 @@ fn channel_color(ch: u32) -> vec3<f32> {
 
 fn channel_glow(ch: u32) -> vec3<f32> {
     if params.is_dark == 0u {
-        // No glow in light mode — it muddles the white background
         return channel_color(ch);
     }
     if ch == 0u {
@@ -96,52 +70,8 @@ fn channel_glow(ch: u32) -> vec3<f32> {
 
 @fragment
 fn fs_main(@location(0) uv: vec2<f32>) -> @location(0) vec4<f32> {
-    let bg = bg_color();
-    var color = bg;
-
-    let margin_left = 0.06;
-    let margin_right = 0.02;
-    let margin_top = 0.04;
-    let margin_bottom = 0.06;
-
-    let plot_uv = vec2<f32>(
-        (uv.x - margin_left) / (1.0 - margin_left - margin_right),
-        (uv.y - margin_top) / (1.0 - margin_top - margin_bottom)
-    );
-
-    if plot_uv.x < 0.0 || plot_uv.x > 1.0 || plot_uv.y < 0.0 || plot_uv.y > 1.0 {
-        return vec4<f32>(bg * 0.7, 1.0);
-    }
-
-    // Grid lines
-    let grid_x_spacing = 1.0 / params.grid_x_divisions;
-    let grid_x_frac = fract(plot_uv.x / grid_x_spacing);
-    let grid_x_dist = min(grid_x_frac, 1.0 - grid_x_frac) * params.grid_x_divisions;
-
-    let grid_y_spacing = 1.0 / params.grid_y_divisions;
-    let grid_y_frac = fract(plot_uv.y / grid_y_spacing);
-    let grid_y_dist = min(grid_y_frac, 1.0 - grid_y_frac) * params.grid_y_divisions;
-
-    let grid_line_width = 0.015;
-    if grid_x_dist < grid_line_width || grid_y_dist < grid_line_width {
-        color = grid_color();
-    }
-
-    // Zero line
-    let zero_y = value_to_y(0.0);
-    let zero_dist = abs(plot_uv.y - (1.0 - zero_y));
-    if zero_dist < 0.003 {
-        color = axis_color();
-    }
-
-    // Plot border
-    let border_dist = min(
-        min(plot_uv.x, 1.0 - plot_uv.x),
-        min(plot_uv.y, 1.0 - plot_uv.y)
-    );
-    if border_dist < 0.002 {
-        color = axis_color();
-    }
+    var color = vec3<f32>(0.0);
+    var alpha = 0.0;
 
     // Screen-pixel sizes in UV space
     let px_x = 1.0 / f32(params.texture_width);
@@ -149,7 +79,7 @@ fn fs_main(@location(0) uv: vec2<f32>) -> @location(0) vec4<f32> {
 
     // Waveforms — iterate over channels
     let vis = params.visible_samples;
-    let sample_x = plot_uv.x * f32(vis - 1u);
+    let sample_x = uv.x * f32(vis - 1u);
     let sample_index_low = u32(floor(sample_x));
     let sample_index_high = min(sample_index_low + 1u, vis - 1u);
     let frac = fract(sample_x);
@@ -160,7 +90,7 @@ fn fs_main(@location(0) uv: vec2<f32>) -> @location(0) vec4<f32> {
         let val = mix(val_low, val_high, frac);
 
         let waveform_y = 1.0 - value_to_y(val);
-        let dist_to_waveform = abs(plot_uv.y - waveform_y);
+        let dist_to_waveform = abs(uv.y - waveform_y);
 
         // Fill vertical segments for steep transitions
         let y_low = 1.0 - value_to_y(val_low);
@@ -169,9 +99,9 @@ fn fs_main(@location(0) uv: vec2<f32>) -> @location(0) vec4<f32> {
         let y_max_seg = max(y_low, y_high);
 
         var segment_dist = dist_to_waveform;
-        if plot_uv.y >= y_min_seg && plot_uv.y <= y_max_seg {
+        if uv.y >= y_min_seg && uv.y <= y_max_seg {
             let nearest_sample_x = round(sample_x) / f32(vis - 1u);
-            segment_dist = min(segment_dist, abs(plot_uv.x - nearest_sample_x) * f32(vis));
+            segment_dist = min(segment_dist, abs(uv.x - nearest_sample_x) * f32(vis));
         }
 
         // Line width in screen pixels (constant regardless of zoom)
@@ -183,8 +113,10 @@ fn fs_main(@location(0) uv: vec2<f32>) -> @location(0) vec4<f32> {
         }
 
         color = mix(color, channel_glow(ch), glow_intensity);
+        alpha = max(alpha, glow_intensity);
         color = mix(color, channel_color(ch), line_intensity);
+        alpha = max(alpha, line_intensity);
     }
 
-    return vec4<f32>(color, 1.0);
+    return vec4<f32>(color, alpha);
 }

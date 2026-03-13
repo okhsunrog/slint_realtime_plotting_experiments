@@ -11,8 +11,6 @@ pub struct PlotParams {
     pub num_samples: u32,
     pub y_min: f32,
     pub y_max: f32,
-    pub grid_x_divisions: f32,
-    pub grid_y_divisions: f32,
     pub time_val: f32,
     pub num_channels: u32,
     pub is_dark: u32,
@@ -156,8 +154,6 @@ impl PlotRenderer {
             num_samples: NUM_SAMPLES as u32,
             y_min: -y_range,
             y_max: y_range,
-            grid_x_divisions: 10.0,
-            grid_y_divisions: 8.0,
             time_val: self.start_time.elapsed().as_secs_f32(),
             num_channels: NUM_CHANNELS as u32,
             is_dark: u32::from(is_dark),
@@ -166,20 +162,11 @@ impl PlotRenderer {
             texture_height: height,
         };
 
-        let clear_color = if is_dark {
-            wgpu::Color {
-                r: 0.06,
-                g: 0.06,
-                b: 0.12,
-                a: 1.0,
-            }
-        } else {
-            wgpu::Color {
-                r: 1.0,
-                g: 1.0,
-                b: 1.0,
-                a: 1.0,
-            }
+        let clear_color = wgpu::Color {
+            r: 0.0,
+            g: 0.0,
+            b: 0.0,
+            a: 0.0,
         };
 
         let mut encoder = self
