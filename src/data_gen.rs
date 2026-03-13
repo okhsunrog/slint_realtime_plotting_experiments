@@ -1,5 +1,6 @@
 pub const NUM_SAMPLES: usize = 32768;
 pub const NUM_CHANNELS: usize = 3;
+pub const SAMPLE_RATE: f32 = 20000.0;
 
 const PHASE_OFFSETS: [f32; NUM_CHANNELS] = [
     0.0,

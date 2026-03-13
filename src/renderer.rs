@@ -132,7 +132,7 @@ impl PlotRenderer {
         width: u32,
         height: u32,
         is_dark: bool,
-        x_zoom: f32,
+        visible_samples: u32,
     ) -> wgpu::Texture {
         let width = width.max(1);
         let height = height.max(1);
@@ -157,7 +157,7 @@ impl PlotRenderer {
             time_val: self.start_time.elapsed().as_secs_f32(),
             num_channels: NUM_CHANNELS as u32,
             is_dark: u32::from(is_dark),
-            visible_samples: ((NUM_SAMPLES as f32 * x_zoom.clamp(0.05, 1.0)) as u32).max(2),
+            visible_samples: visible_samples.clamp(2, NUM_SAMPLES as u32),
             texture_width: width,
             texture_height: height,
         };

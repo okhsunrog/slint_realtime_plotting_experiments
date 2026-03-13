@@ -73,41 +73,47 @@ fn fs_main(@location(0) uv: vec2<f32>) -> @location(0) vec4<f32> {
     var color = vec3<f32>(0.0);
     var alpha = 0.0;
 
-    // Screen-pixel sizes in UV space
-    let px_x = 1.0 / f32(params.texture_width);
     let px_y = 1.0 / f32(params.texture_height);
-
-    // Waveforms — iterate over channels
     let vis = params.visible_samples;
-    let sample_x = uv.x * f32(vis - 1u);
-    let sample_index_low = u32(floor(sample_x));
-    let sample_index_high = min(sample_index_low + 1u, vis - 1u);
-    let frac = fract(sample_x);
+
+    // How many samples fall within one pixel column
+    let samples_per_pixel = f32(vis) / f32(params.texture_width);
+    let sample_center = uv.x * f32(vis - 1u);
+
+    // Sample range for this pixel column (at least 1 sample on each side for continuity)
+    let half_span = max(samples_per_pixel * 0.5, 0.5);
+    let s_start = u32(clamp(floor(sample_center - half_span), 0.0, f32(vis - 1u)));
+    let s_end = u32(clamp(ceil(sample_center + half_span), 0.0, f32(vis - 1u)));
+    let iter_count = min(s_end - s_start + 1u, 256u);
 
     for (var ch = 0u; ch < params.num_channels; ch++) {
-        let val_low = get_sample(ch, sample_index_low);
-        let val_high = get_sample(ch, sample_index_high);
-        let val = mix(val_low, val_high, frac);
+        // Find min/max Y values across all samples in this pixel column
+        var val_min = get_sample(ch, s_start);
+        var val_max = val_min;
 
-        let waveform_y = 1.0 - value_to_y(val);
-        let dist_to_waveform = abs(uv.y - waveform_y);
-
-        // Fill vertical segments for steep transitions
-        let y_low = 1.0 - value_to_y(val_low);
-        let y_high = 1.0 - value_to_y(val_high);
-        let y_min_seg = min(y_low, y_high);
-        let y_max_seg = max(y_low, y_high);
-
-        var segment_dist = dist_to_waveform;
-        if uv.y >= y_min_seg && uv.y <= y_max_seg {
-            let nearest_sample_x = round(sample_x) / f32(vis - 1u);
-            segment_dist = min(segment_dist, abs(uv.x - nearest_sample_x) * f32(vis));
+        for (var i = 1u; i < iter_count; i++) {
+            let val = get_sample(ch, s_start + i);
+            val_min = min(val_min, val);
+            val_max = max(val_max, val);
         }
 
-        // Line width in screen pixels (constant regardless of zoom)
-        let line_intensity = smoothstep(px_y * 2.0, 0.0, segment_dist);
+        // Convert to screen Y (inverted: higher value = lower screen Y)
+        let y_top = 1.0 - value_to_y(val_max);
+        let y_bot = 1.0 - value_to_y(val_min);
 
-        var glow_intensity = smoothstep(px_y * 6.0, 0.0, segment_dist) * 0.25;
+        // Distance from pixel to the vertical line segment [y_top, y_bot]
+        var dist: f32;
+        if uv.y < y_top {
+            dist = y_top - uv.y;
+        } else if uv.y > y_bot {
+            dist = uv.y - y_bot;
+        } else {
+            dist = 0.0;
+        }
+
+        let line_intensity = smoothstep(px_y * 2.0, 0.0, dist);
+
+        var glow_intensity = smoothstep(px_y * 6.0, 0.0, dist) * 0.25;
         if params.is_dark == 0u {
             glow_intensity = 0.0;
         }

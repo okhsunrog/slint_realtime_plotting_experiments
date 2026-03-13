@@ -7,7 +7,7 @@ export component App inherits Window {
 
     out property <float> amplitude <=> amp-slider.value;
     out property <float> frequency <=> freq-slider.value;
-    out property <float> x-zoom <=> zoom-slider.value;
+    out property <float> time-window <=> tw-slider.value;
     in-out property <bool> paused: false;
     out property <bool> dark-mode: Palette.color-scheme == ColorScheme.dark;
 
@@ -17,7 +17,8 @@ export component App inherits Window {
     property <color> plot-bg: is-dark ? #0f0f1e : #ffffff;
     property <color> grid-color: is-dark ? #1a1a30 : #e0e0e0;
     property <color> axis-color: is-dark ? #5555aa : #808080;
-    property <length> label-width: 45px;
+    property <length> y-label-width: 45px;
+    property <length> x-label-height: 18px;
 
     preferred-width: 900px;
     preferred-height: 650px;
@@ -45,7 +46,7 @@ export component App inherits Window {
             for label[i] in ["15", "10", "5", "0", "-5", "-10", "-15"]: Text {
                 x: 0;
                 y: i * (plot-area.height / 6) + plot-area.y - self.height / 2;
-                width: root.label-width - 4px;
+                width: root.y-label-width - 4px;
                 horizontal-alignment: right;
                 text: label;
                 font-size: 11px;
@@ -54,10 +55,10 @@ export component App inherits Window {
 
             // Plot area with grid
             plot-area := Rectangle {
-                x: root.label-width;
+                x: root.y-label-width;
                 y: 0;
-                width: parent.width - root.label-width;
-                height: parent.height;
+                width: parent.width - root.y-label-width;
+                height: parent.height - root.x-label-height;
                 background: root.plot-bg;
                 border-width: 1px;
                 border-color: root.axis-color;
@@ -95,6 +96,23 @@ export component App inherits Window {
                     height: parent.height;
                 }
             }
+
+            // X-axis labels
+            for i in 5: Text {
+                property <float> abs-time: Math.round(root.time-window * (5 - i) / 5 * 10) / 10;
+                x: plot-area.x + i * 2 * (plot-area.width / 10) - self.width / 2;
+                y: plot-area.y + plot-area.height + 2px;
+                text: "-\{self.abs-time}s";
+                font-size: 11px;
+                color: root.axis-color;
+            }
+            Text {
+                x: plot-area.x + plot-area.width - self.width / 2;
+                y: plot-area.y + plot-area.height + 2px;
+                text: "0s";
+                font-size: 11px;
+                color: root.axis-color;
+            }
         }
 
         HorizontalBox {
@@ -116,8 +134,8 @@ export component App inherits Window {
                     freq-slider := Slider { minimum: 1.0; maximum: 20.0; value: 5.0; }
                 }
                 Row {
-                    Text { text: "X Zoom:"; vertical-alignment: center; }
-                    zoom-slider := Slider { minimum: 0.05; maximum: 1.0; value: 1.0; }
+                    Text { text: "Time Window (s):"; vertical-alignment: center; }
+                    tw-slider := Slider { minimum: 0.1; maximum: 1.6; value: 1.0; }
                 }
                 Row {
                     Text { text: "Theme:"; vertical-alignment: center; }

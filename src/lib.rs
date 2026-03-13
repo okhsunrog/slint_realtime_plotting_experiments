@@ -29,7 +29,7 @@ pub fn main() {
 
     let app = App::new().unwrap();
 
-    let simulator = Rc::new(RefCell::new(data_gen::MotorSimulator::new(10000.0)));
+    let simulator = Rc::new(RefCell::new(data_gen::MotorSimulator::new(data_gen::SAMPLE_RATE)));
 
     let mut plot_renderer: Option<renderer::PlotRenderer> = None;
 
@@ -48,12 +48,15 @@ pub fn main() {
                     (plot_renderer.as_mut(), app_weak.upgrade())
                 {
                     let sim = sim_for_render.borrow();
+                    let time_window = app.get_time_window();
+                    let visible_samples =
+                        (time_window * data_gen::SAMPLE_RATE) as u32;
                     let texture = renderer.render(
                         &sim,
                         app.get_requested_texture_width() as u32,
                         app.get_requested_texture_height() as u32,
                         app.get_dark_mode(),
-                        app.get_x_zoom(),
+                        visible_samples,
                     );
                     app.set_texture(slint::Image::try_from(texture).unwrap());
                     app.window().request_redraw();
@@ -77,10 +80,11 @@ pub fn main() {
                 let frequency = app.get_frequency();
 
                 let mut sim = sim_for_timer.borrow_mut();
-                sim.generate_samples(160, amplitude, frequency);
+                let samples_per_tick = (data_gen::SAMPLE_RATE * 0.016) as usize;
+                sim.generate_samples(samples_per_tick, amplitude, frequency);
 
                 app.set_status_text(slint::format!(
-                    "3-Phase | {:.0} Hz | {:.1} A | 10 kSa/s",
+                    "3-Phase | {:.0} Hz | {:.1} A | 20 kSa/s",
                     frequency,
                     amplitude,
                 ));
