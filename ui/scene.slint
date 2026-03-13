@@ -18,6 +18,11 @@ export component App inherits Window {
     title: "3-Phase Motor Current - Real-Time Plot";
 
     VerticalBox {
+        x: root.safe-area-insets.left;
+        y: root.safe-area-insets.top;
+        width: root.width - root.safe-area-insets.right - root.safe-area-insets.left;
+        height: root.height - root.safe-area-insets.bottom - root.safe-area-insets.top;
+
         Text {
             text: "3-Phase Motor Current Waveform";
             font-size: 16px;
