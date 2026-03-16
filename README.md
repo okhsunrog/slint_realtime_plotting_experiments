@@ -99,4 +99,4 @@ ui/
 
 ## License
 
-This is an experimental project. See individual dependency licenses for their terms.
+This project is licensed under the [MIT License](LICENSE).
