@@ -52,11 +52,17 @@ cargo run --release
 
 ### Android
 
+Android builds use [xbuild](https://github.com/rust-mobile/xbuild) as recommended by the [Slint Android docs](https://docs.slint.dev/latest/docs/slint/guide/platforms/mobile/android/).
+
 1. Install prerequisites:
+
+   - [Android Studio](https://developer.android.com/studio) — install the Android SDK via its SDK Manager
+   - Add `$ANDROID_HOME/platform-tools` to your `PATH` (for `adb`)
+   - Install the Rust Android target and xbuild:
 
 ```bash
 rustup target add aarch64-linux-android
-cargo install cargo-apk
+cargo install --git https://github.com/rust-mobile/xbuild.git
 ```
 
 2. Set environment variables (adjust paths for your system):
@@ -64,17 +70,21 @@ cargo install cargo-apk
 ```bash
 export ANDROID_HOME="$HOME/Android/Sdk"
 export ANDROID_NDK_ROOT="$ANDROID_HOME/ndk/<version>"
-# Optional if javac is in PATH; Android Studio bundles JDK:
-export JAVA_HOME="/path/to/android-studio/jbr"
 ```
 
-3. Build and deploy to a connected device:
+3. Build and run on a connected device:
 
 ```bash
-cargo apk run --release --target aarch64-linux-android --lib --no-default-features --features android
+x run --device adb:<device-id> --no-default-features --features android
 ```
 
-See the [Slint Android docs](https://docs.slint.dev/latest/docs/slint/guide/platforms/mobile/android/) for details.
+4. Build a release APK for distribution:
+
+```bash
+x build --platform android --arch arm64 --format apk --release --no-default-features --features android
+```
+
+The output APK will be in `target/x/release/android/`.
 
 ## Project Structure
 
