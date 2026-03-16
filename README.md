@@ -1,80 +1,101 @@
-# Slint Real-Time Plotting Experiments
+# Real-Time Plotting with Slint + WGPU
 
-Real-time 3-phase motor current waveform visualization using **Slint** and **WGPU**, targeting desktop and Android.
+A reference implementation of **real-time waveform plotting** in [Slint](https://slint.dev/) using custom **WGPU shaders** — something not covered by existing Slint examples or third-party projects.
 
-![Rust](https://img.shields.io/badge/Rust-2024_edition-orange)
+The demo simulates a 3-phase AC motor current sensor and renders waveforms entirely on the GPU at 20 kHz sample rate. It runs on desktop (Linux, Windows, macOS) and Android.
 
-## Overview
+## Why This Project
 
-This project simulates a 3-phase AC motor current sensor and renders the waveforms in real time using GPU shaders. It demonstrates high-performance data visualization with:
+Slint doesn't ship with a real-time plotting widget. If you need to visualize streaming data — sensor readings, audio, telemetry — you have to build the rendering yourself. This project shows one way to do it: bypass Slint's drawing primitives, render the plot as a GPU texture via WGPU, and composite it back into the Slint scene.
 
-- **20 kHz sample rate** with a 32,768-sample circular buffer
-- **GPU-accelerated rendering** via WGPU with custom WGSL shaders
-- **Anti-aliased min/max line rendering** for clean waveforms at any zoom level
-- **3-phase signals** with 120° phase offsets, Gaussian noise, and random transient spikes
+Key techniques demonstrated:
+
+- **Slint ↔ WGPU integration** — using `set_rendering_notifier` to hook into Slint's render loop and produce a custom texture each frame
+- **WGSL fragment shader for waveforms** — a single fullscreen-triangle pass that reads from a storage buffer and draws anti-aliased, color-coded, multi-channel signals
+- **Min/max line rendering** — for each pixel column, the shader computes the min and max sample values across the corresponding time range, then draws a vertical line segment between them — this is how oscilloscopes handle zoomed-out views without aliasing
+- **GPU immediates** (`var<immediate>`) — plot parameters (write position, Y-axis range, visible samples, theme) are passed as push constants, avoiding extra buffer allocations
+- **Circular buffer on GPU** — 32,768 interleaved samples streamed to a storage buffer every frame with modular index arithmetic in the shader
+
+## The Shader
+
+The core of the project is `src/shader.wgsl`. It implements:
+
+1. **Fullscreen triangle** vertex shader (3 vertices, no vertex buffer)
+2. **Per-pixel-column sampling** — maps each column to a range of samples based on zoom level
+3. **Min/max envelope** — finds the extremes within each column's sample range
+4. **Anti-aliased edges** — `smoothstep` distance from pixel to the [min, max] line segment
+5. **Per-channel colors** — Phase 1 (magenta), Phase 2 (red), Phase 3 (green)
+6. **Glow effect** — subtle color halo around lines in dark mode
+
+The shader reads samples from a `storage` buffer and all parameters via `immediate` constants — no uniform buffers needed.
 
 ## Features
 
-- **Interactive controls** — adjust amplitude (0.1–10 A), frequency (1–20 Hz), and time window (0.1–1.6 s) in real time
-- **Play/Pause** — freeze the simulation to inspect waveforms
-- **Theme switching** — System, Dark, and Light modes with glow effects in dark mode
-- **Cross-platform** — runs on Linux, Windows, macOS, and Android
-- **Responsive UI** — adapts to window resizing and respects Android safe area insets
+- **20 kHz sample rate**, 32,768-sample circular buffer (3 channels interleaved)
+- **Interactive controls** — amplitude (0.1–10 A), frequency (1–20 Hz), time window (0.1–1.6 s)
+- **Play/Pause** to freeze the simulation
+- **Dark / Light / System theme** with glow effects in dark mode
+- **Android support** with safe area insets for notches and system bars
 
 ## Building
 
 ### Prerequisites
 
 - [Rust](https://rustup.rs/) (edition 2024)
-- A GPU with Vulkan, Metal, or DX12 support
+- GPU with Vulkan, Metal, or DX12 support
 
 ### Desktop
 
 ```bash
-cargo run
+cargo run --release
 ```
 
 ### Android
 
-Requires the Android NDK and `cargo-apk` or equivalent tooling:
+1. Install prerequisites:
 
 ```bash
-cargo build --no-default-features --features android
+rustup target add aarch64-linux-android
+cargo install cargo-apk
 ```
+
+2. Set environment variables (adjust paths for your system):
+
+```bash
+export ANDROID_HOME="$HOME/Android/Sdk"
+export ANDROID_NDK_ROOT="$ANDROID_HOME/ndk/<version>"
+# Optional if javac is in PATH; Android Studio bundles JDK:
+export JAVA_HOME="/path/to/android-studio/jbr"
+```
+
+3. Build and deploy to a connected device:
+
+```bash
+cargo apk run --release --target aarch64-linux-android --lib --no-default-features --features android
+```
+
+See the [Slint Android docs](https://docs.rs/slint/latest/slint/android/index.html) for details.
 
 ## Project Structure
 
 ```
-├── Cargo.toml          # Dependencies and feature flags
-├── build.rs            # Compiles .slint UI files
-├── src/
-│   ├── main.rs         # Entry point
-│   ├── lib.rs          # App initialization, WGPU setup, timer loop
-│   ├── data_gen.rs     # 3-phase motor simulator (circular buffer, noise, transients)
-│   ├── renderer.rs     # WGPU render pipeline and texture management
-│   └── shader.wgsl     # Vertex/fragment shaders for waveform rendering
-└── ui/
-    └── scene.slint     # UI layout, controls, grid, and axis labels
+src/
+  shader.wgsl     # WGSL vertex + fragment shader for waveform rendering
+  renderer.rs     # WGPU pipeline setup, texture management, buffer uploads
+  data_gen.rs     # 3-phase motor simulator (circular buffer, noise, transients)
+  lib.rs          # App init, WGPU device config, render loop, timer
+  main.rs         # Desktop entry point
+ui/
+  scene.slint     # UI layout: plot area, grid overlay, controls, axis labels
 ```
-
-## How It Works
-
-1. **Data generation** — `MotorSimulator` produces interleaved 3-phase samples at 20 kHz with configurable amplitude/frequency, Gaussian noise (5%), and rare transient spikes.
-
-2. **GPU rendering** — The sample buffer is uploaded to a WGPU storage buffer each frame. A fullscreen-triangle fragment shader maps pixel columns to sample ranges, computes per-column min/max values for antialiasing, and draws color-coded waveforms:
-   - **Phase 1**: Magenta
-   - **Phase 2**: Red
-   - **Phase 3**: Green
-
-3. **UI** — Slint provides the control panel (sliders, theme selector, play/pause) and overlays grid lines and axis labels on top of the GPU-rendered plot texture.
 
 ## Dependencies
 
 | Crate | Purpose |
 |-------|---------|
-| [slint](https://slint.dev/) | UI framework with WGPU integration |
-| [wgpu](https://wgpu.rs/) | Cross-platform GPU API |
-| [bytemuck](https://docs.rs/bytemuck) | Safe memory casting for GPU data transfer |
+| [slint](https://slint.dev/) (git, `unstable-wgpu-28`) | UI framework with WGPU texture integration |
+| [wgpu](https://wgpu.rs/) 28 | Cross-platform GPU API |
+| [bytemuck](https://docs.rs/bytemuck) | Safe transmute for GPU data upload |
 
 ## License
 
