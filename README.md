@@ -74,7 +74,7 @@ export JAVA_HOME="/path/to/android-studio/jbr"
 cargo apk run --release --target aarch64-linux-android --lib --no-default-features --features android
 ```
 
-See the [Slint Android docs](https://docs.rs/slint/latest/slint/android/index.html) for details.
+See the [Slint Android docs](https://docs.slint.dev/latest/docs/slint/guide/platforms/mobile/android/) for details.
 
 ## Project Structure
 
