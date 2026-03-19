@@ -4,6 +4,8 @@ A reference implementation of **real-time waveform plotting** in [Slint](https:/
 
 The demo simulates a 3-phase AC motor current sensor and renders waveforms entirely on the GPU at 20 kHz sample rate. It runs on desktop (Linux, Windows, macOS) and Android.
 
+![Screenshot](screenshots/Screenshot_20260320_011616.png)
+
 ## Why This Project
 
 Slint doesn't ship with a real-time plotting widget. If you need to visualize streaming data — sensor readings, audio, telemetry — you have to build the rendering yourself. This project shows one way to do it: bypass Slint's drawing primitives, render the plot as a GPU texture via WGPU, and composite it back into the Slint scene.
