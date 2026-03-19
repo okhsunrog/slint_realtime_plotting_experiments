@@ -1,8 +1,7 @@
 use crate::data_gen::{MotorSimulator, NUM_CHANNELS, NUM_SAMPLES};
 use slint::wgpu_28::wgpu;
 
-const SAMPLES_BUFFER_SIZE: u64 =
-    (NUM_SAMPLES * NUM_CHANNELS * std::mem::size_of::<f32>()) as u64;
+const SAMPLES_BUFFER_SIZE: u64 = (NUM_SAMPLES * NUM_CHANNELS * std::mem::size_of::<f32>()) as u64;
 
 #[repr(C)]
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]

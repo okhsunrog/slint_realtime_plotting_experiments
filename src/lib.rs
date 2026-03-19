@@ -4,10 +4,9 @@ mod data_gen;
 mod renderer;
 
 use slint::wgpu_28::{WGPUConfiguration, WGPUSettings, wgpu};
-use slint::{Timer, TimerMode};
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::rc::Rc;
-use std::time::Duration;
+use std::time::Instant;
 
 pub fn main() {
     let mut wgpu_settings = WGPUSettings::default();
@@ -29,12 +28,12 @@ pub fn main() {
 
     let app = App::new().unwrap();
 
-    let simulator = Rc::new(RefCell::new(data_gen::MotorSimulator::new(data_gen::SAMPLE_RATE)));
-
+    let simulator = Rc::new(RefCell::new(data_gen::MotorSimulator::new(
+        data_gen::SAMPLE_RATE,
+    )));
     let mut plot_renderer: Option<renderer::PlotRenderer> = None;
-
     let app_weak = app.as_weak();
-    let sim_for_render = simulator.clone();
+    let last_frame = Cell::new(Instant::now());
 
     app.window()
         .set_rendering_notifier(move |state, graphics_api| match state {
@@ -44,13 +43,29 @@ pub fn main() {
                 }
             }
             slint::RenderingState::BeforeRendering => {
-                if let (Some(renderer), Some(app)) =
-                    (plot_renderer.as_mut(), app_weak.upgrade())
-                {
-                    let sim = sim_for_render.borrow();
+                if let (Some(renderer), Some(app)) = (plot_renderer.as_mut(), app_weak.upgrade()) {
+                    let now = Instant::now();
+                    let dt = now.duration_since(last_frame.get()).as_secs_f32();
+                    last_frame.set(now);
+
+                    if !app.get_paused() {
+                        let amplitude = app.get_amplitude();
+                        let frequency = app.get_frequency();
+
+                        let samples_per_frame = (data_gen::SAMPLE_RATE * dt).round() as usize;
+                        let mut sim = simulator.borrow_mut();
+                        sim.generate_samples(samples_per_frame, amplitude, frequency);
+
+                        app.set_status_text(slint::format!(
+                            "3-Phase | {:.0} Hz | {:.1} A | 20 kSa/s",
+                            frequency,
+                            amplitude,
+                        ));
+                    }
+
+                    let sim = simulator.borrow();
                     let time_window = app.get_time_window();
-                    let visible_samples =
-                        (time_window * data_gen::SAMPLE_RATE) as u32;
+                    let visible_samples = (time_window * data_gen::SAMPLE_RATE) as u32;
                     let texture = renderer.render(
                         &sim,
                         app.get_requested_texture_width() as u32,
@@ -68,30 +83,6 @@ pub fn main() {
             _ => {}
         })
         .expect("Unable to set rendering notifier");
-
-    let timer = Timer::default();
-    let app_weak_timer = app.as_weak();
-    let sim_for_timer = simulator.clone();
-
-    timer.start(TimerMode::Repeated, Duration::from_millis(16), move || {
-        if let Some(app) = app_weak_timer.upgrade() {
-            if !app.get_paused() {
-                let amplitude = app.get_amplitude();
-                let frequency = app.get_frequency();
-
-                let mut sim = sim_for_timer.borrow_mut();
-                let samples_per_tick = (data_gen::SAMPLE_RATE * 0.016) as usize;
-                sim.generate_samples(samples_per_tick, amplitude, frequency);
-
-                app.set_status_text(slint::format!(
-                    "3-Phase | {:.0} Hz | {:.1} A | 20 kSa/s",
-                    frequency,
-                    amplitude,
-                ));
-            }
-            app.window().request_redraw();
-        }
-    });
 
     app.run().unwrap();
 }

@@ -33,23 +33,11 @@ impl MotorSimulator {
             let t = self.sample_index as f32 / self.sample_rate;
             let base_angle = 2.0 * std::f32::consts::PI * frequency * t;
 
-            let transient = if self.random_u32().is_multiple_of(1000) {
-                amplitude
-                    * 2.0
-                    * if self.random_u32().is_multiple_of(2) {
-                        1.0
-                    } else {
-                        -1.0
-                    }
-            } else {
-                0.0
-            };
-
             let base_idx = self.write_pos as usize * NUM_CHANNELS;
             for (ch, &offset) in PHASE_OFFSETS.iter().enumerate() {
                 let phase_current = amplitude * (base_angle + offset).sin();
                 let noise = self.random_normal() * 0.05 * amplitude;
-                self.buffer[base_idx + ch] = phase_current + noise + transient;
+                self.buffer[base_idx + ch] = phase_current + noise;
             }
 
             self.write_pos = (self.write_pos + 1) % NUM_SAMPLES as u32;
