@@ -31,3 +31,20 @@ build_targets = ["aarch64-linux-android"]
 [package.metadata.android.sdk]
 min_sdk_version = 23
 target_sdk_version = 33
+
+[package.metadata.android.application]
+label = "Slint Plot"
+
+# Slint's backend-android-activity-06 runs inside NativeActivity; without an
+# explicit activity + LAUNCHER intent filter the app installs but has no icon.
+[[package.metadata.android.application.activity]]
+name = "android.app.NativeActivity"
+exported = true
+
+[[package.metadata.android.application.activity.meta_data]]
+name = "android.app.lib_name"
+value = "slint_realtime_plotting_experiments"
+
+[[package.metadata.android.application.activity.intent_filter]]
+actions = ["android.intent.action.MAIN"]
+categories = ["android.intent.category.LAUNCHER"]
