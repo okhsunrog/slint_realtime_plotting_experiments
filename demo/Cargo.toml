@@ -23,3 +23,11 @@ slint = { workspace = true, features = ["accessibility"] }
 
 [build-dependencies]
 slint-build = { workspace = true }
+
+[package.metadata.android]
+package = "com.okhsunrog.slint_plot"
+build_targets = ["aarch64-linux-android"]
+
+[package.metadata.android.sdk]
+min_sdk_version = 23
+target_sdk_version = 33

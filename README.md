@@ -123,6 +123,22 @@ x build --platform android --arch arm64 --format apk --release --no-default-feat
 
 The output APK will be in `target/x/release/android/`.
 
+Alternatively, [cargo-apk2](https://crates.io/crates/cargo-apk2) (the maintained
+fork of cargo-apk, which the [`slint::android` docs](https://docs.slint.dev/latest/docs/rust/slint/android/)
+suggest) works too — the `[package.metadata.android]` section in
+`demo/Cargo.toml` is already set up for it:
+
+```bash
+cargo install cargo-apk2
+cd demo
+CARGO_APK_RELEASE_KEYSTORE=$HOME/.android/debug.keystore \
+CARGO_APK_RELEASE_KEYSTORE_PASSWORD=android \
+cargo apk2 build --release --lib --no-default-features --features android
+```
+
+The signed APK lands in `target/release/apk/`. Point the keystore variables at
+a real release key for anything beyond sideloading.
+
 ## Project Structure
 
 The workspace is split into a reusable library crate and the demo application:
