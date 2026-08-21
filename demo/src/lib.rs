@@ -1,37 +1,15 @@
 slint::include_modules!();
 
-mod buffer;
 mod data_gen;
-mod renderer;
 
-pub use buffer::PlotBuffer;
-pub use renderer::{PlotConfig, PlotRenderer};
-
-use slint::wgpu_30::{WGPUConfiguration, WGPUSettings, wgpu};
+use slint::wgpu_30::WGPUConfiguration;
+use slint_realtime_plot::{PlotBuffer, PlotConfig, PlotRenderer, required_wgpu_settings};
 use std::cell::Cell;
 use std::io::Write as _;
 use std::rc::Rc;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use std::time::{Duration, Instant};
-
-/// Maximum number of channels supported by the shader.
-pub const MAX_CHANNELS: usize = 8;
-
-/// Build the [`WGPUSettings`] required by the plot renderer.
-///
-/// - `max_capacity`  — largest ring-buffer capacity used across all charts.
-/// - `max_channels`  — largest number of channels in any single chart.
-pub fn required_wgpu_settings(max_capacity: usize, max_channels: usize) -> WGPUSettings {
-    let mut s = WGPUSettings::default();
-    s.device_required_features = wgpu::Features::IMMEDIATES;
-    s.device_required_limits.max_immediate_size = size_of::<renderer::PlotParams>() as u32;
-    s.device_required_limits
-        .max_storage_buffers_per_shader_stage = 1;
-    s.device_required_limits.max_storage_buffer_binding_size =
-        (max_capacity * max_channels * size_of::<f32>()) as u64;
-    s
-}
 
 /// Knobs shared between the UI thread and the sample-generator thread.
 struct SimControl {

@@ -21,7 +21,7 @@ Key techniques demonstrated:
 
 ## The Shader
 
-The core of the project is `src/shader.wgsl`. It implements:
+The core of the project is `slint-realtime-plot/src/shader.wgsl`. It implements:
 
 1. **Fullscreen triangle** vertex shader (3 vertices, no vertex buffer)
 2. **Line mode** — per-pixel distance to the nearest waveform segment, anti-aliased with `smoothstep`, hidpi-aware line width
@@ -80,15 +80,17 @@ export ANDROID_HOME="$HOME/Android/Sdk"
 export ANDROID_NDK_ROOT="$ANDROID_HOME/ndk/<version>"
 ```
 
-3. Build and run on a connected device:
+3. Build and run on a connected device (from the `demo/` directory):
 
 ```bash
+cd demo
 x run --device adb:<device-id> --no-default-features --features android
 ```
 
 4. Build a release APK for distribution:
 
 ```bash
+cd demo
 x build --platform android --arch arm64 --format apk --release --no-default-features --features android
 ```
 
@@ -96,18 +98,44 @@ The output APK will be in `target/x/release/android/`.
 
 ## Project Structure
 
+The workspace is split into a reusable library crate and the demo application:
+
 ```
-src/
-  shader.wgsl     # WGSL vertex + fragment shader (line + peak-detect modes)
-  renderer.rs     # WGPU pipeline, render caching, auto-range, PNG export
-  buffer.rs       # Lock-free SPSC ring buffer shared between threads
-  data_gen.rs     # 3-phase motor simulator (runs on its own thread)
-  lib.rs          # App init, WGPU device config, render loop, exports
-  main.rs         # Desktop entry point
-ui/
-  plot.slint      # Reusable PlotWidget: grid, axes, legend, pan/zoom, cursor
-  scene.slint     # App layout: plot + controls
+slint-realtime-plot/    # the reusable plotting library
+  src/
+    shader.wgsl         # WGSL vertex + fragment shader (line + peak-detect modes)
+    renderer.rs         # WGPU pipeline, render caching, auto-range, PNG export
+    buffer.rs           # Lock-free SPSC ring buffer shared between threads
+    lib.rs              # Public API: PlotBuffer, PlotRenderer, required_wgpu_settings
+  ui/
+    plot.slint          # PlotWidget: grid, axes, legend, pan/zoom, cursor
+demo/                   # the 3-phase motor demo app
+  src/
+    data_gen.rs         # 3-phase motor simulator (runs on its own thread)
+    lib.rs              # App init, WGPU device config, render loop, exports
+    main.rs             # Desktop entry point
+  ui/
+    scene.slint         # App layout: plot + controls
+  build.rs              # Maps the @slint-realtime-plot import prefix
 ```
+
+## Using the Library in Your Own Project
+
+Add `slint-realtime-plot` as a path/git dependency, then map its `.slint` side
+in your `build.rs` via `with_library_paths` (see `demo/build.rs`) and import
+the widget with:
+
+```slint
+import { PlotWidget } from "@slint-realtime-plot/plot.slint";
+```
+
+On the Rust side, configure the backend with `required_wgpu_settings()`, push
+samples into a `PlotBuffer` from any thread, and drive a `PlotRenderer` from
+Slint's rendering notifier (see `demo/src/lib.rs` for the full wiring).
+
+Once Slint's experimental [library modules](https://snapshots.slint.dev/master/docs/slint/guide/experimental/library-modules/)
+stabilise, the `build.rs` mapping will no longer be needed — the import will
+resolve automatically through Cargo metadata.
 
 ## Dependencies
 

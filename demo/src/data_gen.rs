@@ -1,4 +1,4 @@
-use crate::PlotBuffer;
+use slint_realtime_plot::PlotBuffer;
 
 pub const NUM_SAMPLES: usize = 32768;
 pub const NUM_CHANNELS: usize = 3;

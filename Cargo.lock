@@ -4604,14 +4604,22 @@ dependencies = [
 ]
 
 [[package]]
-name = "slint_realtime_plotting_experiments"
+name = "slint-realtime-plot"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
  "png",
  "slint",
- "slint-build",
  "wgpu",
+]
+
+[[package]]
+name = "slint_realtime_plotting_experiments"
+version = "0.1.0"
+dependencies = [
+ "slint",
+ "slint-build",
+ "slint-realtime-plot",
 ]
 
 [[package]]

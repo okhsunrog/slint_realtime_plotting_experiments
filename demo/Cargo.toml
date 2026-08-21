@@ -1,0 +1,23 @@
+[package]
+name = "slint_realtime_plotting_experiments"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["lib", "cdylib"]
+
+[[bin]]
+name = "slint_realtime_plotting_experiments"
+path = "src/main.rs"
+
+[features]
+default = ["desktop"]
+desktop = ["slint/backend-winit", "slint/renderer-femtovg-wgpu"]
+android = ["slint/backend-android-activity-06"]
+
+[dependencies]
+slint-realtime-plot = { workspace = true }
+slint = { workspace = true, features = ["accessibility"] }
+
+[build-dependencies]
+slint-build = { workspace = true }

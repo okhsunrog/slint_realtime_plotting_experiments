@@ -1,0 +1,23 @@
+use std::collections::HashMap;
+use std::path::PathBuf;
+
+fn main() {
+    // Map the `@slint-realtime-plot` import prefix to the library's ui/ dir.
+    // Once Slint's experimental library modules stabilise, this becomes a
+    // plain `import from "@slint-realtime-plot"` with no build.rs config.
+    let manifest = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let plot_ui = manifest
+        .parent()
+        .unwrap()
+        .join("slint-realtime-plot")
+        .join("ui");
+
+    let mut library_paths = HashMap::new();
+    library_paths.insert("slint-realtime-plot".to_string(), plot_ui);
+
+    slint_build::compile_with_config(
+        "ui/scene.slint",
+        slint_build::CompilerConfiguration::new().with_library_paths(library_paths),
+    )
+    .unwrap();
+}
