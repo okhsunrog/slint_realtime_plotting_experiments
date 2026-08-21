@@ -87,17 +87,23 @@ cargo run --release
 
 ### Android
 
-Android builds use [xbuild](https://github.com/rust-mobile/xbuild) as recommended by the [Slint Android docs](https://docs.slint.dev/latest/docs/slint/guide/platforms/mobile/android/).
+The recommended route is [cargo-apk2](https://crates.io/crates/cargo-apk2) —
+the maintained fork of cargo-apk, which the
+[`slint::android` docs](https://docs.slint.dev/latest/docs/rust/slint/android/)
+suggest. The `[package.metadata.android]` section in `demo/Cargo.toml` already
+declares everything it needs, including the `NativeActivity` launcher entry
+(cargo-apk2 does **not** generate one automatically — without it the app
+installs but has no icon and cannot be launched).
 
 1. Install prerequisites:
 
    - [Android Studio](https://developer.android.com/studio) — install the Android SDK via its SDK Manager
    - Add `$ANDROID_HOME/platform-tools` to your `PATH` (for `adb`)
-   - Install the Rust Android target and xbuild:
+   - Install the Rust Android target and cargo-apk2:
 
 ```bash
 rustup target add aarch64-linux-android
-cargo install --git https://github.com/rust-mobile/xbuild.git
+cargo install cargo-apk2
 ```
 
 2. Set environment variables (adjust paths for your system):
@@ -107,37 +113,35 @@ export ANDROID_HOME="$HOME/Android/Sdk"
 export ANDROID_NDK_ROOT="$ANDROID_HOME/ndk/<version>"
 ```
 
-3. Build and run on a connected device (from the `demo/` directory):
+3. Build a signed release APK (from the `demo/` directory):
 
 ```bash
-cd demo
-x run --device adb:<device-id> --no-default-features --features android
-```
-
-4. Build a release APK for distribution:
-
-```bash
-cd demo
-x build --platform android --arch arm64 --format apk --release --no-default-features --features android
-```
-
-The output APK will be in `target/x/release/android/`.
-
-Alternatively, [cargo-apk2](https://crates.io/crates/cargo-apk2) (the maintained
-fork of cargo-apk, which the [`slint::android` docs](https://docs.slint.dev/latest/docs/rust/slint/android/)
-suggest) works too — the `[package.metadata.android]` section in
-`demo/Cargo.toml` is already set up for it:
-
-```bash
-cargo install cargo-apk2
 cd demo
 CARGO_APK_RELEASE_KEYSTORE=$HOME/.android/debug.keystore \
 CARGO_APK_RELEASE_KEYSTORE_PASSWORD=android \
 cargo apk2 build --release --lib --no-default-features --features android
 ```
 
-The signed APK lands in `target/release/apk/`. Point the keystore variables at
-a real release key for anything beyond sideloading.
+Notes:
+
+- The `--lib` flag matters: without it cargo-apk2 panics trying to package
+  the `[[bin]]` target as well.
+- The signed APK lands in `target/release/apk/`; install with `adb install -r`.
+  Point the keystore variables at a real release key for anything beyond
+  sideloading (`~/.android/debug.keystore` with password `android` is the
+  standard debug key).
+- If your `~/.cargo/config.toml` sets a custom `build.build-dir`, packaging
+  fails with a bare `No such file or directory`: cargo-apk2 (and xbuild) look
+  for build-script outputs under `target/<triple>/release/build`, which the
+  remap moves elsewhere. Work around it by restoring the default for this
+  invocation: prefix the command with `CARGO_BUILD_BUILD_DIR=$PWD/../target`.
+
+[xbuild](https://github.com/rust-mobile/xbuild), which the
+[Slint platform guide](https://docs.slint.dev/latest/docs/slint/guide/platforms/mobile/android/)
+uses, also works as an alternative (`x build --platform android --arch arm64
+--format apk --release --no-default-features --features android` from `demo/`;
+output in `target/x/release/android/`), and is handy for `x run
+--device adb:<device-id>` develop-deploy loops.
 
 ## Project Structure
 
