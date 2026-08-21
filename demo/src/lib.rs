@@ -133,17 +133,34 @@ pub fn main() {
 
     // PNG export needs the renderer, which lives inside the rendering
     // notifier — hand the request over via a flag checked each frame.
+    // Redraws stop while paused and idle, so request one explicitly.
     let png_requested = Rc::new(Cell::new(false));
     {
         let flag = png_requested.clone();
-        app.on_export_png(move || flag.set(true));
+        let weak = app.as_weak();
+        app.on_export_png(move || {
+            flag.set(true);
+            if let Some(app) = weak.upgrade() {
+                app.window().request_redraw();
+            }
+        });
     }
 
     let mut plot_renderer: Option<PlotRenderer> = None;
     let app_weak = app.as_weak();
     let cursor_was_active = Cell::new(false);
+    let last_status = Cell::new((f32::NAN, f32::NAN));
     let render_control = control.clone();
     let render_buffer = plot_buffer.clone();
+
+    // Frame statistics, printed once a second when PLOT_STATS is set.
+    let stats_enabled = std::env::var_os("PLOT_STATS").is_some();
+    let mut stats_t0 = Instant::now();
+    let mut stats_prev_frame: Option<Instant> = None;
+    let mut stats_frames = 0u32;
+    let mut stats_dt_max = 0.0f32;
+    let mut stats_render_sum = 0.0f32;
+    let mut stats_render_max = 0.0f32;
 
     app.window()
         .set_rendering_notifier(move |state, graphics_api| match state {
@@ -180,7 +197,10 @@ pub fn main() {
                         .store(frequency.to_bits(), Ordering::Relaxed);
                     render_control.paused.store(paused, Ordering::Relaxed);
 
-                    if !paused {
+                    // Only touch the property when the values changed — a new
+                    // string every frame would dirty the text item needlessly.
+                    if !paused && last_status.get() != (amplitude, frequency) {
+                        last_status.set((amplitude, frequency));
                         app.set_status_text(slint::format!(
                             "3-Phase | {:.0} Hz | {:.1} A | 20 kSa/s",
                             frequency,
@@ -212,6 +232,7 @@ pub fn main() {
                         app.set_cursor_text(Default::default());
                     }
 
+                    let render_t0 = Instant::now();
                     let output = renderer.render(
                         &render_buffer,
                         app.get_requested_texture_width() as u32,
@@ -220,10 +241,41 @@ pub fn main() {
                         view_offset,
                         app.window().scale_factor(),
                     );
-                    app.set_texture(slint::Image::try_from(output.texture).unwrap());
-                    app.set_y_min(output.y_min);
-                    app.set_y_max(output.y_max);
-                    app.set_y_divisions(output.y_divisions as i32);
+                    if stats_enabled {
+                        let now = Instant::now();
+                        let render_ms = now.duration_since(render_t0).as_secs_f32() * 1000.0;
+                        stats_render_sum += render_ms;
+                        stats_render_max = stats_render_max.max(render_ms);
+                        if let Some(prev) = stats_prev_frame {
+                            let dt_ms = now.duration_since(prev).as_secs_f32() * 1000.0;
+                            stats_dt_max = stats_dt_max.max(dt_ms);
+                        }
+                        stats_prev_frame = Some(now);
+                        stats_frames += 1;
+                        let elapsed = stats_t0.elapsed().as_secs_f32();
+                        if elapsed >= 1.0 {
+                            eprintln!(
+                                "[stats] {:.0} fps | frame dt max {:.2} ms | render(): avg {:.3} ms, max {:.3} ms",
+                                stats_frames as f32 / elapsed,
+                                stats_dt_max,
+                                stats_render_sum / stats_frames as f32,
+                                stats_render_max,
+                            );
+                            stats_t0 = Instant::now();
+                            stats_frames = 0;
+                            stats_dt_max = 0.0;
+                            stats_render_sum = 0.0;
+                            stats_render_max = 0.0;
+                        }
+                    }
+                    // A fresh Image wrapper always dirties the property, so
+                    // only push results when the renderer actually re-rendered.
+                    if output.rendered {
+                        app.set_texture(slint::Image::try_from(output.texture).unwrap());
+                        app.set_y_min(output.y_min);
+                        app.set_y_max(output.y_max);
+                        app.set_y_divisions(output.y_divisions as i32);
+                    }
 
                     if png_requested.take() {
                         let background = if app.get_dark_mode() {
@@ -239,7 +291,13 @@ pub fn main() {
                         app.set_export_status(msg);
                     }
 
-                    app.window().request_redraw();
+                    // Keep the frame loop running only while there is motion:
+                    // live data, or pan/zoom/auto-range still producing new
+                    // frames while paused. When paused and settled, redraws
+                    // stop entirely; input and property changes restart them.
+                    if !paused || output.rendered {
+                        app.window().request_redraw();
+                    }
                 }
             }
             slint::RenderingState::RenderingTeardown => {

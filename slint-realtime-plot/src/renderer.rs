@@ -47,6 +47,9 @@ pub struct RenderOutput {
     pub y_min: f32,
     pub y_max: f32,
     pub y_divisions: u32,
+    /// `false` when the cached texture was returned unchanged — the caller
+    /// can skip updating UI properties and scheduling another frame.
+    pub rendered: bool,
 }
 
 /// GPU renderer for one chart.  Create one instance per chart via
@@ -375,6 +378,7 @@ impl PlotRenderer {
                 y_min: self.last_y_min,
                 y_max: self.last_y_max,
                 y_divisions: self.last_divisions,
+                rendered: false,
             };
         }
 
@@ -442,6 +446,7 @@ impl PlotRenderer {
             y_min,
             y_max,
             y_divisions: divisions,
+            rendered: true,
         }
     }
 

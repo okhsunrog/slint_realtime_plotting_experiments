@@ -12,7 +12,9 @@ path = "src/main.rs"
 
 [features]
 default = ["desktop"]
-desktop = ["slint/backend-winit", "slint/renderer-femtovg-wgpu"]
+# renderer-skia repaints the scene ~7x cheaper than renderer-femtovg-wgpu
+# here (measured: 12% vs 87% of a core at 60 fps) and stops missing vsync.
+desktop = ["slint/backend-winit", "slint/renderer-skia"]
 android = ["slint/backend-android-activity-06"]
 
 [dependencies]
