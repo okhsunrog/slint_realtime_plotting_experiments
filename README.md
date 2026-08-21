@@ -4,7 +4,7 @@ A reference implementation of **real-time waveform plotting** in [Slint](https:/
 
 The demo simulates a 3-phase AC motor current sensor and renders waveforms entirely on the GPU at 20 kHz sample rate. It runs on desktop (Linux, Windows, macOS) and Android.
 
-![Screenshot](screenshots/Screenshot_20260320_011616.png)
+![Screenshot](screenshots/Screenshot_20260821_143131.png)
 
 ## Why This Project
 
