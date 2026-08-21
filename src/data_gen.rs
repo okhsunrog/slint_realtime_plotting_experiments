@@ -1,18 +1,18 @@
+use crate::PlotBuffer;
+
 pub const NUM_SAMPLES: usize = 32768;
 pub const NUM_CHANNELS: usize = 3;
 pub const SAMPLE_RATE: f32 = 20000.0;
 
-const PHASE_OFFSETS: [f32; NUM_CHANNELS] = [
-    0.0,
-    2.0 * std::f32::consts::PI / 3.0,
-    4.0 * std::f32::consts::PI / 3.0,
-];
+const TWO_PI: f32 = 2.0 * std::f32::consts::PI;
+
+const PHASE_OFFSETS: [f32; NUM_CHANNELS] = [0.0, TWO_PI / 3.0, 2.0 * TWO_PI / 3.0];
 
 pub struct MotorSimulator {
-    /// Interleaved buffer: [ph1_0, ph2_0, ph3_0, ph1_1, ph2_1, ph3_1, ...]
-    pub buffer: [f32; NUM_SAMPLES * NUM_CHANNELS],
-    pub write_pos: u32,
-    sample_index: u64,
+    /// Reused staging area for one batch of interleaved frames.
+    scratch: Vec<f32>,
+    /// Accumulated electrical angle — frequency changes stay phase-continuous.
+    phase: f32,
     sample_rate: f32,
     rng_state: u64,
 }
@@ -20,29 +20,32 @@ pub struct MotorSimulator {
 impl MotorSimulator {
     pub fn new(sample_rate: f32) -> Self {
         Self {
-            buffer: [0.0; NUM_SAMPLES * NUM_CHANNELS],
-            write_pos: 0,
-            sample_index: 0,
+            scratch: Vec::new(),
+            phase: 0.0,
             sample_rate,
             rng_state: 0xDEAD_BEEF_CAFE_BABEu64,
         }
     }
 
-    pub fn generate_samples(&mut self, count: usize, amplitude: f32, frequency: f32) {
+    pub fn generate_samples(
+        &mut self,
+        buffer: &PlotBuffer,
+        count: usize,
+        amplitude: f32,
+        frequency: f32,
+    ) {
+        let phase_step = TWO_PI * frequency / self.sample_rate;
+        self.scratch.clear();
         for _ in 0..count {
-            let t = self.sample_index as f32 / self.sample_rate;
-            let base_angle = 2.0 * std::f32::consts::PI * frequency * t;
+            self.phase = (self.phase + phase_step) % TWO_PI;
 
-            let base_idx = self.write_pos as usize * NUM_CHANNELS;
-            for (ch, &offset) in PHASE_OFFSETS.iter().enumerate() {
-                let phase_current = amplitude * (base_angle + offset).sin();
+            for &offset in &PHASE_OFFSETS {
+                let phase_current = amplitude * (self.phase + offset).sin();
                 let noise = self.random_normal() * 0.05 * amplitude;
-                self.buffer[base_idx + ch] = phase_current + noise;
+                self.scratch.push(phase_current + noise);
             }
-
-            self.write_pos = (self.write_pos + 1) % NUM_SAMPLES as u32;
-            self.sample_index += 1;
         }
+        buffer.push_batch(&self.scratch);
     }
 
     fn random_u32(&mut self) -> u32 {

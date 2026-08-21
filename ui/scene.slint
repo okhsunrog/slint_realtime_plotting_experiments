@@ -1,24 +1,34 @@
 import { Slider, GroupBox, HorizontalBox, VerticalBox, GridBox, Button, ComboBox, Palette } from "std-widgets.slint";
+import { PlotWidget } from "plot.slint";
 
 export component App inherits Window {
-    in property <image> texture <=> plot-image.source;
-    out property <int> requested-texture-width: plot-image.width / 1phx;
-    out property <int> requested-texture-height: plot-image.height / 1phx;
+    in property <image> texture <=> plot.texture;
+    // Physical pixels so the texture stays crisp on hidpi screens.
+    out property <int> requested-texture-width: plot.requested-texture-width / 1phx;
+    out property <int> requested-texture-height: plot.requested-texture-height / 1phx;
 
     out property <float> amplitude <=> amp-slider.value;
     out property <float> frequency <=> freq-slider.value;
-    out property <float> time-window <=> tw-slider.value;
-    in-out property <bool> paused: false;
+    in-out property <float> time-window <=> plot.time-window;
+    in-out property <bool> paused <=> plot.paused;
+    out property <int> view-offset <=> plot.view-offset;
     out property <bool> dark-mode: Palette.color-scheme == ColorScheme.dark;
 
-    in property <string> status-text: "Initializing...";
+    // Auto-ranged Y axis, fed back from PlotRenderer::render() each frame.
+    in property <float> y-min <=> plot.y-min;
+    in property <float> y-max <=> plot.y-max;
+    in property <int> y-divisions <=> plot.y-divisions;
 
-    property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
-    property <color> plot-bg: is-dark ? #0f0f1e : #ffffff;
-    property <color> grid-color: is-dark ? #1a1a30 : #e0e0e0;
-    property <color> axis-color: is-dark ? #5555aa : #808080;
-    property <length> y-label-width: 45px;
-    property <length> x-label-height: 18px;
+    // Cursor measurement: position out, formatted values back in.
+    out property <bool> cursor-active: plot.cursor-active;
+    out property <float> cursor-frac: plot.cursor-frac;
+    in property <string> cursor-text <=> plot.cursor-text;
+
+    in property <string> status-text: "Initializing...";
+    in property <string> export-status: "";
+
+    callback export-csv();
+    callback export-png();
 
     preferred-width: 900px;
     preferred-height: 650px;
@@ -30,95 +40,35 @@ export component App inherits Window {
         width: root.width - root.safe-area-insets.right - root.safe-area-insets.left;
         height: root.height - root.safe-area-insets.bottom - root.safe-area-insets.top;
 
-        Text {
-            text: "3-Phase Motor Current Waveform";
-            font-size: 16px;
-            horizontal-alignment: center;
-        }
-
-        Rectangle {
-            preferred-width: 800px;
-            preferred-height: 480px;
+        plot := PlotWidget {
+            vertical-stretch: 1;
             min-width: 320px;
             min-height: 200px;
-
-            // Y-axis labels
-            for label[i] in ["15", "10", "5", "0", "-5", "-10", "-15"]: Text {
-                x: 0;
-                y: i * (plot-area.height / 6) + plot-area.y - self.height / 2;
-                width: root.y-label-width - 4px;
-                horizontal-alignment: right;
-                text: label;
-                font-size: 11px;
-                color: root.axis-color;
-            }
-
-            // Plot area with grid
-            plot-area := Rectangle {
-                x: root.y-label-width;
-                y: 0;
-                width: parent.width - root.y-label-width;
-                height: parent.height - root.x-label-height;
-                background: root.plot-bg;
-                border-width: 1px;
-                border-color: root.axis-color;
-
-                // Vertical grid lines (10 divisions, 9 interior lines)
-                for i in 9: Rectangle {
-                    x: (i + 1) * (parent.width / 10);
-                    y: 0;
-                    width: 1px;
-                    height: parent.height;
-                    background: root.grid-color;
-                }
-
-                // Horizontal grid lines (6 divisions, 5 interior lines)
-                for i in 5: Rectangle {
-                    x: 0;
-                    y: (i + 1) * (parent.height / 6);
-                    width: parent.width;
-                    height: 1px;
-                    background: root.grid-color;
-                }
-
-                // Zero line (center, slightly thicker)
-                Rectangle {
-                    x: 0;
-                    y: parent.height / 2 - 0.5px;
-                    width: parent.width;
-                    height: 1.5px;
-                    background: root.axis-color;
-                }
-
-                // Waveform texture overlay (transparent background)
-                plot-image := Image {
-                    width: parent.width;
-                    height: parent.height;
-                }
-            }
-
-            // X-axis labels
-            for i in 5: Text {
-                property <float> abs-time: Math.round(root.time-window * (5 - i) / 5 * 10) / 10;
-                x: plot-area.x + i * 2 * (plot-area.width / 10) - self.width / 2;
-                y: plot-area.y + plot-area.height + 2px;
-                text: "-\{self.abs-time}s";
-                font-size: 11px;
-                color: root.axis-color;
-            }
-            Text {
-                x: plot-area.x + plot-area.width - self.width / 2;
-                y: plot-area.y + plot-area.height + 2px;
-                text: "0s";
-                font-size: 11px;
-                color: root.axis-color;
-            }
+            title: "3-Phase Motor Current Waveform";
+            x-divisions: 5;
+            time-window: 1.0;
+            // 32768 samples @ 20 kHz
+            max-time-window: 1.6;
+            sample-rate: 20000.0;
+            legend-labels: ["Phase A", "Phase B", "Phase C"];
+            legend-colors: [#22d3ee, #8b5cf6, #f97316];
         }
 
         HorizontalBox {
             Text {
                 text: root.status-text;
                 vertical-alignment: center;
+            }
+            Text {
+                text: root.export-status;
+                vertical-alignment: center;
+                opacity: 0.8;
+            }
+            Text {
+                text: "scroll/pinch: zoom | double-click: pause | drag (paused): pan";
+                vertical-alignment: center;
+                horizontal-alignment: right;
+                opacity: 0.6;
             }
         }
 
@@ -135,7 +85,11 @@ export component App inherits Window {
                 }
                 Row {
                     Text { text: "Time Window (s):"; vertical-alignment: center; }
-                    tw-slider := Slider { minimum: 0.1; maximum: 1.6; value: 1.0; }
+                    tw-slider := Slider {
+                        minimum: 0.1;
+                        maximum: 1.6;
+                        value <=> root.time-window;
+                    }
                 }
                 Row {
                     Text { text: "Theme:"; vertical-alignment: center; }
@@ -156,7 +110,23 @@ export component App inherits Window {
                 Row {
                     Button {
                         text: root.paused ? "Resume" : "Pause";
-                        clicked => { root.paused = !root.paused; }
+                        clicked => {
+                            root.paused = !root.paused;
+                            if (!root.paused) {
+                                plot.view-offset = 0;
+                            }
+                        }
+                    }
+                    HorizontalBox {
+                        padding: 0;
+                        Button {
+                            text: "Export CSV";
+                            clicked => { root.export-csv(); }
+                        }
+                        Button {
+                            text: "Export PNG";
+                            clicked => { root.export-png(); }
+                        }
                     }
                 }
             }

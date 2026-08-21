@@ -15,10 +15,12 @@ default = ["desktop"]
 desktop = ["slint/backend-winit", "slint/renderer-femtovg-wgpu"]
 android = ["slint/backend-android-activity-06"]
 
+# Pinned to a known-good rev for reproducible access to the wgpu 30 integration.
 [dependencies]
 bytemuck = { version = "1.25.0", features = ["derive"] }
-slint = { git = "https://github.com/slint-ui/slint.git", default-features = false, features = ["std", "unstable-wgpu-28", "accessibility", "compat-1-2"] }
-wgpu = { version = "28", features = ["wgsl"] }
+png = "0.18.1"
+slint = { git = "https://github.com/slint-ui/slint.git", rev = "64ee54de49999a97d97ffe004e30904e8e9118a3", version = "1.18.0", default-features = false, features = ["std", "unstable-wgpu-30", "accessibility", "compat-1-2"] }
+wgpu = { version = "30", features = ["wgsl"] }
 
 [build-dependencies]
-slint-build = { git = "https://github.com/slint-ui/slint.git" }
+slint-build = { git = "https://github.com/slint-ui/slint.git", rev = "64ee54de49999a97d97ffe004e30904e8e9118a3", version = "1.18.0" }
