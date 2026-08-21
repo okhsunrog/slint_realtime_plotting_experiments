@@ -12,7 +12,8 @@ export component App inherits Window {
     in-out property <float> time-window <=> plot.time-window;
     in-out property <bool> paused <=> plot.paused;
     out property <int> view-offset <=> plot.view-offset;
-    out property <bool> dark-mode: Palette.color-scheme == ColorScheme.dark;
+    // Luminance-based: color-scheme reads `unknown` when following the system.
+    out property <bool> dark-mode: Palette.background.to-hsv().value < 0.5;
 
     // Auto-ranged Y axis, fed back from PlotRenderer::render() each frame.
     in property <float> y-min <=> plot.y-min;

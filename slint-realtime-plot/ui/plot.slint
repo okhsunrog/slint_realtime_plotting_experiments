@@ -60,8 +60,10 @@ export component PlotWidget inherits Rectangle {
     // Sample rate in Hz (needed to convert pixel drag to sample offset)
     in property <float> sample-rate: 1000.0;
 
-    // Theme-aware colors
-    property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
+    // Theme-aware colors. Darkness is derived from the palette's actual
+    // background luminance: `Palette.color-scheme` stays `unknown` when
+    // following the system theme, so comparing it against `dark` misfires.
+    property <bool> is-dark: Palette.background.to-hsv().value < 0.5;
     property <color> plot-bg: is-dark ? #0f0f1e : #fafafa;
     property <color> grid-color: is-dark ? #1a1a30 : #e0e0e0;
     property <color> axis-color: is-dark ? #5555aa : #909090;
