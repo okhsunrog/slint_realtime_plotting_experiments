@@ -45,6 +45,33 @@ The shader reads samples from a `storage` buffer and all parameters via `immedia
 - **Hidpi-aware** — the texture is rendered at physical resolution, and line widths/mode switching account for the scale factor
 - **Android support** with safe area insets for notches and system bars
 
+## Performance
+
+Measured on Linux/Wayland (Intel Xe, release build), the plot itself is cheap:
+`PlotRenderer::render()` — ring upload, auto-range scan, and the GPU pass —
+takes **~0.4 ms** per frame, and the 20 kSa/s generator thread is negligible.
+The app holds a steady 60 fps at **~12% of one core** while live, and drops to
+**~0%** when paused.
+
+Two profiling findings worth knowing if you build something similar:
+
+- **Skia vs FemtoVG.** The Slint renderer choice dominates the frame budget.
+  With `slint/renderer-femtovg-wgpu`, repainting this scene (plot texture +
+  axis labels + controls) cost **~87% of a core** with frame-time spikes of
+  25–34 ms (missed vsync). Switching to `slint/renderer-skia` renders the
+  identical scene at **~12%** with a stable ~17 ms frame — roughly **7× less
+  CPU**. The demo therefore uses Skia on desktop; both work with the WGPU
+  texture integration.
+- **Redraw on demand.** An unconditional `request_redraw()` forces Slint to
+  repaint the whole scene every frame even when nothing changed.
+  `RenderOutput::rendered` reports whether the renderer actually produced a
+  new texture; the demo only pushes properties and schedules the next frame
+  when it did, so a paused, settled plot stops redrawing entirely — input and
+  property changes restart the loop on their own.
+
+Per-second frame statistics (fps, frame-time max, `render()` cost) are printed
+with `PLOT_STATS=1 cargo run --release`.
+
 ## Building
 
 ### Prerequisites
