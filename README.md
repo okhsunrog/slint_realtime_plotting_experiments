@@ -13,7 +13,7 @@ Slint doesn't ship with a real-time plotting widget. If you need to visualize st
 Key techniques demonstrated:
 
 - **Slint ↔ WGPU integration** — using `set_rendering_notifier` to hook into Slint's render loop and produce a custom texture each frame
-- **WGSL fragment shader for waveforms** — a single fullscreen-triangle pass that reads from a storage buffer and draws anti-aliased, color-coded, multi-channel signals
+- **WGSL waveform pipelines** — instanced segment quads for line mode; compute min/max reduction followed by a fullscreen envelope pass for peak mode
 - **Hybrid line / peak-detect rendering** — zoomed in (≤ 8 samples per logical pixel) the shader connects consecutive samples with anti-aliased line segments; zoomed out it computes the min/max envelope per pixel column and draws vertical bars — this is how oscilloscopes handle zoomed-out views without aliasing
 - **GPU immediates** (`var<immediate>`) — plot parameters (write position, Y-axis range, visible samples, view offset, hidpi scale) are passed as push constants, avoiding extra buffer allocations
 - **Consistent incremental snapshots** — a short mutex protects the ring and its metadata; only changed ranges are copied and uploaded (one or two writes across wrap). Reset and full-ring overrun trigger a full upload.
@@ -24,9 +24,9 @@ Key techniques demonstrated:
 
 The core of the project is `slint-realtime-plot/src/shader.wgsl`. It implements:
 
-1. **Fullscreen triangle** vertex shader (3 vertices, no vertex buffer)
-2. **Line mode** — per-pixel distance to the nearest waveform segment, anti-aliased with `smoothstep`, hidpi-aware line width
-3. **Peak-detect mode** — min/max envelope per pixel column when many samples map to one pixel
+1. **Fullscreen triangle** for the peak envelope (3 vertices, no vertex buffer)
+2. **Line mode** — six generated vertices per segment, with anti-aliased distance evaluated only inside its narrow quad; hidpi-aware line width
+3. **Peak-detect mode** — `reduce.wgsl` computes min/max once per column/channel, followed by envelope rendering
 4. **Ring-buffer indexing** — modular arithmetic over `write_pos`, `visible_samples`, and `view_offset` (pan)
 5. **Per-channel colors** from a uniform buffer (configured on the Rust side, matches the UI legend)
 6. **NaN-transparent** — unwritten buffer slots hold NaN and render as transparent, so a partially filled buffer has no artificial baseline
@@ -152,7 +152,8 @@ The workspace is split into a reusable library crate and the demo application:
 ```
 slint-realtime-plot/    # the reusable plotting library
   src/
-    shader.wgsl         # WGSL vertex + fragment shader (line + peak-detect modes)
+    shader.wgsl         # Instanced lines and fullscreen peak envelopes
+    reduce.wgsl         # Compute min/max per column/channel
     renderer.rs         # WGPU pipeline, render caching, auto-range, PNG export
     buffer.rs           # Lock-free SPSC ring buffer shared between threads
     lib.rs              # Public API: PlotBuffer, PlotRenderer, required_wgpu_settings
