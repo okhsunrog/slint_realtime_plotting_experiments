@@ -16,7 +16,8 @@ Key techniques demonstrated:
 - **WGSL fragment shader for waveforms** — a single fullscreen-triangle pass that reads from a storage buffer and draws anti-aliased, color-coded, multi-channel signals
 - **Hybrid line / peak-detect rendering** — zoomed in (≤ 8 samples per logical pixel) the shader connects consecutive samples with anti-aliased line segments; zoomed out it computes the min/max envelope per pixel column and draws vertical bars — this is how oscilloscopes handle zoomed-out views without aliasing
 - **GPU immediates** (`var<immediate>`) — plot parameters (write position, Y-axis range, visible samples, view offset, hidpi scale) are passed as push constants, avoiding extra buffer allocations
-- **Lock-free SPSC ring buffer** — 32,768 interleaved samples generated on a dedicated thread and shared with the render loop through atomics, no locks
+- **Consistent incremental snapshots** — a short mutex protects the ring and its metadata; only changed ranges are copied and uploaded (one or two writes across wrap). Reset and full-ring overrun trigger a full upload.
+- **Compute peak reduction** — min/max is computed once per physical column/channel and reused by all fragment rows. Every contributing sample is scanned, without a 256-sample limit.
 - **Render caching** — a generation counter on the buffer lets the renderer skip the CPU→GPU upload and the render pass entirely when nothing changed (e.g. while paused)
 
 ## The Shader
@@ -34,7 +35,7 @@ The shader reads samples from a `storage` buffer and all parameters via `immedia
 
 ## Features
 
-- **20 kHz sample rate**, 32,768-sample lock-free ring buffer (3 channels interleaved), generated on a background thread
+- **20 kHz sample rate**, 32,768-sample ring buffer (3 channels interleaved), generated on a background thread
 - **Interactive controls** — amplitude (0.1–10 A), frequency (1–20 Hz, phase-continuous changes), time window (0.1–1.6 s)
 - **Pan & zoom** — scroll wheel and pinch gesture zoom toward the cursor, drag to pan through history while paused, on-plot +/− buttons for touch
 - **Pause** via button or double-click, with paused-state border highlight
@@ -47,9 +48,10 @@ The shader reads samples from a `storage` buffer and all parameters via `immedia
 
 ## Performance
 
-Measured on Linux/Wayland (Intel Xe, release build), the plot itself is cheap:
-`PlotRenderer::render()` — ring upload, auto-range scan, and the GPU pass —
-takes **~0.4 ms** per frame, and the 20 kSa/s generator thread is negligible.
+Historical measurements on Linux/Wayland (Intel Xe, release build), before
+the incremental upload and compute changes: the CPU call to
+`PlotRenderer::render()` took **~0.4 ms** per frame. This measures CPU work
+and command submission, not GPU execution time.
 The app holds a steady 60 fps at **~12% of one core** while live, and drops to
 **~0%** when paused.
 
@@ -188,7 +190,7 @@ resolve automatically through Cargo metadata.
 
 | Crate | Purpose |
 |-------|---------|
-| [slint](https://slint.dev/) (git, `unstable-wgpu-30`) | UI framework with WGPU texture integration |
+| [slint](https://slint.dev/) (1.18.1, `unstable-wgpu-30`) | UI framework with WGPU texture integration |
 | [wgpu](https://wgpu.rs/) 30 | Cross-platform GPU API |
 | [bytemuck](https://docs.rs/bytemuck) | Safe transmute for GPU data upload |
 | [png](https://docs.rs/png) | PNG encoding for plot export |

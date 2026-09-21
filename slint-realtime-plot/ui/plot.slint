@@ -59,6 +59,13 @@ export component PlotWidget inherits Rectangle {
     in-out property <int> view-offset: 0;
     // Sample rate in Hz (needed to convert pixel drag to sample offset)
     in property <float> sample-rate: 1000.0;
+    in property <int> capacity: 32768;
+    in property <int> available-samples: 0;
+    out property <int> visible-samples: clamp(floor(root.time-window * root.sample-rate), 2, root.capacity);
+    out property <int> effective-view-offset: clamp(root.view-offset, 0, max(0, root.available-samples - root.visible-samples));
+    property <float> effective-window: (root.visible-samples - 1) / root.sample-rate;
+    property <float> min-window: 2 / root.sample-rate;
+    property <float> window-limit: max(root.min-window, min(root.max-time-window, root.capacity / root.sample-rate));
 
     // Theme-aware colors. Darkness is derived from the palette's actual
     // background luminance: `Palette.color-scheme` stays `unknown` when
@@ -80,7 +87,7 @@ export component PlotWidget inherits Rectangle {
 
     // Zoom keeping the right (live) edge anchored — used by the +/− buttons.
     function zoom-by(factor: float) {
-        self.time-window = clamp(self.time-window * factor, 0.001, self.max-time-window);
+        self.time-window = clamp(self.time-window * factor, self.min-window, self.window-limit);
     }
 
     background: transparent;
@@ -192,10 +199,10 @@ export component PlotWidget inherits Rectangle {
 
                         started => {
                             self.start-window = root.time-window;
-                            self.start-offset = root.view-offset;
+                            self.start-offset = root.effective-view-offset;
                         }
                         updated => {
-                            let new-window = clamp(self.start-window / self.scale, 0.001, root.max-time-window);
+                            let new-window = clamp(self.start-window / self.scale, root.min-window, root.window-limit);
                             // Keep the sample under the gesture center fixed
                             let fx = clamp(self.center.x / plot-area.width, 0.0, 1.0);
                             let old-vis = self.start-window * root.sample-rate;
@@ -221,7 +228,7 @@ export component PlotWidget inherits Rectangle {
                             // Drag start: save current offset (pan only works when paused)
                             pointer-event(event) => {
                                 if (event.button == PointerEventButton.left && event.kind == PointerEventKind.down) {
-                                    self.drag-start-offset = root.view-offset;
+                                    self.drag-start-offset = root.effective-view-offset;
                                 }
                             }
 
@@ -231,7 +238,7 @@ export component PlotWidget inherits Rectangle {
                                     // Convert pixel delta to sample offset
                                     // pixels dragged * (samples_in_view / plot_width)
                                     let dx-px = (self.mouse-x - self.pressed-x) / 1px;
-                                    let samples-in-view = root.time-window * root.sample-rate;
+                                    let samples-in-view = root.visible-samples - 1;
                                     let samples-per-pixel = samples-in-view / (parent.width / 1px);
                                     let delta-samples = dx-px * samples-per-pixel;
                                     root.view-offset = max(0, round(self.drag-start-offset + delta-samples));
@@ -242,19 +249,19 @@ export component PlotWidget inherits Rectangle {
                             scroll-event(event) => {
                                 let factor = 1.0 - (event.delta-y / 1px) / 200.0;
                                 let old-window = root.time-window;
-                                let new-window = clamp(old-window * factor, 0.001, root.max-time-window);
+                                let new-window = clamp(old-window * factor, root.min-window, root.window-limit);
 
                                 // Fraction of plot width where cursor is (0=left, 1=right)
                                 let fx = clamp(self.mouse-x / parent.width, 0.0, 1.0);
 
                                 // Samples under cursor before and after zoom
-                                let old-vis = old-window * root.sample-rate;
+                                let old-vis = root.visible-samples;
                                 let new-vis = new-window * root.sample-rate;
 
                                 // Shift view-offset so the sample under cursor stays put
                                 // Cursor is at (1-fx) from the right edge (live edge)
                                 let shift = round((1.0 - fx) * (old-vis - new-vis));
-                                root.view-offset = max(0, root.view-offset + shift);
+                                root.view-offset = max(0, root.effective-view-offset + shift);
 
                                 root.time-window = new-window;
                                 return accept;
@@ -370,8 +377,8 @@ export component PlotWidget inherits Rectangle {
                     horizontal-stretch: 1;
 
                     for i in (root.x-divisions + 1): Text {
-                        property <float> offset-time: root.view-offset / root.sample-rate;
-                        property <float> abs-time: Math.round((root.time-window * (root.x-divisions - i) / root.x-divisions + offset-time) * 1000) / 1000;
+                        property <float> offset-time: root.effective-view-offset / root.sample-rate;
+                        property <float> abs-time: root.effective-window * (root.x-divisions - i) / root.x-divisions + offset-time;
                         x: i * (parent.width / root.x-divisions) - self.width / 2;
                         y: 1px;
                         text: self.abs-time == 0 ? "0s"

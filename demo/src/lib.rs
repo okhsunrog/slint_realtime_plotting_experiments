@@ -37,6 +37,7 @@ fn fmt_sample(v: f32) -> String {
 /// Write the currently visible window as CSV into the working directory.
 fn export_csv(buffer: &PlotBuffer, time_window: f32, view_offset: u32) -> Result<String, String> {
     let vis = ((time_window * data_gen::SAMPLE_RATE) as u32).clamp(2, buffer.capacity as u32);
+    let view_offset = view_offset.min(buffer.available_samples().saturating_sub(vis));
     let name = format!("plot_{}.csv", unix_secs());
     let file = std::fs::File::create(&name).map_err(|e| format!("create {name}: {e}"))?;
     let mut out = std::io::BufWriter::new(file);
@@ -208,6 +209,7 @@ pub fn main() {
                         ));
                     }
 
+                    app.set_available_samples(render_buffer.available_samples() as i32);
                     let visible_samples = ((app.get_time_window() * data_gen::SAMPLE_RATE) as u32)
                         .clamp(2, data_gen::NUM_SAMPLES as u32);
                     let view_offset = app.get_view_offset().max(0) as u32;

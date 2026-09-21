@@ -10,3 +10,6 @@ bytemuck = { workspace = true }
 png = { workspace = true }
 slint = { workspace = true }
 wgpu = { workspace = true }
+
+[dev-dependencies]
+pollster = "1.0.1"
