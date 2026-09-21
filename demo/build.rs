@@ -5,7 +5,7 @@ fn main() {
     // Map the `@slint-realtime-plot` import prefix to the library's ui/ dir.
     // Once Slint's experimental library modules stabilise, this becomes a
     // plain `import from "@slint-realtime-plot"` with no build.rs config.
-    let manifest = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let manifest = PathBuf::from(std::env::var_os("CARGO_MANIFEST_DIR").unwrap());
     let plot_ui = manifest
         .parent()
         .unwrap()
