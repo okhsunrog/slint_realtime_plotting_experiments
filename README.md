@@ -38,11 +38,11 @@ The shader reads samples from a `storage` buffer and all parameters via `immedia
 - **20 kHz sample rate**, 32,768-sample ring buffer (3 channels interleaved), generated on a background thread
 - **Interactive controls** — amplitude (0.1–10 A), frequency (1–20 Hz, phase-continuous changes), time window (0.1–1.6 s)
 - **Pan & zoom** — scroll wheel and pinch gesture zoom toward the cursor, drag to pan through history while paused, on-plot +/− buttons for touch
-- **Pause** via button or double-click, with paused-state border highlight
+- **Pause** via button or double-click / double tap, with paused-state border highlight; a source that keeps streaming while paused can hold the view still through `paused-shift`
 - **Auto-ranging Y axis** — follows the visible data (expands instantly, shrinks smoothly) and snaps to nice 1-2-5 grid steps
 - **Cursor readout** — hover shows a measurement line with per-channel values and the time offset
 - **CSV / PNG export** of the visible window
-- **Dark / Light / System theme** with glow effects
+- **Dark / Light / System theme**
 - **Hidpi-aware** — the texture is rendered at physical resolution, and line widths/mode switching account for the scale factor
 - **Android support** with safe area insets for notches and system bars
 

@@ -57,6 +57,11 @@ export component PlotWidget inherits Rectangle {
     in-out property <bool> paused: false;
     // View offset in samples (how far back from live to look when paused)
     in-out property <int> view-offset: 0;
+    // Samples that arrived since the view was paused. A source that keeps
+    // streaming while paused grows view-offset by the same amount to hold the
+    // picture still; this keeps the time labels relative to the pause moment
+    // instead of counting up.
+    in property <int> paused-shift: 0;
     // Sample rate in Hz (needed to convert pixel drag to sample offset)
     in property <float> sample-rate: 1000.0;
     in property <int> capacity: 32768;
@@ -130,6 +135,11 @@ export component PlotWidget inherits Rectangle {
                     width: root.y-label-width;
                     clip: true;
 
+                    // Enough decimals to tell adjacent grid lines apart: a
+                    // 0.005 step needs three, where a fixed two repeated labels.
+                    property <float> y-step: (root.y-max - root.y-min) / max(1, root.y-divisions);
+                    property <int> y-decimals: clamp(ceil(-Math.log(self.y-step, 10)), 0, 4);
+
                     for i in (root.y-divisions + 1): Text {
                         property <float> y-val: root.y-max - i * (root.y-max - root.y-min) / root.y-divisions;
                         property <float> y-frac: i / root.y-divisions;
@@ -139,9 +149,7 @@ export component PlotWidget inherits Rectangle {
                          : y-frac * parent.height - self.height / 2;
                         width: root.y-label-width - 4px;
                         horizontal-alignment: right;
-                        text: abs(self.y-val) >= 10.0 ? "\{Math.round(self.y-val)}"
-                            : abs(self.y-val) < 0.01 ? "0"
-                            : "\{Math.round(self.y-val * 100) / 100}";
+                        text: abs(self.y-val) < parent.y-step / 2 ? "0" : self.y-val.to-fixed(parent.y-decimals);
                         font-size: 10px;
                         color: root.label-color;
                     }
@@ -196,10 +204,15 @@ export component PlotWidget inherits Rectangle {
                     pinch := ScaleRotateGestureHandler {
                         property <float> start-window;
                         property <int> start-offset;
+                        // Set while the touches since the last first-finger-down
+                        // formed a pinch; its finger lifts are not taps.
+                        property <bool> pinched;
 
                         started => {
                             self.start-window = root.time-window;
                             self.start-offset = root.effective-view-offset;
+                            self.pinched = true;
+                            tap-timer.running = false;
                         }
                         updated => {
                             let new-window = clamp(self.start-window / self.scale, root.min-window, root.window-limit);
@@ -217,18 +230,38 @@ export component PlotWidget inherits Rectangle {
 
                             property <float> drag-start-offset;
 
-                            // Double-click: toggle pause
-                            double-clicked => {
-                                root.paused = !root.paused;
-                                if (!root.paused) {
-                                    root.view-offset = 0;
+                            // Double tap or double click: toggle pause. `double-clicked`
+                            // does not fire for touch input on Android, so pair two
+                            // clicks within the timer window instead. A drag is a pan,
+                            // not a tap, and neither is lifting the fingers of a pinch:
+                            // two lifts within the window used to read as a double tap.
+                            clicked => {
+                                if (pinch.pinched || abs(self.mouse-x - self.pressed-x) > 12px || abs(self.mouse-y - self.pressed-y) > 12px) {
+                                    tap-timer.running = false;
+                                } else if (tap-timer.running) {
+                                    tap-timer.running = false;
+                                    root.paused = !root.paused;
+                                    if (!root.paused) {
+                                        root.view-offset = 0;
+                                    }
+                                } else {
+                                    tap-timer.running = true;
                                 }
+                            }
+
+                            tap-timer := Timer {
+                                interval: 350ms;
+                                running: false;
+                                triggered => { self.running = false; }
                             }
 
                             // Drag start: save current offset (pan only works when paused)
                             pointer-event(event) => {
                                 if (event.button == PointerEventButton.left && event.kind == PointerEventKind.down) {
                                     self.drag-start-offset = root.effective-view-offset;
+                                    // A new touch sequence; a pinch sets this again
+                                    // once it is recognised.
+                                    pinch.pinched = false;
                                 }
                             }
 
@@ -377,14 +410,18 @@ export component PlotWidget inherits Rectangle {
                     horizontal-stretch: 1;
 
                     for i in (root.x-divisions + 1): Text {
-                        property <float> offset-time: root.effective-view-offset / root.sample-rate;
+                        // Time before the reference point: now, or the pause moment.
+                        property <float> offset-time: (root.effective-view-offset - root.paused-shift) / root.sample-rate;
                         property <float> abs-time: root.effective-window * (root.x-divisions - i) / root.x-divisions + offset-time;
+                        property <float> magnitude: abs(self.abs-time);
+                        // Samples newer than the pause moment read as "+".
+                        property <string> sign: self.abs-time < 0 ? "+" : "-";
                         x: i * (parent.width / root.x-divisions) - self.width / 2;
                         y: 1px;
-                        text: self.abs-time == 0 ? "0s"
-                            : self.abs-time < 0.01 ? "-\{Math.round(self.abs-time * 10000) / 10}ms"
-                            : self.abs-time < 1.0 ? "-\{Math.round(self.abs-time * 1000)}ms"
-                            : "-\{Math.round(self.abs-time * 10) / 10}s";
+                        text: self.magnitude == 0 ? "0s"
+                            : self.magnitude < 0.01 ? "\{self.sign}\{Math.round(self.magnitude * 10000) / 10}ms"
+                            : self.magnitude < 1.0 ? "\{self.sign}\{Math.round(self.magnitude * 1000)}ms"
+                            : "\{self.sign}\{Math.round(self.magnitude * 10) / 10}s";
                         font-size: 10px;
                         color: root.label-color;
                     }

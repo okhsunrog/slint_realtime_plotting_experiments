@@ -90,10 +90,7 @@ fn fs_main(@location(0) uv: vec2<f32>) -> @location(0) vec4<f32> {
 
         let line_col   = channel_colors.data[ch].rgb;
         let line_alpha = smoothstep(px_y * 2.0 * params.scale, 0.0, dist);
-        let glow_alpha = smoothstep(px_y * 6.0 * params.scale, 0.0, dist) * 0.25;
 
-        color = mix(color, line_col * 0.35, glow_alpha);
-        alpha = max(alpha, glow_alpha);
         color = mix(color, line_col, line_alpha);
         alpha = max(alpha, line_alpha);
     }
@@ -107,7 +104,7 @@ struct LineVertex {
     @location(2) @interpolate(flat) color: vec4<f32>,
 };
 
-// One oriented, glow-width quad per segment. Only pixels close to the
+// One oriented, line-width quad per segment. Only pixels close to the
 // waveform run the distance calculation, rather than the entire texture.
 @vertex
 fn vs_line(@builtin(vertex_index) vertex: u32, @builtin(instance_index) instance: u32) -> LineVertex {
@@ -124,7 +121,8 @@ fn vs_line(@builtin(vertex_index) vertex: u32, @builtin(instance_index) instance
     let b = vec2<f32>(f32(sample_index + 1u) / f32(segments), 1.0 - value_to_y(vb)) * size;
     let direction = normalize(b - a);
     let normal = vec2<f32>(-direction.y, direction.x);
-    let radius = 4.0 * params.scale;
+    // Covers the anti-aliased edge of the line, which fades out at 1.5 px.
+    let radius = 2.0 * params.scale;
     var corners = array<vec2<f32>, 6>(
         vec2<f32>(0.0, -1.0), vec2<f32>(1.0, -1.0), vec2<f32>(0.0, 1.0),
         vec2<f32>(0.0, 1.0), vec2<f32>(1.0, -1.0), vec2<f32>(1.0, 1.0)
@@ -143,8 +141,6 @@ fn fs_line(input: LineVertex) -> @location(0) vec4<f32> {
     let t = clamp(dot(ap, ab) / max(dot(ab, ab), 1e-20), 0.0, 1.0);
     let distance = length(ap - t * ab);
     let core = 1.0 - smoothstep(0.0, 1.5 * params.scale, distance);
-    let glow = (1.0 - smoothstep(0.0, 4.0 * params.scale, distance)) * 0.2;
-    let alpha = max(core, glow) * input.color.a;
-    let color = input.color.rgb * mix(0.35, 1.0, core);
-    return vec4<f32>(color * alpha, alpha);
+    let alpha = core * input.color.a;
+    return vec4<f32>(input.color.rgb * alpha, alpha);
 }
