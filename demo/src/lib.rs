@@ -7,6 +7,8 @@ use slint_realtime_plot::{
     PlotBackend, PlotBuffer, PlotConfig, PlotRenderer, required_wgpu_settings,
 };
 use std::cell::Cell;
+#[cfg(all(feature = "vello-profile", target_os = "android"))]
+use std::fs::OpenOptions;
 use std::io::Write as _;
 use std::rc::Rc;
 use std::sync::Arc;
@@ -19,6 +21,39 @@ struct SimControl {
     frequency_bits: AtomicU32,
     paused: AtomicBool,
     running: AtomicBool,
+}
+
+/// Benchmark overrides: `PLOT_BACKEND` / `PLOT_WINDOW` (seconds), or on
+/// Android a file holding `<backend> [window_seconds]`.
+#[cfg(feature = "vello")]
+fn plot_settings() -> (Option<String>, Option<f32>) {
+    let from_file =
+        std::fs::read_to_string("/data/data/com.okhsunrog.slint_plot/files/plot_backend")
+            .unwrap_or_default();
+    let mut words = from_file.split_whitespace();
+    let backend = std::env::var("PLOT_BACKEND")
+        .ok()
+        .or_else(|| words.next().map(str::to_owned));
+    let window = std::env::var("PLOT_WINDOW")
+        .ok()
+        .or_else(|| words.next().map(str::to_owned))
+        .and_then(|w| w.parse().ok());
+    (backend, window)
+}
+
+/// Diagnostics output of the `vello-profile` feature.
+#[cfg(feature = "vello-profile")]
+fn write_profile(line: &str) {
+    #[cfg(target_os = "android")]
+    if let Ok(mut file) = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open("/data/data/com.okhsunrog.slint_plot/files/plot_profile.txt")
+    {
+        let _ = writeln!(file, "{} {line}", unix_secs());
+    }
+    #[cfg(not(target_os = "android"))]
+    eprintln!("[profile] {line}");
 }
 
 fn unix_secs() -> u64 {
@@ -149,14 +184,22 @@ pub fn main() {
         });
     }
 
-    // PLOT_BACKEND=vello|vello_gpu|vello_cpu selects a Vello renderer
+    // PLOT_BACKEND=vello|vello_naive|vello_gpu|vello_cpu selects a Vello renderer
     // (needs the `vello` feature); anything else is the wgpu pipelines.
+    // Android has no environment, so it reads the name from a file instead.
     #[cfg(feature = "vello")]
-    let backend = match std::env::var("PLOT_BACKEND").as_deref() {
-        Ok("vello") => PlotBackend::Vello,
-        Ok("vello_gpu") => PlotBackend::VelloGpu,
-        Ok("vello_cpu") => PlotBackend::VelloCpu,
-        _ => PlotBackend::Wgpu,
+    let backend = {
+        let (name, window) = plot_settings();
+        if let Some(window) = window {
+            app.set_time_window(window);
+        }
+        match name.as_deref() {
+            Some("vello") => PlotBackend::Vello,
+            Some("vello_naive") => PlotBackend::VelloNaive,
+            Some("vello_gpu") => PlotBackend::VelloGpu,
+            Some("vello_cpu") => PlotBackend::VelloCpu,
+            _ => PlotBackend::Wgpu,
+        }
     };
     #[cfg(not(feature = "vello"))]
     let backend = PlotBackend::Wgpu;
@@ -176,6 +219,8 @@ pub fn main() {
     let mut stats_dt_max = 0.0f32;
     let mut stats_render_sum = 0.0f32;
     let mut stats_render_max = 0.0f32;
+    #[cfg(feature = "vello-profile")]
+    let mut profile_frames = 0u32;
 
     app.window()
         .set_rendering_notifier(move |state, graphics_api| match state {
@@ -258,6 +303,14 @@ pub fn main() {
                         view_offset,
                         app.window().scale_factor(),
                     );
+                    #[cfg(feature = "vello-profile")]
+                    {
+                        profile_frames += 1;
+                        if profile_frames == 600 {
+                            profile_frames = 0;
+                            write_profile(&renderer.profile_report());
+                        }
+                    }
                     if stats_enabled {
                         let now = Instant::now();
                         let render_ms = now.duration_since(render_t0).as_secs_f32() * 1000.0;

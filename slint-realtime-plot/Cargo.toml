@@ -9,13 +9,21 @@ license = "MIT"
 bytemuck = { workspace = true }
 png = { workspace = true }
 slint = { workspace = true }
-vello = { git = "https://github.com/linebender/vello", version = "0.10.0", optional = true }
-vello_cpu = { git = "https://github.com/linebender/vello", version = "0.2.0", features = ["multithreading"], optional = true }
-vello_gpu = { git = "https://github.com/linebender/vello", version = "0.2.0", optional = true }
+vello = { git = "https://github.com/okhsunrog/vello", version = "0.10.0", optional = true, branch = "mali-workarounds" }
+vello_cpu = { git = "https://github.com/okhsunrog/vello", version = "0.2.0", features = ["multithreading"], optional = true, branch = "mali-workarounds" }
+vello_gpu = { git = "https://github.com/okhsunrog/vello", version = "0.2.0", optional = true, branch = "mali-workarounds" }
 wgpu = { workspace = true }
+wgpu-profiler = { version = "0.28", optional = true }
 
 [dev-dependencies]
 pollster = "1.0.1"
 
 [features]
 vello = ["dep:vello", "dep:vello_gpu", "dep:vello_cpu"]
+# Diagnostics: per-stage GPU timestamps of the Vello compute pipeline
+# (needs a device with timestamp queries).
+vello-profile = ["vello", "vello/wgpu-profiler", "dep:wgpu-profiler"]
+# Experiment: clear the texture before Vello renders, for a Vello whose fine
+# stage skips tiles without commands. Needs the `mali-experiments` branch of
+# https://github.com/okhsunrog/vello instead of `mali-workarounds`.
+vello-skip-empty-tiles = ["vello"]

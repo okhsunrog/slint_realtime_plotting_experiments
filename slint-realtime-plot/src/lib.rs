@@ -30,6 +30,8 @@ mod vello_backend;
 
 #[cfg(test)]
 mod gpu_tests;
+#[cfg(all(test, feature = "vello"))]
+mod vello_bench;
 
 pub use buffer::PlotBuffer;
 pub use renderer::{PlotBackend, PlotConfig, PlotRenderer, RenderOutput};
@@ -52,6 +54,13 @@ pub fn required_wgpu_settings(max_capacity: usize, max_channels: usize) -> WGPUS
         s.device_required_limits = wgpu::Limits::default();
     }
     s.device_required_features = wgpu::Features::IMMEDIATES;
+    // Diagnostics builds time every pipeline stage.
+    #[cfg(feature = "vello-profile")]
+    {
+        s.device_required_features |= wgpu::Features::TIMESTAMP_QUERY
+            | wgpu::Features::TIMESTAMP_QUERY_INSIDE_ENCODERS
+            | wgpu::Features::TIMESTAMP_QUERY_INSIDE_PASSES;
+    }
     #[cfg(not(feature = "vello"))]
     {
         s.device_required_limits

@@ -1199,7 +1199,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -1639,7 +1639,7 @@ dependencies = [
 [[package]]
 name = "glifo"
 version = "0.3.0"
-source = "git+https://github.com/linebender/vello#c750662a1e176d73311bfe3f0091d25438b44e13"
+source = "git+https://github.com/okhsunrog/vello?branch=mali-workarounds#7860adbcc035ef29958700560b0f19f2e54885a9"
 dependencies = [
  "bytemuck",
  "foldhash 0.2.0",
@@ -3013,7 +3013,7 @@ dependencies = [
  "once_cell",
  "png",
  "thiserror 2.0.18",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -3560,7 +3560,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7d8fae84b431384b68627d0f9b3b1245fcf9f46f6c0e3dc902e9dce64edd1967"
 dependencies = [
  "libc",
- "windows-sys 0.45.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -4197,7 +4197,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.12.1",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -4483,6 +4483,7 @@ dependencies = [
  "vello_cpu",
  "vello_gpu",
  "wgpu",
+ "wgpu-profiler",
 ]
 
 [[package]]
@@ -4783,7 +4784,7 @@ dependencies = [
  "getrandom 0.4.2",
  "once_cell",
  "rustix 1.1.4",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -4792,7 +4793,7 @@ version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d8c27177b12a6399ffc08b98f76f7c9a1f4fe9fc967c784c5a071fa8d93cf7e1"
 dependencies = [
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -5086,7 +5087,7 @@ checksum = "51b70b87d15e91f553711b40df3048faf27a7a04e01e0ddc0cf9309f0af7c2ca"
 dependencies = [
  "memoffset",
  "tempfile",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -5209,7 +5210,7 @@ dependencies = [
 [[package]]
 name = "vello"
 version = "0.10.0"
-source = "git+https://github.com/linebender/vello#c750662a1e176d73311bfe3f0091d25438b44e13"
+source = "git+https://github.com/okhsunrog/vello?branch=mali-workarounds#7860adbcc035ef29958700560b0f19f2e54885a9"
 dependencies = [
  "bytemuck",
  "futures-intrusive",
@@ -5222,12 +5223,13 @@ dependencies = [
  "vello_encoding",
  "vello_shaders",
  "wgpu",
+ "wgpu-profiler",
 ]
 
 [[package]]
 name = "vello_common"
 version = "0.2.0"
-source = "git+https://github.com/linebender/vello#c750662a1e176d73311bfe3f0091d25438b44e13"
+source = "git+https://github.com/okhsunrog/vello?branch=mali-workarounds#7860adbcc035ef29958700560b0f19f2e54885a9"
 dependencies = [
  "bytemuck",
  "fearless_simd",
@@ -5242,7 +5244,7 @@ dependencies = [
 [[package]]
 name = "vello_cpu"
 version = "0.2.0"
-source = "git+https://github.com/linebender/vello#c750662a1e176d73311bfe3f0091d25438b44e13"
+source = "git+https://github.com/okhsunrog/vello?branch=mali-workarounds#7860adbcc035ef29958700560b0f19f2e54885a9"
 dependencies = [
  "bytemuck",
  "crossbeam-channel",
@@ -5258,7 +5260,7 @@ dependencies = [
 [[package]]
 name = "vello_encoding"
 version = "0.10.0"
-source = "git+https://github.com/linebender/vello#c750662a1e176d73311bfe3f0091d25438b44e13"
+source = "git+https://github.com/okhsunrog/vello?branch=mali-workarounds#7860adbcc035ef29958700560b0f19f2e54885a9"
 dependencies = [
  "bytemuck",
  "guillotiere",
@@ -5270,7 +5272,7 @@ dependencies = [
 [[package]]
 name = "vello_gpu"
 version = "0.2.0"
-source = "git+https://github.com/linebender/vello#c750662a1e176d73311bfe3f0091d25438b44e13"
+source = "git+https://github.com/okhsunrog/vello?branch=mali-workarounds#7860adbcc035ef29958700560b0f19f2e54885a9"
 dependencies = [
  "bytemuck",
  "glifo",
@@ -5285,7 +5287,7 @@ dependencies = [
 [[package]]
 name = "vello_gpu_shaders"
 version = "0.2.0"
-source = "git+https://github.com/linebender/vello#c750662a1e176d73311bfe3f0091d25438b44e13"
+source = "git+https://github.com/okhsunrog/vello?branch=mali-workarounds#7860adbcc035ef29958700560b0f19f2e54885a9"
 dependencies = [
  "naga",
  "wesl",
@@ -5297,7 +5299,7 @@ dependencies = [
 [[package]]
 name = "vello_shaders"
 version = "0.10.0"
-source = "git+https://github.com/linebender/vello#c750662a1e176d73311bfe3f0091d25438b44e13"
+source = "git+https://github.com/okhsunrog/vello?branch=mali-workarounds#7860adbcc035ef29958700560b0f19f2e54885a9"
 dependencies = [
  "bytemuck",
  "log",
@@ -5801,6 +5803,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "wgpu-profiler"
+version = "0.28.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a15a635a2a2ec0b9787589f17dbbffaa7960e779bcf0348a67f73c3e7665f9eb"
+dependencies = [
+ "parking_lot",
+ "thiserror 2.0.18",
+ "wgpu",
+]
+
+[[package]]
 name = "wgpu-types"
 version = "30.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5850,7 +5863,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

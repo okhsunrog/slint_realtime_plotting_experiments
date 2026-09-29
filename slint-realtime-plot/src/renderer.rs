@@ -1,8 +1,12 @@
+#[cfg(feature = "vello-profile")]
+use crate::vello_backend::spread;
 #[cfg(feature = "vello")]
 use crate::vello_backend::{Frame, VelloBackend};
 use crate::{MAX_CHANNELS, PlotBuffer};
 use slint::wgpu_30::wgpu;
 use std::path::Path;
+#[cfg(feature = "vello-profile")]
+use wgpu_profiler::{GpuProfiler, GpuProfilerSettings};
 
 // Matches the `PlotParams` struct in shader.wgsl exactly.
 #[repr(C)]
@@ -37,6 +41,11 @@ pub enum PlotBackend {
     /// Vello compute renderer fed with CPU-built paths.
     #[cfg(feature = "vello")]
     Vello,
+    /// Vello compute renderer with the first, unoptimized scene building
+    /// (kurbo paths through every sample, envelope fill plus stroke); kept
+    /// as a reference for benchmarks.
+    #[cfg(feature = "vello")]
+    VelloNaive,
     /// Vello GPU (sparse strips) renderer.
     #[cfg(feature = "vello")]
     VelloGpu,
@@ -111,6 +120,15 @@ pub struct PlotRenderer {
     last_visible: u32,
     last_view_offset: u32,
     last_scale: f32,
+    /// GPU timestamps of the wgpu pipelines' passes, for comparison with
+    /// Vello's per-stage profile.
+    #[cfg(feature = "vello-profile")]
+    profiler: GpuProfiler,
+    /// GPU time (ms) of each profiled wgpu-path frame, and per pass.
+    #[cfg(feature = "vello-profile")]
+    pub(crate) gpu_times: Vec<f64>,
+    #[cfg(feature = "vello-profile")]
+    gpu_passes: Vec<(String, Vec<f64>)>,
 }
 
 /// Round `raw_step` up to the nearest "nice" 1-2-5×10ⁿ value.
@@ -386,6 +404,13 @@ impl PlotRenderer {
             last_visible: 0,
             last_view_offset: u32::MAX,
             last_scale: 0.0,
+            #[cfg(feature = "vello-profile")]
+            profiler: GpuProfiler::new(device, GpuProfilerSettings::default())
+                .expect("failed to create GPU profiler"),
+            #[cfg(feature = "vello-profile")]
+            gpu_times: Vec::new(),
+            #[cfg(feature = "vello-profile")]
+            gpu_passes: Vec::new(),
         }
     }
 
@@ -633,16 +658,31 @@ impl PlotRenderer {
                 label: Some("plot_encoder"),
             });
         if reduce_peaks {
+            #[cfg(feature = "vello-profile")]
+            let query = self.profiler.begin_pass_query("plot_reduce", &mut encoder);
+            #[cfg(feature = "vello-profile")]
+            let timestamp_writes = query.compute_pass_timestamp_writes();
+            #[cfg(not(feature = "vello-profile"))]
+            let timestamp_writes = None;
             let mut pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {
                 label: Some("plot_reduce"),
-                timestamp_writes: None,
+                timestamp_writes,
             });
             pass.set_pipeline(&self.peak_pipeline);
             pass.set_bind_group(0, &self.peak_bind_group, &[]);
             pass.set_immediates(0, bytemuck::bytes_of(&params));
             pass.dispatch_workgroups((width * params.num_channels).div_ceil(64), 1, 1);
+            drop(pass);
+            #[cfg(feature = "vello-profile")]
+            self.profiler.end_query(&mut encoder, query);
         }
         {
+            #[cfg(feature = "vello-profile")]
+            let query = self.profiler.begin_pass_query("plot_draw", &mut encoder);
+            #[cfg(feature = "vello-profile")]
+            let timestamp_writes = query.render_pass_timestamp_writes();
+            #[cfg(not(feature = "vello-profile"))]
+            let timestamp_writes = None;
             let mut rpass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: Some("plot_pass"),
                 color_attachments: &[Some(wgpu::RenderPassColorAttachment {
@@ -660,7 +700,7 @@ impl PlotRenderer {
                     depth_slice: None,
                 })],
                 depth_stencil_attachment: None,
-                timestamp_writes: None,
+                timestamp_writes,
                 occlusion_query_set: None,
                 multiview_mask: None,
             });
@@ -677,8 +717,34 @@ impl PlotRenderer {
             } else {
                 rpass.draw(0..3, 0..1);
             }
+            drop(rpass);
+            #[cfg(feature = "vello-profile")]
+            self.profiler.end_query(&mut encoder, query);
         }
+        #[cfg(feature = "vello-profile")]
+        self.profiler.resolve_queries(&mut encoder);
         self.queue.submit(Some(encoder.finish()));
+        #[cfg(feature = "vello-profile")]
+        {
+            self.profiler.end_frame().unwrap();
+            if let Some(results) = self
+                .profiler
+                .process_finished_frame(self.queue.get_timestamp_period())
+            {
+                let mut sum = 0.0;
+                for result in &results {
+                    if let Some(t) = &result.time {
+                        let ms = (t.end - t.start) * 1000.0;
+                        sum += ms;
+                        match self.gpu_passes.iter_mut().find(|(l, _)| *l == result.label) {
+                            Some((_, times)) => times.push(ms),
+                            None => self.gpu_passes.push((result.label.clone(), vec![ms])),
+                        }
+                    }
+                }
+                self.gpu_times.push(sum);
+            }
+        }
         RenderOutput {
             texture: self.texture.clone(),
             y_min,
@@ -686,6 +752,31 @@ impl PlotRenderer {
             y_divisions: divisions,
             rendered: true,
         }
+    }
+
+    #[cfg(all(test, feature = "vello"))]
+    pub(crate) fn vello_mut(&mut self) -> Option<&mut VelloBackend> {
+        self.vello.as_mut()
+    }
+
+    /// Diagnostics: GPU (and, for Vello compute, CPU) times per stage since
+    /// the previous call, as `median(p10-p90)` over frames in milliseconds.
+    #[cfg(feature = "vello-profile")]
+    pub fn profile_report(&mut self) -> String {
+        if let Some(compute) = self.vello.as_mut().and_then(|v| v.compute_mut()) {
+            return compute.take_report();
+        }
+        let mut out = format!(
+            "frames {} | gpu sum={}",
+            self.gpu_times.len(),
+            spread(&mut self.gpu_times)
+        );
+        for (label, times) in &mut self.gpu_passes {
+            out += &format!(" {label}={}", spread(times));
+        }
+        self.gpu_times.clear();
+        self.gpu_passes.clear();
+        out
     }
 
     /// Update the Y-axis range at runtime (used when `auto_range` is off).

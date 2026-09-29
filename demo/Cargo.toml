@@ -17,6 +17,9 @@ default = ["desktop"]
 desktop = ["slint/backend-winit", "slint/renderer-skia"]
 android = ["slint/backend-android-activity-06"]
 vello = ["slint-realtime-plot/vello"]
+# Per-stage GPU timings of the plot, reported every 600 frames (stderr, or
+# files/plot_profile.txt on Android). Needs timestamp-query support.
+vello-profile = ["vello", "slint-realtime-plot/vello-profile"]
 
 [dependencies]
 slint-realtime-plot = { workspace = true }

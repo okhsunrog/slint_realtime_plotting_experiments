@@ -139,6 +139,7 @@ fn compare_backends_png() {
     for (backend, name) in [
         (PlotBackend::Wgpu, "wgpu"),
         (PlotBackend::Vello, "vello"),
+        (PlotBackend::VelloNaive, "vello_naive"),
         (PlotBackend::VelloGpu, "vello_gpu"),
         (PlotBackend::VelloCpu, "vello_cpu"),
     ] {
