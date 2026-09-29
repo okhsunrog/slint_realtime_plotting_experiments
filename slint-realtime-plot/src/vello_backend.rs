@@ -1,18 +1,51 @@
-//! Vello rasterizer for the plot: same inputs and output texture as the
-//! hand-written wgpu pipelines, so the two can be compared head to head.
+//! Vello rasterizers for the plot: same inputs and output texture as the
+//! hand-written wgpu pipelines, so they can be compared head to head.
 //!
 //! Vello takes vector paths, so the CPU turns the ring buffer into one path
 //! per channel each frame: a polyline through the samples when there are few
-//! per pixel, or a min/max envelope polygon per column otherwise.
+//! per pixel, or a min/max envelope polygon per column otherwise. Three
+//! Vello renderers consume those same paths:
+//!
+//! - compute (`vello`): everything but path encoding runs in compute shaders
+//! - GPU (`vello_gpu`): sparse strips built on the CPU, drawn by render passes
+//! - CPU (`vello_cpu`): multithreaded SIMD raster, uploaded as a texture
 
+use crate::renderer::PlotBackend;
 use slint::wgpu_30::wgpu;
 use vello::kurbo::{Affine, BezPath, Cap, Join, Stroke};
 use vello::peniko::{Color, Fill};
 use vello::{AaConfig, AaSupport, RenderParams, Renderer, RendererOptions, Scene};
+use vello_cpu::color::{AlphaColor as CpuColor, Srgb as CpuSrgb};
+use vello_cpu::{
+    Pixmap, RenderContext as CpuContext, Resources as CpuResources,
+};
+use vello_gpu::color::{AlphaColor as GpuColor, Srgb as GpuSrgb};
+use vello_gpu::{
+    ClearSettings, RenderSize, RenderTargetConfig, Renderer as GpuRenderer,
+    Resources as GpuResources, Scene as GpuScene, TargetInit, TextureBindings,
+};
 
-pub(crate) struct VelloBackend {
-    renderer: Renderer,
-    scene: Scene,
+pub(crate) enum VelloBackend {
+    Compute {
+        renderer: Renderer,
+        scene: Scene,
+    },
+    Gpu(GpuState),
+    Cpu(CpuState),
+}
+
+pub(crate) struct GpuState {
+    renderer: GpuRenderer,
+    resources: GpuResources,
+    scene: GpuScene,
+    depth: wgpu::TextureView,
+    size: (u32, u32),
+}
+
+pub(crate) struct CpuState {
+    context: CpuContext,
+    resources: CpuResources,
+    pixmap: Pixmap,
 }
 
 /// Everything needed to draw one frame; mirrors the shader's `PlotParams`.
@@ -34,19 +67,32 @@ pub(crate) struct Frame<'a> {
     pub peak: bool,
 }
 
+/// One channel's geometry: an outline, plus a fill in peak mode.
+struct ChannelPath {
+    path: BezPath,
+    color: [f32; 4],
+    filled: bool,
+}
+
 impl VelloBackend {
-    pub fn new(device: &wgpu::Device) -> Self {
-        let renderer = Renderer::new(
-            device,
-            RendererOptions {
-                antialiasing_support: AaSupport::area_only(),
-                ..Default::default()
+    pub fn new(backend: PlotBackend, device: &wgpu::Device) -> Self {
+        match backend {
+            PlotBackend::Vello => Self::Compute {
+                renderer: Renderer::new(
+                    device,
+                    RendererOptions {
+                        antialiasing_support: AaSupport::area_only(),
+                        ..Default::default()
+                    },
+                )
+                .expect("failed to create Vello renderer"),
+                scene: Scene::new(),
             },
-        )
-        .expect("failed to create Vello renderer");
-        Self {
-            renderer,
-            scene: Scene::new(),
+            PlotBackend::VelloGpu => {
+                Self::Gpu(GpuState::new(device, 1, 1))
+            }
+            PlotBackend::VelloCpu => Self::Cpu(CpuState::new(1, 1)),
+            PlotBackend::Wgpu => unreachable!("not a Vello backend"),
         }
     }
 
@@ -54,42 +100,161 @@ impl VelloBackend {
         &mut self,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
-        view: &wgpu::TextureView,
+        texture: &wgpu::Texture,
         frame: &Frame,
     ) {
-        self.scene.reset();
-        let style = Stroke::new(f64::from(1.5 * frame.scale))
+        let paths = channel_paths(frame);
+        let stroke_width = f64::from(1.5 * frame.scale);
+        let style = Stroke::new(stroke_width)
             .with_join(Join::Round)
             .with_caps(Cap::Round);
-        for ch in 0..frame.num_channels {
-            let color = Color::new(frame.colors[ch]);
-            let path = if frame.peak {
+        match self {
+            Self::Compute { renderer, scene } => {
+                scene.reset();
+                for p in &paths {
+                    let color = Color::new(p.color);
+                    if p.filled {
+                        scene.fill(Fill::NonZero, Affine::IDENTITY, color, None, &p.path);
+                    }
+                    scene.stroke(&style, Affine::IDENTITY, color, None, &p.path);
+                }
+                let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
+                renderer
+                    .render_to_texture(
+                        device,
+                        queue,
+                        scene,
+                        &view,
+                        &RenderParams {
+                            base_color: Color::TRANSPARENT,
+                            width: frame.width,
+                            height: frame.height,
+                            antialiasing_method: AaConfig::Area,
+                        },
+                    )
+                    .expect("Vello render failed");
+            }
+            Self::Gpu(state) => {
+                if state.size != (frame.width, frame.height) {
+                    *state = GpuState::new(device, frame.width, frame.height);
+                }
+                state.scene.reset();
+                state.scene.set_stroke(style);
+                for p in &paths {
+                    let color = GpuColor::<GpuSrgb>::new(p.color);
+                    state.scene.set_paint(color);
+                    if p.filled {
+                        state.scene.fill_path(&p.path);
+                    }
+                    state.scene.stroke_path(&p.path);
+                }
+                let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
+                let mut encoder = device.create_command_encoder(&Default::default());
+                state
+                    .renderer
+                    .render(
+                        &state.scene,
+                        &mut state.resources,
+                        device,
+                        queue,
+                        &mut encoder,
+                        &RenderSize {
+                            width: frame.width as u16,
+                            height: frame.height as u16,
+                        },
+                        &view,
+                        Some(&state.depth),
+                        &TextureBindings::new(),
+                        TargetInit::Clear(ClearSettings::default()),
+                    )
+                    .expect("Vello GPU render failed");
+                queue.submit(Some(encoder.finish()));
+            }
+            Self::Cpu(state) => {
+                if state.pixmap.width() as u32 != frame.width
+                    || state.pixmap.height() as u32 != frame.height
+                {
+                    *state = CpuState::new(frame.width as u16, frame.height as u16);
+                }
+                state.context.reset();
+                state.context.set_stroke(style);
+                for p in &paths {
+                    let color = CpuColor::<CpuSrgb>::new(p.color);
+                    state.context.set_paint(color);
+                    if p.filled {
+                        state.context.fill_path(&p.path);
+                    }
+                    state.context.stroke_path(&p.path);
+                }
+                state.context.flush();
+                state
+                    .context
+                    .render(&mut state.pixmap, &mut state.resources);
+                queue.write_texture(
+                    texture.as_image_copy(),
+                    state.pixmap.data_as_u8_slice(),
+                    wgpu::TexelCopyBufferLayout {
+                        offset: 0,
+                        bytes_per_row: Some(frame.width * 4),
+                        rows_per_image: None,
+                    },
+                    texture.size(),
+                );
+            }
+        }
+    }
+}
+
+impl GpuState {
+    fn new(device: &wgpu::Device, width: u32, height: u32) -> Self {
+        let (w, h) = (width.max(1) as u16, height.max(1) as u16);
+        let (renderer, resources) = GpuRenderer::new(
+            device,
+            &RenderTargetConfig {
+                format: wgpu::TextureFormat::Rgba8Unorm,
+                width: w,
+                height: h,
+            },
+        );
+        Self {
+            renderer,
+            resources,
+            scene: GpuScene::new(w, h),
+            depth: GpuRenderer::create_depth_texture_view(
+                device,
+                &RenderSize {
+                    width: w,
+                    height: h,
+                },
+            ),
+            size: (width, height),
+        }
+    }
+}
+
+impl CpuState {
+    fn new(width: u16, height: u16) -> Self {
+        let (width, height) = (width.max(1), height.max(1));
+        Self {
+            context: CpuContext::new(width, height),
+            resources: CpuResources::new(),
+            pixmap: Pixmap::new(width, height),
+        }
+    }
+}
+
+fn channel_paths(frame: &Frame) -> Vec<ChannelPath> {
+    (0..frame.num_channels)
+        .map(|ch| ChannelPath {
+            path: if frame.peak {
                 envelope_path(frame, ch)
             } else {
                 line_path(frame, ch)
-            };
-            if frame.peak {
-                self.scene
-                    .fill(Fill::NonZero, Affine::IDENTITY, color, None, &path);
-            }
-            self.scene
-                .stroke(&style, Affine::IDENTITY, color, None, &path);
-        }
-        self.renderer
-            .render_to_texture(
-                device,
-                queue,
-                &self.scene,
-                view,
-                &RenderParams {
-                    base_color: Color::TRANSPARENT,
-                    width: frame.width,
-                    height: frame.height,
-                    antialiasing_method: AaConfig::Area,
-                },
-            )
-            .expect("Vello render failed");
-    }
+            },
+            color: frame.colors[ch],
+            filled: frame.peak,
+        })
+        .collect()
 }
 
 /// Sample `index` (0 = oldest visible) of `channel`, honouring ring wrap.

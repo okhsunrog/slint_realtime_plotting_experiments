@@ -126,7 +126,6 @@ fn compare_backends_png() {
         }),
     )
     .unwrap();
-    let buffer = PlotBuffer::new(3, 32768);
     let frames: Vec<f32> = (0..32768)
         .flat_map(|i| {
             let t = i as f32 / 20000.0;
@@ -137,8 +136,15 @@ fn compare_backends_png() {
             })
         })
         .collect();
-    buffer.push_batch(&frames);
-    for (backend, name) in [(PlotBackend::Wgpu, "wgpu"), (PlotBackend::Vello, "vello")] {
+    for (backend, name) in [
+        (PlotBackend::Wgpu, "wgpu"),
+        (PlotBackend::Vello, "vello"),
+        (PlotBackend::VelloGpu, "vello_gpu"),
+        (PlotBackend::VelloCpu, "vello_cpu"),
+    ] {
+        // Fresh ring per backend so every one draws identical data.
+        let buffer = PlotBuffer::new(3, 32768);
+        buffer.push_batch(&frames);
         let mut renderer = PlotRenderer::new(
             &device,
             &queue,
@@ -158,6 +164,8 @@ fn compare_backends_png() {
         );
         // Visible-sample counts from a few samples per pixel down to a
         // fraction of one, at 1x and 2x hidpi (2x doubles the texture).
+        // Export every configuration first, on untouched data; the timing
+        // pass below pushes extra frames into the ring.
         for scale in [1.0f32, 2.0] {
             for visible in [50u32, 600, 2000, 8000, 32768] {
                 renderer.render(
@@ -174,20 +182,23 @@ fn compare_backends_png() {
                         [0.059, 0.059, 0.118],
                     )
                     .unwrap();
-                // Frame cost: alternate the pan offset to defeat the render
-                // cache, and wait for the GPU so the time includes drawing.
+            }
+        }
+        // Frame cost, waiting for the GPU so the time includes drawing.
+        for scale in [1.0f32, 2.0] {
+            for visible in [50u32, 600, 2000, 8000, 32768] {
                 let runs = 100u32;
                 let t0 = std::time::Instant::now();
-                for i in 0..runs {
-                    // A new frame bumps the content generation; panning
-                    // alone is clamped away when the window shows everything.
+                for _ in 0..runs {
+                    // A new frame bumps the content generation and defeats
+                    // the render cache.
                     buffer.push_frame(&[0.0, 1.0, 2.0]);
                     renderer.render(
                         &buffer,
                         (1000.0 * scale) as u32,
                         (300.0 * scale) as u32,
                         visible,
-                        i % 2,
+                        0,
                         scale,
                     );
                     device.poll(wgpu::PollType::wait_indefinitely()).unwrap();

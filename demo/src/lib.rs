@@ -149,12 +149,14 @@ pub fn main() {
         });
     }
 
-    // PLOT_BACKEND=vello selects Vello (needs the `vello` feature).
+    // PLOT_BACKEND=vello|vello_gpu|vello_cpu selects a Vello renderer
+    // (needs the `vello` feature); anything else is the wgpu pipelines.
     #[cfg(feature = "vello")]
-    let backend = if std::env::var("PLOT_BACKEND").is_ok_and(|v| v == "vello") {
-        PlotBackend::Vello
-    } else {
-        PlotBackend::Wgpu
+    let backend = match std::env::var("PLOT_BACKEND").as_deref() {
+        Ok("vello") => PlotBackend::Vello,
+        Ok("vello_gpu") => PlotBackend::VelloGpu,
+        Ok("vello_cpu") => PlotBackend::VelloCpu,
+        _ => PlotBackend::Wgpu,
     };
     #[cfg(not(feature = "vello"))]
     let backend = PlotBackend::Wgpu;

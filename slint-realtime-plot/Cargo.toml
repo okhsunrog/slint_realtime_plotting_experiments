@@ -10,10 +10,12 @@ bytemuck = { workspace = true }
 png = { workspace = true }
 slint = { workspace = true }
 vello = { git = "https://github.com/linebender/vello", version = "0.10.0", optional = true }
+vello_cpu = { git = "https://github.com/linebender/vello", version = "0.2.0", features = ["multithreading"], optional = true }
+vello_gpu = { git = "https://github.com/linebender/vello", version = "0.2.0", optional = true }
 wgpu = { workspace = true }
 
 [dev-dependencies]
 pollster = "1.0.1"
 
 [features]
-vello = ["dep:vello"]
+vello = ["dep:vello", "dep:vello_gpu", "dep:vello_cpu"]

@@ -34,9 +34,15 @@ pub enum PlotBackend {
     /// Hand-written wgpu pipelines (compute envelope + instanced line quads).
     #[default]
     Wgpu,
-    /// Vello vector renderer fed with CPU-built paths.
+    /// Vello compute renderer fed with CPU-built paths.
     #[cfg(feature = "vello")]
     Vello,
+    /// Vello GPU (sparse strips) renderer.
+    #[cfg(feature = "vello")]
+    VelloGpu,
+    /// Vello CPU renderer; the pixels are uploaded to the texture.
+    #[cfg(feature = "vello")]
+    VelloCpu,
 }
 
 /// Construction-time configuration for a [`PlotRenderer`].
@@ -359,7 +365,7 @@ impl PlotRenderer {
             peak_bind_group,
             peak_width_capacity,
             #[cfg(feature = "vello")]
-            vello: use_vello.then(|| VelloBackend::new(device)),
+            vello: use_vello.then(|| VelloBackend::new(config.backend, device)),
             snapshot: Default::default(),
             texture,
             samples_buffer,
@@ -386,10 +392,13 @@ impl PlotRenderer {
     fn make_texture(device: &wgpu::Device, width: u32, height: u32, storage: bool) -> wgpu::Texture {
         // Vello writes through a storage binding, which sRGB formats lack.
         // Slint still requires RENDER_ATTACHMENT on any texture it imports.
+        // COPY_DST lets Vello CPU upload its pixmap.
         let (format, usage) = if storage {
             (
                 wgpu::TextureFormat::Rgba8Unorm,
-                wgpu::TextureUsages::STORAGE_BINDING | wgpu::TextureUsages::RENDER_ATTACHMENT,
+                wgpu::TextureUsages::STORAGE_BINDING
+                    | wgpu::TextureUsages::RENDER_ATTACHMENT
+                    | wgpu::TextureUsages::COPY_DST,
             )
         } else {
             (
@@ -593,7 +602,7 @@ impl PlotRenderer {
             vello.render(
                 &self.device,
                 &self.queue,
-                &view,
+                &self.texture,
                 &Frame {
                     samples: &self.scratch,
                     write_pos: self.snapshot.write_pos as usize,
