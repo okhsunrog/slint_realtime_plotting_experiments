@@ -9,7 +9,11 @@ license = "MIT"
 bytemuck = { workspace = true }
 png = { workspace = true }
 slint = { workspace = true }
+vello = { git = "https://github.com/linebender/vello", version = "0.10.0", optional = true }
 wgpu = { workspace = true }
 
 [dev-dependencies]
 pollster = "1.0.1"
+
+[features]
+vello = ["dep:vello"]

@@ -3,7 +3,9 @@ slint::include_modules!();
 mod data_gen;
 
 use slint::wgpu_30::WGPUConfiguration;
-use slint_realtime_plot::{PlotBuffer, PlotConfig, PlotRenderer, required_wgpu_settings};
+use slint_realtime_plot::{
+    PlotBackend, PlotBuffer, PlotConfig, PlotRenderer, required_wgpu_settings,
+};
 use std::cell::Cell;
 use std::io::Write as _;
 use std::rc::Rc;
@@ -147,6 +149,16 @@ pub fn main() {
         });
     }
 
+    // PLOT_BACKEND=vello selects Vello (needs the `vello` feature).
+    #[cfg(feature = "vello")]
+    let backend = if std::env::var("PLOT_BACKEND").is_ok_and(|v| v == "vello") {
+        PlotBackend::Vello
+    } else {
+        PlotBackend::Wgpu
+    };
+    #[cfg(not(feature = "vello"))]
+    let backend = PlotBackend::Wgpu;
+
     let mut plot_renderer: Option<PlotRenderer> = None;
     let app_weak = app.as_weak();
     let cursor_was_active = Cell::new(false);
@@ -171,6 +183,7 @@ pub fn main() {
                         device,
                         queue,
                         PlotConfig {
+                            backend,
                             num_channels: data_gen::NUM_CHANNELS,
                             capacity: data_gen::NUM_SAMPLES,
                             y_min: -15.0,

@@ -1,3 +1,5 @@
+#[cfg(feature = "vello")]
+use crate::vello_backend::{Frame, VelloBackend};
 use crate::{MAX_CHANNELS, PlotBuffer};
 use slint::wgpu_30::wgpu;
 use std::path::Path;
@@ -26,8 +28,20 @@ struct ColorsUniform {
     data: [[f32; 4]; MAX_CHANNELS],
 }
 
+/// Which rasterizer draws the waveform.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum PlotBackend {
+    /// Hand-written wgpu pipelines (compute envelope + instanced line quads).
+    #[default]
+    Wgpu,
+    /// Vello vector renderer fed with CPU-built paths.
+    #[cfg(feature = "vello")]
+    Vello,
+}
+
 /// Construction-time configuration for a [`PlotRenderer`].
 pub struct PlotConfig {
+    pub backend: PlotBackend,
     pub num_channels: usize,
     pub capacity: usize,
     /// Fallback Y-axis minimum (used when auto_range has no valid data)
@@ -63,6 +77,8 @@ pub struct PlotRenderer {
     peak_pipeline: wgpu::ComputePipeline,
     peak_bind_group: wgpu::BindGroup,
     peak_width_capacity: u32,
+    #[cfg(feature = "vello")]
+    vello: Option<VelloBackend>,
     snapshot: crate::buffer::Snapshot,
     texture: wgpu::Texture,
     samples_buffer: wgpu::Buffer,
@@ -329,7 +345,8 @@ impl PlotRenderer {
             cache: None,
         });
 
-        let texture = Self::make_texture(device, 1, 1);
+        let use_vello = config.backend != PlotBackend::Wgpu;
+        let texture = Self::make_texture(device, 1, 1, use_vello);
         let y_min = config.y_min;
         let y_max = config.y_max;
 
@@ -341,6 +358,8 @@ impl PlotRenderer {
             peak_pipeline,
             peak_bind_group,
             peak_width_capacity,
+            #[cfg(feature = "vello")]
+            vello: use_vello.then(|| VelloBackend::new(device)),
             snapshot: Default::default(),
             texture,
             samples_buffer,
@@ -364,7 +383,20 @@ impl PlotRenderer {
         }
     }
 
-    fn make_texture(device: &wgpu::Device, width: u32, height: u32) -> wgpu::Texture {
+    fn make_texture(device: &wgpu::Device, width: u32, height: u32, storage: bool) -> wgpu::Texture {
+        // Vello writes through a storage binding, which sRGB formats lack.
+        // Slint still requires RENDER_ATTACHMENT on any texture it imports.
+        let (format, usage) = if storage {
+            (
+                wgpu::TextureFormat::Rgba8Unorm,
+                wgpu::TextureUsages::STORAGE_BINDING | wgpu::TextureUsages::RENDER_ATTACHMENT,
+            )
+        } else {
+            (
+                wgpu::TextureFormat::Rgba8UnormSrgb,
+                wgpu::TextureUsages::RENDER_ATTACHMENT,
+            )
+        };
         device.create_texture(&wgpu::TextureDescriptor {
             label: Some("plot_texture"),
             size: wgpu::Extent3d {
@@ -375,10 +407,8 @@ impl PlotRenderer {
             mip_level_count: 1,
             sample_count: 1,
             dimension: wgpu::TextureDimension::D2,
-            format: wgpu::TextureFormat::Rgba8UnormSrgb,
-            usage: wgpu::TextureUsages::RENDER_ATTACHMENT
-                | wgpu::TextureUsages::TEXTURE_BINDING
-                | wgpu::TextureUsages::COPY_SRC,
+            format,
+            usage: usage | wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_SRC,
             view_formats: &[],
         })
     }
@@ -514,7 +544,12 @@ impl PlotRenderer {
         let range_changed = y_min != self.last_y_min || y_max != self.last_y_max;
 
         if needs_resize {
-            self.texture = Self::make_texture(&self.device, width, height);
+            self.texture = Self::make_texture(
+                &self.device,
+                width,
+                height,
+                self.config.backend != PlotBackend::Wgpu,
+            );
         }
 
         if !(data_changed || view_changed || needs_resize || scale_changed || range_changed) {
@@ -553,6 +588,36 @@ impl PlotRenderer {
         let view = self
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
+        #[cfg(feature = "vello")]
+        if let Some(vello) = self.vello.as_mut() {
+            vello.render(
+                &self.device,
+                &self.queue,
+                &view,
+                &Frame {
+                    samples: &self.scratch,
+                    write_pos: self.snapshot.write_pos as usize,
+                    capacity: buffer.capacity,
+                    num_channels: buffer.num_channels,
+                    visible: vis as usize,
+                    view_offset: view_offset as usize,
+                    width,
+                    height,
+                    y_min,
+                    y_max,
+                    scale: scale_factor,
+                    colors: &self.config.channel_colors,
+                    peak: vis as f32 / width as f32 * scale_factor > 8.0,
+                },
+            );
+            return RenderOutput {
+                texture: self.texture.clone(),
+                y_min,
+                y_max,
+                y_divisions: divisions,
+                rendered: true,
+            };
+        }
         let mut encoder = self
             .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor {

@@ -16,6 +16,7 @@ default = ["desktop"]
 # here (measured: 12% vs 87% of a core at 60 fps) and stops missing vsync.
 desktop = ["slint/backend-winit", "slint/renderer-skia"]
 android = ["slint/backend-android-activity-06"]
+vello = ["slint-realtime-plot/vello"]
 
 [dependencies]
 slint-realtime-plot = { workspace = true }

@@ -1,4 +1,4 @@
-use crate::{PlotBuffer, PlotConfig, PlotRenderer, required_wgpu_settings};
+use crate::{PlotBackend, PlotBuffer, PlotConfig, PlotRenderer, required_wgpu_settings};
 use slint::wgpu_30::wgpu;
 
 fn pixels(device: &wgpu::Device, queue: &wgpu::Queue, texture: &wgpu::Texture) -> Vec<u8> {
@@ -57,6 +57,7 @@ fn peak_tail_line_mode_reset_and_cache() {
         &device,
         &queue,
         PlotConfig {
+            backend: PlotBackend::default(),
             num_channels: 1,
             capacity: 32768,
             y_min: -1.0,
@@ -102,4 +103,100 @@ fn peak_tail_line_mode_reset_and_cache() {
     let diagonal = pixels(&device, &queue, &texture);
     assert!(diagonal[32 * 1280 + 160 * 4 + 3] > 128);
     assert!(diagonal[35 * 1280 + 160 * 4 + 3] < 16);
+}
+
+/// Renders the same signal with both backends into PNGs for visual
+/// comparison: `PLOT_COMPARE_DIR=/some/dir cargo test --features vello
+/// compare_backends_png -- --ignored`.
+#[cfg(feature = "vello")]
+#[test]
+#[ignore = "requires a GPU adapter"]
+fn compare_backends_png() {
+    let dir = std::path::PathBuf::from(std::env::var("PLOT_COMPARE_DIR").unwrap());
+    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle());
+    let adapter = pollster::block_on(instance.request_adapter(&Default::default())).unwrap();
+    let settings = required_wgpu_settings(32768, 3);
+    let (device, queue) = pollster::block_on(
+        adapter.request_device(&wgpu::DeviceDescriptor {
+            required_features: settings.device_required_features,
+            required_limits: settings
+                .device_required_limits
+                .using_resolution(adapter.limits()),
+            ..Default::default()
+        }),
+    )
+    .unwrap();
+    let buffer = PlotBuffer::new(3, 32768);
+    let frames: Vec<f32> = (0..32768)
+        .flat_map(|i| {
+            let t = i as f32 / 20000.0;
+            (0..3).map(move |ch| {
+                let phase = ch as f32 * 2.094;
+                10.0 * (t * 2.0 * std::f32::consts::PI * 50.0 + phase).sin()
+                    + 0.3 * ((i * 7 + ch * 13) % 17) as f32
+            })
+        })
+        .collect();
+    buffer.push_batch(&frames);
+    for (backend, name) in [(PlotBackend::Wgpu, "wgpu"), (PlotBackend::Vello, "vello")] {
+        let mut renderer = PlotRenderer::new(
+            &device,
+            &queue,
+            PlotConfig {
+                backend,
+                num_channels: 3,
+                capacity: 32768,
+                y_min: -15.0,
+                y_max: 15.0,
+                auto_range: true,
+                channel_colors: vec![
+                    [0.133, 0.827, 0.933, 1.0],
+                    [0.545, 0.361, 0.965, 1.0],
+                    [0.976, 0.451, 0.086, 1.0],
+                ],
+            },
+        );
+        // Visible-sample counts from a few samples per pixel down to a
+        // fraction of one, at 1x and 2x hidpi (2x doubles the texture).
+        for scale in [1.0f32, 2.0] {
+            for visible in [50u32, 600, 2000, 8000, 32768] {
+                renderer.render(
+                    &buffer,
+                    (1000.0 * scale) as u32,
+                    (300.0 * scale) as u32,
+                    visible,
+                    0,
+                    scale,
+                );
+                renderer
+                    .export_png(
+                        &dir.join(format!("{name}_v{visible}_x{scale}.png")),
+                        [0.059, 0.059, 0.118],
+                    )
+                    .unwrap();
+                // Frame cost: alternate the pan offset to defeat the render
+                // cache, and wait for the GPU so the time includes drawing.
+                let runs = 100u32;
+                let t0 = std::time::Instant::now();
+                for i in 0..runs {
+                    // A new frame bumps the content generation; panning
+                    // alone is clamped away when the window shows everything.
+                    buffer.push_frame(&[0.0, 1.0, 2.0]);
+                    renderer.render(
+                        &buffer,
+                        (1000.0 * scale) as u32,
+                        (300.0 * scale) as u32,
+                        visible,
+                        i % 2,
+                        scale,
+                    );
+                    device.poll(wgpu::PollType::wait_indefinitely()).unwrap();
+                }
+                println!(
+                    "BENCH {name} visible={visible} scale={scale}: {:.3} ms/frame",
+                    t0.elapsed().as_secs_f64() * 1000.0 / f64::from(runs)
+                );
+            }
+        }
+    }
 }
