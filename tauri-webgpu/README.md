@@ -1,0 +1,130 @@
+# Wavebench: Tauri / CEF + Leptos + WebGPU
+
+A second demo alongside the existing Slint application. The Rust backend generates
+three interleaved current channels; the Rust/WASM frontend renders them with
+`wgpu` on browser WebGPU. Leptos owns the controls and telemetry. There is no
+Canvas 2D, SVG waveform, JavaScript generator or WebGL fallback.
+
+On this machine it uses the custom Tauri 3 / CEF 154 Wayland fork prepared in
+`/home/okhsunrog/tmp_zfs/tauri_cef_wayland`. Dawn WebGPU uses Vulkan with
+`ForceEnableWebGpuInterop`; window presentation uses ANGLE/OpenGL. The Nix
+shell and host Vulkan-loader workaround come from the existing verified CEF
+setup. This is a local research build; Cargo path overrides and the scripts
+currently refer to those local checkouts and the installed SDK. Moving the
+application to another machine requires updating those paths and installing
+the matching custom SDK; a stock CEF SDK lacks the embedding API.
+
+## Build and run
+
+```sh
+cd /home/okhsunrog/code/rust/slint_realtime_plotting_experiments/tauri-webgpu
+./build.sh
+./run.sh
+```
+
+Prerequisites on this host: Rust with `wasm32-unknown-unknown`, `wasm-pack`,
+Nix, and the existing custom CEF SDK. Both frontend and backend are built in
+release mode. `build.sh` embeds the generated WASM and assets into the native
+application, so no frontend server or internet connection is needed at runtime.
+Rebuild after changing frontend code. The separate Cargo workspace leaves the
+original Slint dependencies and build configuration intact.
+
+Logs are retained in `logs/runtime.log`, `logs/cef.log`,
+`logs/frontend-build.log` and `logs/backend-build.log`. **Save report** writes
+`logs/benchmark.json`; copy it before the next comparison overwrites it.
+
+## Try it
+
+- Choose a transport, frame rate and batch size, then **Apply / restart**.
+  A frame contains all three channels: 1 Mframe/s means 3 million floats/s,
+  or 12 MB/s of raw samples. The controls go up to 8 Mframe/s.
+- Zoom with the wheel or buttons. **Freeze plot** stops updating the GPU ring
+  while reception and transport metrics continue. Drag to pan frozen history;
+  **Resume plot** starts a fresh history at the current stream position.
+- Change frequency or amplitude and apply. The narrow spikes are intentional:
+  they exercise peak detection when many samples fall into a screen column.
+- **Compare all** runs each of the five transports twice, in opposite orders, with a 2 s
+  warmup and a 6 s measurement window per run. Keep the same window size and
+  view settings while comparing. Try both large and small batches; increasing
+  batch size trades batching latency for lower per-message overhead.
+- **GPU diagnostics** opens CEF's `chrome://gpu`. Its compositor Vulkan status
+  is separate from Dawn's Vulkan WebGPU backend.
+
+## Transports and flow control
+
+| Mode | Backend → frontend | Consumer acknowledgement |
+| --- | --- | --- |
+| JSON Channel | `Channel<InvokeResponseBody::Json>` with a numeric array | `acknowledge` invoke |
+| Binary Channel | `Channel<InvokeResponseBody::Raw>` / `ArrayBuffer` | `acknowledge` invoke |
+| Binary invoke pull | raw `tauri::ipc::Response` | next pull request |
+| Custom protocol fetch | `register_asynchronous_uri_scheme_protocol` + `fetch().arrayBuffer()` | next GET request |
+| Binary WebSocket | local binary WebSocket / `ArrayBuffer` | sequence number on the socket |
+
+The custom-protocol mode follows Tangleaf’s attachment delivery mechanism: IPC
+returns a resource identifier; the browser obtains bytes directly from a Rust
+URI handler. Unlike immutable image attachments, the benchmark responses use
+`Cache-Control: no-store`, a per-stream token and one consumed packet per GET.
+
+The binary transports use the same versioned little-endian 64-byte header and
+interleaved `f32` payload. Samples are generated on a dedicated Rust thread,
+using a precomputed three-phase waveform table and absolute frame indices.
+All modes use the same source, batching, pacing and GPU renderer.
+
+The producer has four packet credits. JSON/Binary Channel and WebSocket can
+pipeline four packets; invoke/protocol pull deliberately measure the simpler sequential
+request/response approach. The queue is bounded. The producer slows down under
+backpressure instead of dropping packets or growing a queue indefinitely. A
+low achieved rate therefore means saturation, not successful delivery at the
+requested rate. There is no deliberate decimation before delivery to WASM.
+WebSocket listens only on loopback at an ephemeral port; a random per-stream
+URL token prevents other pages from joining the current stream.
+
+## GPU and measurements
+
+The GPU owns a 1,048,576-frame ring (12 MiB). Each incoming batch uploads one
+contiguous range, or two when wrapping. Each rendered frame runs a compute
+shader over every contributing sample to produce min/max for each physical
+pixel column and channel. The render pass draws those extrema and the grid.
+Zoomed-in rendering connects adjacent column values. Canvas backing dimensions
+follow CSS size × device pixel ratio; no native-only push constants are used.
+
+On startup the **actual reduction shader** is run on a known wrapped ring,
+including a narrow spike. All 102 extrema are read back and compared with a CPU
+reference. Validation errors, device loss and packet-sequence discontinuities
+are recorded. **PASS** covers this deterministic compute check, not every
+possible GPU/driver behavior.
+
+Metrics:
+
+- **Payload MiB/s:** received sample bytes, excluding JSON expansion, binary
+  headers and protocol overhead. Rates across modes therefore compare useful
+  data, not bytes on the wire.
+- **Delivery p95:** packet creation after source generation to entry into WASM.
+  Clocks are calibrated using the minimum RTT of nine IPC exchanges; RTT is
+  saved in the report. This excludes the time needed to accumulate a batch of
+  samples at a real acquisition device.
+- **WASM p95:** JS→WASM copy/decoding, CPU history copy and `queue.write_buffer`
+  call. JSON parsing before callback entry is counted in delivery latency.
+- **Frame p95/p99:** intervals between `requestAnimationFrame` callbacks.
+  **Render fps** counts render submissions. These do not prove compositor
+  presentation timing or absence of every dropped frame.
+- **CPU submit p95:** compute/render encoding and submit calls, not GPU execution
+  time. Backend generation, delivery/encoding and credit-wait statistics are
+  also saved; those backend averages include warmup.
+
+The frontend keeps a bounded history of timing samples. `wasm-bindgen` provides
+thin JavaScript glue for Tauri's official Channel API, timers and adapter info;
+UI, transports, sample processing, benchmarking and rendering are written in Rust.
+There are still copies across process and JS/WASM boundaries: this does not
+claim to be shared-memory or zero-copy IPC.
+
+## Checks
+
+```sh
+cargo test -p plot-wire
+# Inside the same Nix shell and with CEF_PATH selected by build.sh:
+cargo test --release -p tauri-webgpu-plot
+cargo fmt --all -- --check
+```
+
+Runtime measurements and screenshots are described in [VALIDATION.md](VALIDATION.md).

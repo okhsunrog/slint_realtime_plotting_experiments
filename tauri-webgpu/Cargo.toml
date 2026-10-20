@@ -1,0 +1,18 @@
+[workspace]
+resolver = "3"
+members = ["frontend", "src-tauri", "wire"]
+default-members = ["wire"]
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+
+[patch.crates-io]
+tauri = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri" }
+tauri-build = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-build" }
+tauri-runtime = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-runtime" }
+tauri-utils = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-utils" }
+tauri-macros = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-macros" }
+tauri-codegen = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-codegen" }
+cef = { path = "/home/okhsunrog/tmp_zfs/codex_tmp/cef-cloud-research/cef-rs/cef" }
+cef-dll-sys = { path = "/home/okhsunrog/tmp_zfs/codex_tmp/cef-cloud-research/cef-rs/sys" }

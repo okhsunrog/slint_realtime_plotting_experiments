@@ -1,0 +1,6 @@
+{
+  "productName": "Wavebench", "version": "0.1.0", "identifier": "dev.okhsunrog.wavebench",
+  "build": { "frontendDist": "../dist", "devUrl": "http://localhost:8087" },
+  "app": { "withGlobalTauri": true, "windows": [{ "label": "main", "title": "Wavebench · CEF / WebGPU", "width": 1440, "height": 1000, "minWidth": 880, "minHeight": 680 }], "security": { "csp": null } },
+  "bundle": { "active": false }
+}

@@ -1,0 +1,23 @@
+[package]
+name = "tauri-webgpu-plot"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+axum = { version = "0.8.9", features = ["ws"] }
+env_logger = "0.11.11"
+futures-util = { version = "0.3.34", features = ["sink"] }
+plot-wire = { version = "0.1.0", path = "../wire" }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+tauri = { version = "3.0.0-alpha.5", path = "../../../../../tmp_zfs/tauri_cef_wayland/tauri/crates/tauri" }
+tauri-runtime-cef = { version = "3.0.0-alpha.6", path = "../../../../../tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-runtime-cef", features = ["devtools"] }
+tokio = { version = "1.54.0", features = ["rt-multi-thread", "net", "sync", "time", "macros"] }
+uuid = { version = "1.28.0", features = ["v4"] }
+
+[build-dependencies]
+tauri-build = { version = "3.0.0-alpha.4", path = "../../../../../tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-build" }
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]

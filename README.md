@@ -6,6 +6,11 @@ The demo simulates a 3-phase AC motor current sensor and renders waveforms entir
 
 ![Screenshot](screenshots/Screenshot_20260821_143131.png)
 
+For the browser-based comparison, see [Wavebench](tauri-webgpu/README.md): a
+Tauri 3 / CEF Wayland application with a Leptos Rust/WASM frontend, WebGPU
+compute/render passes, and five Rust-to-browser streaming transports. It has
+its own Cargo workspace and does not change the Slint demo's dependencies.
+
 ## Why This Project
 
 Slint doesn't ship with a real-time plotting widget. If you need to visualize streaming data — sensor readings, audio, telemetry — you have to build the rendering yourself. This project shows one way to do it: bypass Slint's drawing primitives, render the plot as a GPU texture via WGPU, and composite it back into the Slint scene.

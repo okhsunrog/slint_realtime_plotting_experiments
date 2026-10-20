@@ -1,0 +1,5 @@
+/target
+/dist
+/logs
+/frontend/pkg
+/src-tauri/gen
