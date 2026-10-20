@@ -68,8 +68,10 @@ async function test() {
     if (!context) throw new Error('WebGPU canvas context unavailable');
     context.configure({ device: gpu, format: navigator.gpu.getPreferredCanvasFormat(), alphaMode: 'opaque' });
     function render(time: number) {
-      canvas.width = Math.max(1, Math.round(canvas.clientWidth * devicePixelRatio));
-      canvas.height = Math.max(1, Math.round(canvas.clientHeight * devicePixelRatio));
+      const width = Math.max(1, Math.round(canvas.clientWidth * devicePixelRatio));
+      const height = Math.max(1, Math.round(canvas.clientHeight * devicePixelRatio));
+      if (canvas.width !== width) canvas.width = width;
+      if (canvas.height !== height) canvas.height = height;
       const command = gpu.createCommandEncoder();
       const renderPass = command.beginRenderPass({ colorAttachments: [{
         view: context!.getCurrentTexture().createView(), loadOp: 'clear', storeOp: 'store',
