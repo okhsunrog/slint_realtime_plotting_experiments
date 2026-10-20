@@ -72,6 +72,8 @@ async function test() {
       const height = Math.max(1, Math.round(canvas.clientHeight * devicePixelRatio));
       if (canvas.width !== width) canvas.width = width;
       if (canvas.height !== height) canvas.height = height;
+      report.canvas = { css: [canvas.clientWidth, canvas.clientHeight], backing: [canvas.width, canvas.height],
+        expectedBacking: [width, height], devicePixelRatio };
       const command = gpu.createCommandEncoder();
       const renderPass = command.beginRenderPass({ colorAttachments: [{
         view: context!.getCurrentTexture().createView(), loadOp: 'clear', storeOp: 'store',
@@ -109,6 +111,7 @@ for (const type of ['pointerdown', 'click', 'focusin', 'keydown', 'input', 'chan
     console.info('input-check', JSON.stringify({ type, tag: element.tagName,
       text: element.textContent?.slice(0, 50),
       key: event instanceof KeyboardEvent ? event.key : undefined,
+      client: event instanceof MouseEvent ? [event.clientX, event.clientY] : undefined,
       value: element instanceof HTMLInputElement || element instanceof HTMLSelectElement ? element.value : undefined }));
   }, true);
 }

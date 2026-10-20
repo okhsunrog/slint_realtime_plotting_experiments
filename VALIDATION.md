@@ -55,3 +55,33 @@ API, so native popup fallback is confined to the host window and may lack
 outside-click dismissal. Individual Wayland webview hiding and cross-window
 reparenting are not implemented. The VM and its build disk must remain retained
 until the user explicitly confirms acceptance.
+
+## Fractional scaling follow-up
+
+The complete SDK was tested on a hardware-rendered isolated KWin output of
+2000 by 1500 pixels. Scaling changed live through 100%, 125%, 150%, 175%,
+125%, 150%, 175% and back to 100%, including maximize and restore.
+
+| Scale | Maximized page viewport | Canvas CSS size | Canvas pixel buffer |
+| --- | --- | --- | --- |
+| 125% | 1600 × 1172 | 1537 × 180 | 1921 × 225 |
+| 150% | 1333 × 972 | 1270 × 180 | 1905 × 270 |
+| 175% | 1143 × 829 | 1081 × 180 | 1892 × 315 |
+
+Each scale reports the matching DPR and a canvas buffer equal to the rounded
+CSS size times DPR. The restored 100% window returns to viewport 1100 × 900
+and buffer 1037 × 180. Compute/readback was repeated at every listed scale
+and after returning to 100%; all 1024 values passed on the Intel adapter,
+without fallback, device loss or WebGPU validation errors.
+
+Actual pointer input selected the text field and native select at each
+fractional scale; the input values `scale125`, `scale150` and `scale175`
+and select changes are recorded in `logs/cef.log`. Popup placement and canvas
+edges were inspected in screenshots. Screenshots do not establish pixel-perfect
+text sharpness on a physical panel. Physical mixed-DPI monitor transitions
+remain untested.
+
+Evidence: `logs/fractional-summary.json`, `logs/fractional-125.json`,
+`logs/fractional-150.json`, `logs/fractional-175.json`,
+`logs/fractional-100-return.json` and `logs/fractional-*-popup.png`.
+The frontend production build passes with `vp run build`.
