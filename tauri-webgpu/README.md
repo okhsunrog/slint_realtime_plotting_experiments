@@ -7,12 +7,14 @@ Canvas 2D, SVG waveform, JavaScript generator or WebGL fallback.
 
 On this machine it uses the custom Tauri 3 / CEF 154 Wayland fork prepared in
 `/home/okhsunrog/tmp_zfs/tauri_cef_wayland`. Dawn WebGPU uses Vulkan with
-`ForceEnableWebGpuInterop`; window presentation uses ANGLE/OpenGL. The Nix
-shell and host Vulkan-loader workaround come from the existing verified CEF
-setup. This is a local research build; Cargo path overrides and the scripts
-currently refer to those local checkouts and the installed SDK. Moving the
-application to another machine requires updating those paths and installing
-the matching custom SDK; a stock CEF SDK lacks the embedding API.
+`ForceEnableWebGpuInterop`; window presentation uses ANGLE/OpenGL. The custom SDK is packaged by
+[nix/cef-wayland-binary.nix](nix/cef-wayland-binary.nix);
+its ELF RPATHs and Nix Vulkan loader replace the former runtime library-path
+workaround. This is a local research build; Cargo path overrides and the scripts
+currently refer to those local source checkouts and a pinned local nixpkgs
+source. Moving the application to another machine requires updating those
+paths and importing the matching custom SDK archive into Nix; a stock CEF SDK
+lacks the embedding API.
 
 ## Build and run
 
@@ -23,7 +25,10 @@ cd /home/okhsunrog/code/rust/slint_realtime_plotting_experiments/tauri-webgpu
 ```
 
 Prerequisites on this host: Rust with `wasm32-unknown-unknown`, `wasm-pack`,
-Nix, and the existing custom CEF SDK. Both frontend and backend are built in
+Nix, and the custom CEF archive imported as described in
+[nix/README.md](nix/README.md). The build selects the immutable SDK through
+`CEF_PATH`; the launcher clears
+`LD_LIBRARY_PATH`. Both frontend and backend are built in
 release mode. `build.sh` embeds the generated WASM and assets into the native
 application, so no frontend server or internet connection is needed at runtime.
 Rebuild after changing frontend code. The separate Cargo workspace leaves the

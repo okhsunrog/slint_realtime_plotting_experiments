@@ -92,3 +92,32 @@ Additional local evidence: `logs/interaction-100.json`,
 `logs/wavebench-frozen-150.png`, `logs/gpu-diagnostics-tree.json` and
 `logs/backend-tests.log`. Physical mixed-DPI monitor movement and GPU execution
 profiling with timestamp queries were not part of this test.
+
+## Immutable Nix SDK integration
+
+The SDK is now `cef-wayland-binary-154.0.8037.98-a09c27de3`, produced by
+`nix/cef-wayland-binary.nix`. The local tested store path is
+`/nix/store/ami12j9nqmk4li256finjqnx1ilgr9m1-cef-wayland-binary-154.0.8037.98-a09c27de3`.
+The original archive and libcef checksums are checked before ELF patching;
+packaged and staged libcef both have SHA256
+`c7760d839c6b0f75a4a72eee5b2fe71d602539946df24c3f1290ae9dcc8f06cb`.
+
+- The package install check resolves libcef dependencies without LD_LIBRARY_PATH.
+- Wavebench was rebuilt with CEF_PATH pointing at the immutable store SDK.
+  Re-running its build script against read-only staged files succeeds.
+- The executable also has explicit Nix RPATHs for its own GTK dependencies;
+  libcef's RUNPATH alone does not resolve the executable's direct dependencies.
+- The GUI test intentionally supplied invalid legacy CEF_PATH/LD_LIBRARY_PATH
+  values. The launcher selected the Nix package and removed LD_LIBRARY_PATH;
+  `/proc/<pid>/environ` confirms its absence. Process maps show GTK4 and the
+  Nix Vulkan loader, and staged libcef matches the package checksum.
+- Native Wayland embedding, Intel hardware WebGPU, the animated waveform and
+  all 102 compute readback comparisons pass. No sequence gaps or GPU errors
+  were recorded. `chrome://gpu` confirms hardware WebGPU and Intel Vulkan info.
+- Opening/closing GPU diagnostics and normal application shutdown exit cleanly.
+
+Local evidence: `logs/nix-webgpu-report.json`, `logs/nix-runtime-tree.json`,
+`logs/nix-gpu-diagnostics-tree.json`, `logs/nix-executable-ldd.txt`,
+`logs/nix-repeat-build.log` and `logs/nix-exit.json`. Package build logs and
+loaded-library/environment evidence are under
+`/home/okhsunrog/tmp_zfs/codex_tmp/tauri-webgpu-nix/`.
