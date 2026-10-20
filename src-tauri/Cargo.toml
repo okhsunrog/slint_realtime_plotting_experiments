@@ -15,13 +15,16 @@ name = "cef_wayland_smoke_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { version = "3.0.0-alpha.4", features = [], path = "../../../../tauri_cef_wayland/tauri/crates/tauri-build" }
 
 [dependencies]
-tauri = { version = "2", features = [] }
-tauri-plugin-opener = "2"
+tauri = { version = "3.0.0-alpha.5", features = [], path = "../../../../tauri_cef_wayland/tauri/crates/tauri" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+tauri-runtime-cef = { version = "3.0.0-alpha.6", path = "../../../../tauri_cef_wayland/tauri/crates/tauri-runtime-cef", features = ["devtools"] }
+env_logger = "0.11.11"
+raw-window-handle = "0.6.2"
+cef = { version = "154.5.0", path = "../../cef-rs/cef", default-features = false }
 
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
@@ -31,3 +34,14 @@ lto = true
 opt-level = 3
 panic = "abort"
 strip = true
+
+[patch.crates-io]
+
+tauri = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri" }
+tauri-build = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-build" }
+tauri-runtime = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-runtime" }
+tauri-utils = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-utils" }
+tauri-macros = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-macros" }
+tauri-codegen = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-codegen" }
+cef = { path = "../../cef-rs/cef" }
+cef-dll-sys = { path = "../../cef-rs/sys" }
