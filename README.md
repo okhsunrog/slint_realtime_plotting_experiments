@@ -17,6 +17,11 @@ vp run build
 ```
 
 `run.sh` opens the task's Nix shell; it does not change system configuration.
+The shell selects NixOS's Vulkan loader. `configure-runtime.sh` installs that
+loader into the extracted SDK and existing app output; the verified archive
+stays unchanged. The original loader is retained under `host-runtime-backup`.
+On this host the bundled loader failed Dawn's `vkDestroySurfaceKHR` lookup and
+caused a SwiftShader fallback; the system loader selects Intel Xe-LPG.
 `GDK_BACKEND=wayland` selects native Wayland. For comparison, close all app
 processes, then run `./run.sh x11`. The same custom CEF supports both paths.
 Do not run the two backends concurrently against the same Chromium cache.
@@ -32,9 +37,14 @@ be kept for comparisons. Do not use a stock CEF SDK with these bindings.
   mapping or validation error is a failure, even if the window renders.
 - The animated WebGPU canvas must resize cleanly. Test maximize, restore and
   moving between outputs, including fractional/HiDPI scaling.
-- `chrome://gpu` must identify the Intel hardware adapter and Vulkan backend;
-  WebGPU must be hardware accelerated. `isFallbackAdapter: false` by itself
-  does not establish Vulkan. SwiftShader or llvmpipe does not satisfy acceptance.
+- `chrome://gpu` must identify the Intel hardware adapter and list WebGPU and
+  WebGPU interop as hardware accelerated. Its Vulkan Information must list the
+  Intel device. The top-level `Vulkan: Disabled` item refers to Chromium's
+  compositor and is expected: ANGLE/OpenGL presents the window, while Dawn
+  runs WebGPU on Vulkan via `ForceEnableWebGpuInterop`. Chromium 154's Linux
+  default backend selection in `webgpu_decoder_impl.cc` chooses Vulkan for
+  this interop path; OpenGLES is not selected. SwiftShader or llvmpipe does
+  not satisfy acceptance.
 - Check `chrome://version` for the actual Chromium version and browser switches.
   Inspect GPU subprocess arguments when diagnosing propagation of ANGLE,
   Vulkan and WebGPU flags.
@@ -53,8 +63,8 @@ menus can be clipped at the host edge and lack outside-click dismissal.
 Wayland has no public global cursor position or X11 taskbar/workspace hints.
 Reparenting a native webview to another window is rejected. Hiding a whole
 window is supported through GTK; hiding just one native Wayland webview is not
-implemented by the CEF patch yet and emits a warning. None of these runtime
-behaviors has been accepted on hardware yet.
+implemented by the CEF patch yet and emits a warning. Physical multi-monitor moves, complex IME and touch input still require
+manual acceptance. Isolated KWin tests use the real Intel GPU.
 
 ## Incremental CEF rebuild
 

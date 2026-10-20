@@ -68,13 +68,13 @@ pub fn run() {
     let runtime = tauri_runtime_cef::Cef::default()
         .log_file(logs.join("cef.log"))
         .command_line_arg("--use-gl", Some("angle"))
-        .command_line_arg("--use-angle", Some("vulkan"))
+        .command_line_arg("--use-angle", Some("gl"))
         .command_line_arg("--enable-unsafe-webgpu", None::<String>)
         .command_line_arg("--force-renderer-accessibility", None::<String>)
         .enable_features(["ForceEnableWebGpuInterop"])
         .child_process_command_line_args([
             ("--use-gl", Some("angle")),
-            ("--use-angle", Some("vulkan")),
+            ("--use-angle", Some("gl")),
             ("--enable-features", Some("ForceEnableWebGpuInterop")),
             ("--enable-unsafe-webgpu", None),
             ("--force-renderer-accessibility", None),

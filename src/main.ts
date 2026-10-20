@@ -7,7 +7,7 @@ root.innerHTML = `
   <h1>CEF / Wayland / WebGPU</h1>
   <p>Native embedding, input and Vulkan diagnostics</p>
   <div class="controls">
-    <button id="run">Run GPU test</button><button id="gpu">Open chrome://gpu</button>
+    <button id="run">Run GPU test</button><button id="pause">Pause animation</button><button id="gpu">Open chrome://gpu</button>
     <button id="version">Open chrome://version</button><button id="save">Save report</button>
   </div>
   <canvas width="640" height="240"></canvas>
@@ -90,6 +90,9 @@ async function test() {
   show();
 }
 document.querySelector('#run')!.addEventListener('click', () => { void test(); });
+document.querySelector('#pause')!.addEventListener('click', () => {
+  cancelAnimationFrame(frame); report.animationPaused = true; show();
+});
 document.querySelector('#gpu')!.addEventListener('click', () => { void invoke('open_diagnostic', { page: 'gpu' }); });
 document.querySelector('#version')!.addEventListener('click', () => { void invoke('open_diagnostic', { page: 'version' }); });
 document.querySelector('#alert')!.addEventListener('click', () => alert('Check keyboard focus after closing this dialog.'));
@@ -99,3 +102,13 @@ document.querySelector('#save')!.addEventListener('click', async () => {
 });
 window.addEventListener('resize', () => { report.viewport = [innerWidth, innerHeight]; report.devicePixelRatio = devicePixelRatio; show(); });
 void test();
+
+for (const type of ['pointerdown', 'click', 'focusin', 'keydown', 'input', 'change']) {
+  document.addEventListener(type, event => {
+    const element = event.target as HTMLElement;
+    console.info('input-check', JSON.stringify({ type, tag: element.tagName,
+      text: element.textContent?.slice(0, 50),
+      key: event instanceof KeyboardEvent ? event.key : undefined,
+      value: element instanceof HTMLInputElement || element instanceof HTMLSelectElement ? element.value : undefined }));
+  }, true);
+}
