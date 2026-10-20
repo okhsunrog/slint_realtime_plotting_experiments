@@ -85,6 +85,8 @@ async function test() {
     report.backendVerification = 'Open chrome://gpu: confirm Vulkan and hardware WebGPU. JS adapter information alone does not prove Vulkan.';
     report.hardware = info.isFallbackAdapter ? 'FAIL: fallback adapter' : 'Adapter reports non-fallback; verify driver/backend in chrome://gpu';
   } catch (error) { report.error = String(error); }
+  try { report.savedTo = await invoke('save_report', { report }); }
+  catch (error) { report.saveError = String(error); }
   show();
 }
 document.querySelector('#run')!.addEventListener('click', () => { void test(); });

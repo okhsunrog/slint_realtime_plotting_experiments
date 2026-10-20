@@ -70,12 +70,14 @@ pub fn run() {
         .command_line_arg("--use-gl", Some("angle"))
         .command_line_arg("--use-angle", Some("vulkan"))
         .command_line_arg("--enable-unsafe-webgpu", None::<String>)
+        .command_line_arg("--force-renderer-accessibility", None::<String>)
         .enable_features(["Vulkan"])
         .child_process_command_line_args([
             ("--use-gl", Some("angle")),
             ("--use-angle", Some("vulkan")),
             ("--enable-features", Some("Vulkan")),
             ("--enable-unsafe-webgpu", None),
+            ("--force-renderer-accessibility", None),
         ]);
     tauri::Builder::default()
         .runtime(runtime)
