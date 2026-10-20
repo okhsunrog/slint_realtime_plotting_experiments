@@ -10,13 +10,19 @@ Validated in the isolated session:
 - Intel WebGPU adapter, `isFallbackAdapter: false`.
 - GPU compute/readback verifies all 1024 values of `i * i + 7`;
   the final value is 1046536. No WebGPU validation or device-loss error occurred.
-- Animated WebGPU canvas, maximize and fractional scaling to 150%.
+- Animated WebGPU canvas, maximize/restore and fractional scaling to 150%.
   At 150%, the page reports DPR 1.5 and viewport 1067 by 705 for the maximized
   window on a 1600 by 1100 virtual output.
 - ASCII typing and clipboard insertion of Russian text and emoji.
 - Native select popup changes to Second item, and the JavaScript dialog closes
   with Enter.
 - Opening and closing `chrome://gpu` leaves the main window alive.
+- Three consecutive launches through `run.sh` / Tauri CLI complete with exit
+  status 0, including closing the last window with animation running or paused.
+  The frontend port is released after each exit.
+- A fourth launch uses the installed complete SDK without a `CEF_PATH`
+  override. Compute passes, maximize/restore changes the viewport from
+  1100 by 900 to 1600 by 1072 and back, and the launcher exits with status 0.
 - The main thread used about 22% of one CPU core while animating and about 1%
   with the animation paused, in two-second samples. Before the GLib idle fix,
   it used about 98% even while waiting.
@@ -36,6 +42,10 @@ as a workaround for that failure.
 Evidence is retained in `logs/cef.log`, `logs/webgpu-report.json`,
 `logs/webgpu-report-scale-1.5.json`, `logs/chrome-gpu-final-tree.json`,
 `logs/cpu-after-idle-fix.txt` and `logs/cpu-paused-after-glib-fix.txt`.
+The final shutdown checks are recorded in `logs/final-cycle-1-exit.json`,
+`logs/final-cycle-2-exit.json` and `logs/final-cycle-3-exit.json`.
+The complete-SDK check is in `logs/full-sdk-cli.json`,
+`logs/full-sdk-cli-exit.json` and `logs/final-wayland.png`.
 Cloud artifacts include `validated-provenance.json` with the CEF commit,
 experimental API hash, library checksum and checksums of the Chromium patches.
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
+ulimit -c 0
 project=$(cd -- "$(dirname -- "$0")" && pwd)
 cd "$project"
 mode=${1:-wayland}
