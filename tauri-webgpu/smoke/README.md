@@ -1,34 +1,27 @@
 # CEF Wayland / Vulkan smoke app
 
 Generated with `vpx create-tauri-app` (vanilla TypeScript), then migrated following
-https://v3.tauri.app/de/start/migrate/from-tauri-2/ . Uses the local Tauri v3
-checkout and the custom Linux x86_64 cef-rs bindings through Cargo path patches.
+https://v3.tauri.app/de/start/migrate/from-tauri-2/ . Uses the Tauri v3
+fork and the custom Linux x86_64 cef-rs bindings pinned to Git revisions.
 The opener plugin was removed. Runtime is selected explicitly with `Cef`.
 
 ## Prepare and launch
 
-From this directory, after the cloud collector has verified the SDK archive:
+Import the matching SDK archive using [../nix/README.md](../nix/README.md), then:
 
 ```sh
 vp install
 vp run build
-./install-sdk.sh
 ./run.sh wayland
 ```
 
-`run.sh` opens the task's Nix shell; it does not change system configuration.
-The shell selects NixOS's Vulkan loader. `configure-runtime.sh` installs that
-loader into the extracted SDK and existing app output; the verified archive
-stays unchanged. The original loader is retained under `host-runtime-backup`.
-On this host the bundled loader failed Dawn's `vkDestroySurfaceKHR` lookup and
-caused a SwiftShader fallback; the system loader selects Intel Xe-LPG.
-`GDK_BACKEND=wayland` selects native Wayland. For comparison, close all app
-processes, then run `./run.sh x11`. The same custom CEF supports both paths.
-Do not run the two backends concurrently against the same Chromium cache.
-
-The selected SDK is recorded in `.cef-sdk-path`; override with `CEF_PATH` if
-needed. SDK archives are extracted separately by fingerprint. Old versions can
-be kept for comparisons. Do not use a stock CEF SDK with these bindings.
+Cargo dependencies are pinned to the same fork revisions as Wavebench.
+`run.sh` uses the shared Nix SDK package and shell without changing the system.
+Its build script embeds the SDK runtime RPATH. Set `WAVEBENCH_TMP` to use a
+large disk for temporary files. Close all processes before `./run.sh x11`.
+Logs are appended to `logs/runtime-wayland.log` or `logs/runtime-x11.log`.
+`install-sdk.sh` and `configure-runtime.sh` are retained for the old mutable SDK
+workflow; the current Nix launch path does not use them.
 
 ## Acceptance
 

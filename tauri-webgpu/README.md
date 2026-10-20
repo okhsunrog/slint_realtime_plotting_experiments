@@ -5,26 +5,28 @@ three interleaved current channels; the Rust/WASM frontend renders them with
 `wgpu` on browser WebGPU. Leptos owns the controls and telemetry. There is no
 Canvas 2D, SVG waveform, JavaScript generator or WebGL fallback.
 
-On this machine it uses the custom Tauri 3 / CEF 154 Wayland fork prepared in
-`/home/okhsunrog/tmp_zfs/tauri_cef_wayland`. Dawn WebGPU uses Vulkan with
-`ForceEnableWebGpuInterop`; window presentation uses ANGLE/OpenGL. The custom SDK is packaged by
-[nix/cef-wayland-binary.nix](nix/cef-wayland-binary.nix);
-its ELF RPATHs and Nix Vulkan loader replace the former runtime library-path
-workaround. This is a local research build; Cargo path overrides and the scripts
-currently refer to those local source checkouts and a pinned local nixpkgs
-source. Moving the application to another machine requires updating those
-paths and importing the matching custom SDK archive into Nix; a stock CEF SDK
-lacks the embedding API.
+Uses pinned commits from our [Tauri](https://github.com/okhsunrog/tauri/tree/feat/cef-wayland)
+and [cef-rs](https://github.com/okhsunrog/cef-rs/tree/feat/wayland-154) forks.
+Dawn WebGPU uses Vulkan with `ForceEnableWebGpuInterop`; window presentation
+uses ANGLE/OpenGL. The [custom CEF SDK](https://github.com/okhsunrog/cef/tree/feat/wayland-154)
+is packaged by [nix/cef-wayland-binary.nix](nix/cef-wayland-binary.nix).
+Cargo dependencies use exact Git revisions and nixpkgs is pinned with a verified
+fetch fallback. Import the matching SDK archive into Nix before building; a
+stock CEF SDK lacks the embedding API.
+
+[smoke/](smoke/) preserves the original TypeScript smoke app, input/scaling
+checks and their validation history. [sources.json](sources.json) records the
+source and artifact revisions for the complete stack.
 
 ## Build and run
 
 ```sh
-cd /home/okhsunrog/code/rust/slint_realtime_plotting_experiments/tauri-webgpu
+cd tauri-webgpu
 ./build.sh
 ./run.sh
 ```
 
-Prerequisites on this host: Rust with `wasm32-unknown-unknown`, `wasm-pack`,
+Prerequisites: Rust with `wasm32-unknown-unknown`, `wasm-pack`,
 Nix, and the custom CEF archive imported as described in
 [nix/README.md](nix/README.md). The build selects the immutable SDK through
 `CEF_PATH`; the launcher clears
@@ -33,6 +35,8 @@ release mode. `build.sh` embeds the generated WASM and assets into the native
 application, so no frontend server or internet connection is needed at runtime.
 Rebuild after changing frontend code. The separate Cargo workspace leaves the
 original Slint dependencies and build configuration intact.
+
+Set `WAVEBENCH_TMP` to select a temporary directory on a large disk.
 
 Logs are retained in `logs/runtime.log`, `logs/cef.log`,
 `logs/frontend-build.log` and `logs/backend-build.log`. **Save report** writes

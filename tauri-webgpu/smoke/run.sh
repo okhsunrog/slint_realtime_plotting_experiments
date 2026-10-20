@@ -1,18 +1,12 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 ulimit -c 0
-project=$(cd -- "$(dirname -- "$0")" && pwd)
-cd "$project"
+cd -- "$(dirname -- "$0")"
 mode=${1:-wayland}
 case "$mode" in wayland|x11) ;; *) echo 'Usage: ./run.sh [wayland|x11]' >&2; exit 2 ;; esac
 export GDK_BACKEND="$mode"
-export CEF_PATH=${CEF_PATH:-$(cat .cef-sdk-path)}
-test -f "$CEF_PATH/libcef.so"
-export TMPDIR="$project/../tmp"
-export CARGO_HTTP_MULTIPLEXING=false
-mkdir -p logs "$TMPDIR"
-export CEF_SMOKE_TMP="$TMPDIR"
+export CEF_SMOKE_TMP="${WAVEBENCH_TMP:-${XDG_CACHE_HOME:-$HOME/.cache}/tauri-webgpu/tmp}"
 export RUST_LOG=${RUST_LOG:-info}
-export LD_LIBRARY_PATH="$CEF_PATH:${LD_LIBRARY_PATH:-}"
-# The outer shell keeps all stdout/stderr, including GPU/renderer subprocess logs.
-nix-shell ../shell.nix --run 'export TMPDIR="$CEF_SMOKE_TMP"; ./configure-runtime.sh "$CEF_PATH"; vp run tauri dev' 2>&1 | tee -a "logs/runtime-$mode.log"
+mkdir -p logs "$CEF_SMOKE_TMP"
+unset CEF_PATH LD_LIBRARY_PATH
+nix-shell ../nix/shell.nix --run 'export TMPDIR="$CEF_SMOKE_TMP"; vp run tauri dev' 2>&1 | tee -a "logs/runtime-$mode.log"

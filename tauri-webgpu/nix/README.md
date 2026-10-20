@@ -10,7 +10,7 @@ Import the existing archive once, then build:
 
 ```sh
 nix-store --add-fixed sha256 \
-  /home/okhsunrog/tmp_zfs/codex_tmp/cef-cloud-research/artifacts/cef-wayland-154-linux-x86_64.tar.zst
+  /path/to/cef-wayland-154-linux-x86_64.tar.zst
 nix-build ./nix --no-out-link
 ```
 
@@ -19,7 +19,8 @@ Expected archive SHA256:
 `requireFile` deliberately requires this artifact; it never silently downloads
 an official, ABI-incompatible SDK. The archive stays outside the Git repository.
 
-`default.nix` pins the same local nixpkgs source used for the runtime tests.
+`pkgs.nix` pins the same nixpkgs revision used for runtime tests, reusing the
+local store path when present and otherwise fetching with a verified hash.
 To use a different nixpkgs instance, pass `pkgs`, or integrate the recipe with:
 
 ```nix

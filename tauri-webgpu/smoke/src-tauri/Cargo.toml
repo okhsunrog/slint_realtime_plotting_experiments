@@ -15,16 +15,16 @@ name = "cef_wayland_smoke_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "3.0.0-alpha.4", features = [], path = "../../../../tauri_cef_wayland/tauri/crates/tauri-build" }
+tauri-build = { version = "3.0.0-alpha.4", features = [], git = "https://github.com/okhsunrog/tauri", rev = "4ef077937178c9369a4e1205ec29b0163f4324a7" }
 
 [dependencies]
-tauri = { version = "3.0.0-alpha.5", features = [], path = "../../../../tauri_cef_wayland/tauri/crates/tauri" }
+tauri = { version = "3.0.0-alpha.5", features = [], git = "https://github.com/okhsunrog/tauri", rev = "4ef077937178c9369a4e1205ec29b0163f4324a7" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tauri-runtime-cef = { version = "3.0.0-alpha.6", path = "../../../../tauri_cef_wayland/tauri/crates/tauri-runtime-cef", features = ["devtools"] }
+tauri-runtime-cef = { version = "3.0.0-alpha.6", features = ["devtools"], git = "https://github.com/okhsunrog/tauri", rev = "4ef077937178c9369a4e1205ec29b0163f4324a7" }
 env_logger = "0.11.11"
 raw-window-handle = "0.6.2"
-cef = { version = "154.5.0", path = "../../cef-rs/cef", default-features = false }
+cef = { version = "154.5.0", default-features = false, git = "https://github.com/okhsunrog/cef-rs", rev = "65c8220a20f3991934e7626b5280d2e660ac860c" }
 
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
@@ -36,12 +36,13 @@ panic = "abort"
 strip = true
 
 [patch.crates-io]
+tauri = { git = "https://github.com/okhsunrog/tauri", rev = "4ef077937178c9369a4e1205ec29b0163f4324a7" }
+tauri-build = { git = "https://github.com/okhsunrog/tauri", rev = "4ef077937178c9369a4e1205ec29b0163f4324a7" }
+tauri-runtime = { git = "https://github.com/okhsunrog/tauri", rev = "4ef077937178c9369a4e1205ec29b0163f4324a7" }
+tauri-utils = { git = "https://github.com/okhsunrog/tauri", rev = "4ef077937178c9369a4e1205ec29b0163f4324a7" }
+tauri-macros = { git = "https://github.com/okhsunrog/tauri", rev = "4ef077937178c9369a4e1205ec29b0163f4324a7" }
+tauri-codegen = { git = "https://github.com/okhsunrog/tauri", rev = "4ef077937178c9369a4e1205ec29b0163f4324a7" }
+cef = { git = "https://github.com/okhsunrog/cef-rs", rev = "65c8220a20f3991934e7626b5280d2e660ac860c" }
+cef-dll-sys = { git = "https://github.com/okhsunrog/cef-rs", rev = "65c8220a20f3991934e7626b5280d2e660ac860c" }
 
-tauri = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri" }
-tauri-build = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-build" }
-tauri-runtime = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-runtime" }
-tauri-utils = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-utils" }
-tauri-macros = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-macros" }
-tauri-codegen = { path = "/home/okhsunrog/tmp_zfs/tauri_cef_wayland/tauri/crates/tauri-codegen" }
-cef = { path = "../../cef-rs/cef" }
-cef-dll-sys = { path = "../../cef-rs/sys" }
+[workspace]

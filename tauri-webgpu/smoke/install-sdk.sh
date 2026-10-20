@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 project=$(cd -- "$(dirname -- "$0")" && pwd)
-archive=${1:-"$project/../artifacts/cef-wayland-154-linux-x86_64.tar.zst"}
+archive=${1:?Usage: install-sdk.sh /path/to/cef-wayland-154-linux-x86_64.tar.zst}
+expected=90ae4e47589368b446fb0e2312ee0b7ea6120f0591d770f939234a3ed7731cb2
+test "$(sha256sum "$archive" | cut -d " " -f1)" = "$expected"
 fingerprint=$(sha256sum "$archive" | cut -c1-16)
 base="$project/../sdk/$fingerprint"
 mkdir -p "$base"

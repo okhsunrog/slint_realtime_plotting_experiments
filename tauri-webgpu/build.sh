@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 cd -- "$(dirname -- "$0")"
-export TMPDIR=/home/okhsunrog/tmp_zfs/codex_tmp/tauri-webgpu-build
+export TMPDIR="${WAVEBENCH_TMP:-${XDG_CACHE_HOME:-$HOME/.cache}/tauri-webgpu/tmp}"
 mkdir -p "$TMPDIR" logs
 wasm-pack build frontend --target web --release --out-dir ../dist/pkg 2>&1 | tee logs/frontend-build.log
 cp frontend/index.html frontend/style.css dist/

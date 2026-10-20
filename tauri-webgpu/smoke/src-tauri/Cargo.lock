@@ -399,6 +399,7 @@ dependencies = [
 [[package]]
 name = "cef"
 version = "154.5.0+154.0.34"
+source = "git+https://github.com/okhsunrog/cef-rs?rev=65c8220a20f3991934e7626b5280d2e660ac860c#65c8220a20f3991934e7626b5280d2e660ac860c"
 dependencies = [
  "anyhow",
  "cargo_metadata 0.23.1",
@@ -417,6 +418,7 @@ dependencies = [
 [[package]]
 name = "cef-dll-sys"
 version = "154.5.0+154.0.34"
+source = "git+https://github.com/okhsunrog/cef-rs?rev=65c8220a20f3991934e7626b5280d2e660ac860c#65c8220a20f3991934e7626b5280d2e660ac860c"
 dependencies = [
  "anyhow",
  "cc",
@@ -962,6 +964,7 @@ checksum = "75b325c5dbd37f80359721ad39aca5a29fb04c89279657cffdda8736d0c0b9d2"
 [[package]]
 name = "download-cef"
 version = "3.0.0"
+source = "git+https://github.com/okhsunrog/cef-rs?rev=65c8220a20f3991934e7626b5280d2e660ac860c#65c8220a20f3991934e7626b5280d2e660ac860c"
 dependencies = [
  "bzip2",
  "clap",
@@ -3880,6 +3883,7 @@ checksum = "adb6935a6f5c20170eeceb1a3835a49e12e19d792f6dd344ccc76a985ca5a6ca"
 [[package]]
 name = "tauri"
 version = "3.0.0-alpha.5"
+source = "git+https://github.com/okhsunrog/tauri?rev=4ef077937178c9369a4e1205ec29b0163f4324a7#4ef077937178c9369a4e1205ec29b0163f4324a7"
 dependencies = [
  "anyhow",
  "bytes",
@@ -3926,6 +3930,7 @@ dependencies = [
 [[package]]
 name = "tauri-build"
 version = "3.0.0-alpha.4"
+source = "git+https://github.com/okhsunrog/tauri?rev=4ef077937178c9369a4e1205ec29b0163f4324a7#4ef077937178c9369a4e1205ec29b0163f4324a7"
 dependencies = [
  "anyhow",
  "cargo_toml",
@@ -3947,6 +3952,7 @@ dependencies = [
 [[package]]
 name = "tauri-codegen"
 version = "3.0.0-alpha.4"
+source = "git+https://github.com/okhsunrog/tauri?rev=4ef077937178c9369a4e1205ec29b0163f4324a7#4ef077937178c9369a4e1205ec29b0163f4324a7"
 dependencies = [
  "base64 0.23.1",
  "brotli",
@@ -3972,6 +3978,7 @@ dependencies = [
 [[package]]
 name = "tauri-macros"
 version = "3.0.0-alpha.4"
+source = "git+https://github.com/okhsunrog/tauri?rev=4ef077937178c9369a4e1205ec29b0163f4324a7#4ef077937178c9369a4e1205ec29b0163f4324a7"
 dependencies = [
  "heck",
  "proc-macro2",
@@ -3984,6 +3991,7 @@ dependencies = [
 [[package]]
 name = "tauri-runtime"
 version = "3.0.0-alpha.4"
+source = "git+https://github.com/okhsunrog/tauri?rev=4ef077937178c9369a4e1205ec29b0163f4324a7#4ef077937178c9369a4e1205ec29b0163f4324a7"
 dependencies = [
  "cookie",
  "dpi",
@@ -4003,6 +4011,7 @@ dependencies = [
 [[package]]
 name = "tauri-runtime-cef"
 version = "3.0.0-alpha.6"
+source = "git+https://github.com/okhsunrog/tauri?rev=4ef077937178c9369a4e1205ec29b0163f4324a7#4ef077937178c9369a4e1205ec29b0163f4324a7"
 dependencies = [
  "base64 0.22.1",
  "cef",
@@ -4041,6 +4050,7 @@ dependencies = [
 [[package]]
 name = "tauri-utils"
 version = "3.0.0-alpha.4"
+source = "git+https://github.com/okhsunrog/tauri?rev=4ef077937178c9369a4e1205ec29b0163f4324a7#4ef077937178c9369a4e1205ec29b0163f4324a7"
 dependencies = [
  "anyhow",
  "brotli",
