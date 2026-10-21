@@ -88,3 +88,7 @@ without a RAF gap, with compute explicitly disabled.
 The normal CEF package and the experimental native pump preset remain separate
 choices. This application-level correction is independent of that SDK choice;
 the current SDK and retained cloud build cache do not need rebuilding for it.
+
+The [20k/s follow-up](LOW_RATE_VALIDATION.md) separately checks low-throughput
+operation, startup history fill, batch-dependent display latency and frame gaps
+under competing desktop load.
