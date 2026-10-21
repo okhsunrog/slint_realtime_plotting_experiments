@@ -237,3 +237,7 @@ that target by more than one batch. This keeps stale display history from
 accumulating latency; a recovery may make a corrective jump. The transport still
 receives every packet, and retained ring data remains available for frozen
 history. The backlog bound has a focused regression test in `playback.rs`.
+
+The Linux wakeup-pipe scheduling fix and remaining renderer GC pauses are
+recorded in [PUMP_VALIDATION.md](PUMP_VALIDATION.md). The pipe fix changes only
+the Tauri runtime; it uses the same CEF SDK and reader opt-in setting.

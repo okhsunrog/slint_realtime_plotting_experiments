@@ -11,14 +11,14 @@ gtk3 = { version = "0.18", package = "gtk", optional = true }
 plot-wire = { version = "0.1.0", path = "../wire" }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.154"
-tauri = { git = "https://github.com/okhsunrog/tauri", rev = "4ef077937178c9369a4e1205ec29b0163f4324a7", version = "3.0.0-alpha.5" }
-tauri-runtime-cef = { version = "3.0.0-alpha.6", features = ["devtools"], git = "https://github.com/okhsunrog/tauri", rev = "4ef077937178c9369a4e1205ec29b0163f4324a7", optional = true }
-tauri-runtime-wry = { git = "https://github.com/okhsunrog/tauri", rev = "4ef077937178c9369a4e1205ec29b0163f4324a7", version = "3.0.0-alpha.5", features = ["devtools"], optional = true }
+tauri = { git = "https://github.com/okhsunrog/tauri", rev = "eed19f2a394c868761c7e78a1c0b2b010dcfbde0", version = "3.0.0-alpha.5" }
+tauri-runtime-cef = { version = "3.0.0-alpha.6", features = ["devtools"], git = "https://github.com/okhsunrog/tauri", rev = "eed19f2a394c868761c7e78a1c0b2b010dcfbde0", optional = true }
+tauri-runtime-wry = { git = "https://github.com/okhsunrog/tauri", rev = "eed19f2a394c868761c7e78a1c0b2b010dcfbde0", version = "3.0.0-alpha.5", features = ["devtools"], optional = true }
 tokio = { version = "1.54.0", features = ["rt-multi-thread", "net", "sync", "time", "macros"] }
 uuid = { version = "1.28.0", features = ["v4"] }
 
 [build-dependencies]
-tauri-build = { git = "https://github.com/okhsunrog/tauri", rev = "4ef077937178c9369a4e1205ec29b0163f4324a7", version = "3.0.0-alpha.4" }
+tauri-build = { git = "https://github.com/okhsunrog/tauri", rev = "eed19f2a394c868761c7e78a1c0b2b010dcfbde0", version = "3.0.0-alpha.4" }
 
 [features]
 default = ["custom-protocol", "cef"]

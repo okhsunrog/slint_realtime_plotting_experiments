@@ -1,7 +1,7 @@
 {
   "tauri": {
     "url": "https://github.com/okhsunrog/tauri",
-    "rev": "4ef077937178c9369a4e1205ec29b0163f4324a7"
+    "rev": "eed19f2a394c868761c7e78a1c0b2b010dcfbde0"
   },
   "cef": {
     "url": "https://github.com/okhsunrog/cef",
