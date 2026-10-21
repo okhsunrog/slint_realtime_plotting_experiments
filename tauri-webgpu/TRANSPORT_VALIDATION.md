@@ -44,8 +44,9 @@ loss. Their JSON files are atomically renamed only after complete export.
   They motivated the 1 Mframes/s comparison rather than treating slower delivery
   as a frame-pacing improvement.
 - The default transport is unchanged. A source-level cppgc deadline experiment
-  is the next step; these results do not identify every finalized object type
-  or explain every native swap delay.
+  is recorded in [CPPGC_VALIDATION.md](CPPGC_VALIDATION.md); these transport
+  results do not identify every finalized object type or explain every native
+  swap delay.
 
 ## Reproduction and artifacts
 
