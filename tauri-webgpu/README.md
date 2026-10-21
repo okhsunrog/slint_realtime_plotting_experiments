@@ -276,7 +276,8 @@ The pacing candidate contains the finite
 external-pump deadline patch, opt-in early yield, FIFO support and the earlier
 cppgc/presentation probes; FIFO is not enabled by this preset.
 
-Import its verified archive, then build and run with the same variant:
+Download the archive from the [pacing candidate release](https://github.com/okhsunrog/cef/releases/tag/cef-154.0.8037.98-pacing.1),
+then import it and build/run with the same variant:
 
 ```sh
 nix-store --add-fixed sha256 /path/to/cef-wayland-154-pump-yield.tar.zst
