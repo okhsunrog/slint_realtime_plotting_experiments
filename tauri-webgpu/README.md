@@ -194,3 +194,27 @@ The WebKitGTK host supplies a valid GDK font DPI before its first WebView only
 when GDK reports an unset/nonpositive value, using GTK's configured font DPI or
 96 as fallback. This prevents WebKitGTK 2.54's negative-DPR startup issue while
 preserving valid existing font DPI and device scale.
+
+## Scrolling clock
+
+**Scrolling → Clocked / buffered** advances the live view at the configured
+sample rate between packets. It retains a small receive buffer (two batches plus
+one 60 Hz frame interval) instead of snapping to the latest packet. The plot bar
+shows the current buffer in milliseconds. This adds display latency; the delivery
+metric still measures transport latency, excluding that display buffer. Large
+batches at low sample rates therefore produce a visibly larger delay.
+
+**Packet head** (`?motion=packet`) retains the original arrival-driven view for
+comparison. Switching scrolling mode reloads the page, as switching renderers
+does. Frozen history retains the last displayed position. Zooming out to the
+entire ring leaves no history available for buffering. On starvation, the view
+stops at received data and rebuilds its buffer; it never predicts missing samples.
+The opt-in `measure` probe also records `[rAF timestamp, displayed head, received
+head, offset]` for checking movement independently of callback cadence.
+
+For controlled native-runtime experiments only,
+`WAVEBENCH_ALLOW_CHROMIUM_ARGS=1` enables forwarding explicit Chromium arguments
+from the executable command line. Release builds otherwise disable those
+arguments. A reader-mode comparison must verify the actual `wayland-fd` thread
+presence/absence; supplying a command-line string alone is not proof that CEF
+received the switch.

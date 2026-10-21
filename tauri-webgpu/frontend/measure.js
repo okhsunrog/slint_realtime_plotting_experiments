@@ -4,7 +4,8 @@
   if (!query.has('measure')) return;
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
   const raf = window.requestAnimationFrame.bind(window);
-  const probe = {active:false, frames:[], longtasks:[], errors:[], longtaskSupported:false};
+  const probe = {active:false, frames:[], motion:[], longtasks:[], errors:[], longtaskSupported:false};
+  window.__wavebenchMotion = (timestamp,head,received,offset) => { if (probe.active) probe.motion.push([timestamp,head,received,offset]); };
   window.requestAnimationFrame = callback => raf(timestamp => {
     const start = performance.now();
     try { return callback(timestamp); }
@@ -57,7 +58,7 @@
     const cpu = probe.frames.map(f => f[2]-f[1]);
     const report = {
       tag:query.get('measure'), query:location.search, start, end:performance.now(),
-      frames:probe.frames, longtasks:probe.longtasks, errors:probe.errors,
+      motion:probe.motion, frames:probe.frames, longtasks:probe.longtasks, errors:probe.errors,
       longtaskSupported:probe.longtaskSupported, graphics,
       viewport:[innerWidth,innerHeight],canvas:[canvas.width,canvas.height],dpr:devicePixelRatio,visibility:document.visibilityState,
       startText,endText:document.querySelector('.telemetry').innerText,

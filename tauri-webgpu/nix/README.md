@@ -10,12 +10,12 @@ Import the existing archive once, then build:
 
 ```sh
 nix-store --add-fixed sha256 \
-  /path/to/cef-wayland-154-linux-x86_64.tar.zst
+  /path/to/cef-wayland-154-reader-opt-in.tar.zst
 nix-build ./nix --no-out-link
 ```
 
 Expected archive SHA256:
-`90ae4e47589368b446fb0e2312ee0b7ea6120f0591d770f939234a3ed7731cb2`.
+`b20026d7ec4eaefbf7035427e4e34b3f4ccbf7d32f06d8814fb93d494891f836`.
 `requireFile` deliberately requires this artifact; it never silently downloads
 an official, ABI-incompatible SDK. The archive stays outside the Git repository.
 
@@ -28,8 +28,10 @@ cef-wayland-binary = pkgs.callPackage ./cef-wayland-binary.nix {};
 ```
 
 Only x86_64-linux is supported by this archive/bindings combination. The SDK's
-original generated version header says `Unknown`; the package's revision and
-archive/library hashes identify the actual build without rewriting its ABI.
+generated version header identifies base CEF commit `a09c27de3`. The library also
+contains the separately hashed Chromium reader-coordination patch recorded in
+`nix-support/cef-provenance.json`; it is not an unmodified a09c27de3 build.
+Tauri enables that path with `--wayland-external-reader` only for GTK4 Wayland.
 
 The package patches RPATHs, the sandbox interpreter, and retains headers,
 resources and wrapper sources. It uses nixpkgs' Vulkan loader instead of the

@@ -1,4 +1,5 @@
 mod gpu;
+mod playback;
 mod renderer;
 mod webgl;
 use leptos::{mount::mount_to_body, prelude::*};
@@ -12,6 +13,7 @@ use wasm_bindgen_futures::{JsFuture, spawn_local};
 const channels = new Map();
 export function rpc(command,args) { return window.__TAURI__.core.invoke(command,args); }
 export function make_channel(callback) { const c = new window.__TAURI__.core.Channel(callback); channels.set(c.id,c); return c.id; }
+export function record_motion(timestamp,head,received,offset) { window.__wavebenchMotion?.(timestamp,head,received,offset); }
 export function drop_channel(id) { const c=channels.get(id); if(c) c.onmessage=()=>{}; channels.delete(id); }
 export function sleep(ms) { return new Promise(resolve=>setTimeout(resolve,ms)); }
 export function protocol_base() { return window.__TAURI__.core.convertFileSrc('', 'wave-data'); }
@@ -27,6 +29,7 @@ extern "C" {
     fn rpc(command: &str, args: &JsValue) -> js_sys::Promise;
     fn make_channel(callback: &js_sys::Function) -> u32;
     fn drop_channel(id: u32);
+    fn record_motion(timestamp: f64, head: f64, received: f64, offset: usize);
     fn sleep(ms: u32) -> js_sys::Promise;
     fn adapter_details() -> js_sys::Promise;
     fn protocol_base() -> String;
@@ -136,6 +139,11 @@ struct Engine {
     write: usize,
     filled: usize,
     drag: Option<(f64, usize)>,
+    playback: playback::PlaybackClock,
+    smooth: bool,
+    measure_motion: bool,
+    display_offset: usize,
+    display_head: u64,
 }
 thread_local! {static ENGINE:RefCell<Option<Engine>>=const{RefCell::new(None)};}
 thread_local! {static FAULTS:RefCell<Vec<String>>=const{RefCell::new(Vec::new())};}
@@ -163,6 +171,7 @@ fn snapshot(e: &Engine) -> Value {
         "raf_p95_ms":percentile(&m.frame_times,0.95),"raf_p99_ms":percentile(&m.frame_times,0.99),
         "submit_p95_ms":percentile(&m.submit,0.95),"render_fps":m.rendered as f64/seconds,"sequence_gaps":m.gaps,
         "clock_rtt_ms":e.clock_rtt,"dpr":web_sys::window().unwrap().device_pixel_ratio(),"canvas":[e.gpu.as_ref().map(|g|g.borrow().canvas.width()),e.gpu.as_ref().map(|g|g.borrow().canvas.height())],
+        "motion":if e.smooth{"clocked"}else{"packet"},"display_offset_frames":e.display_offset,"playback_underruns":e.playback.underruns,
         "runtime":e.ui.runtime.get_untracked(),"gpu":e.ui.gpu.get_untracked(),"renderer":if webgl_selected(){"webgl2"}else{"webgpu"},"compute_check":e.ui.check.get_untracked(),"errors":FAULTS.with_borrow(Clone::clone)})
 }
 fn receive(generation: u32, value: JsValue, json_mode: bool) -> Option<(u32, u32)> {
@@ -200,6 +209,7 @@ fn receive(generation: u32, value: JsValue, json_mode: bool) -> Option<(u32, u32
                 e.ring[..(frames - first) * CHANNELS]
                     .copy_from_slice(&packet.samples[first * CHANNELS..]);
             }
+            e.playback.receive(frames, began);
             e.write = (e.write + frames) % CAPACITY;
             e.filled = (e.filled + frames).min(CAPACITY);
             if let Some(gpu) = &e.gpu {
@@ -255,6 +265,9 @@ async fn start_stream(config: Config) -> Result<(), String> {
         e.ui.paused.set(false);
         e.write = 0;
         e.filled = 0;
+        e.playback.reset();
+        e.display_offset = 0;
+        e.display_head = 0;
         if let Some(gpu) = &e.gpu {
             gpu.borrow_mut().reset();
         }
@@ -395,6 +408,30 @@ fn webgl_selected() -> bool {
         .split('&')
         .any(|part| part == "renderer=webgl")
 }
+fn packet_motion() -> bool {
+    web_sys::window()
+        .unwrap()
+        .location()
+        .search()
+        .unwrap_or_default()
+        .trim_start_matches('?')
+        .split('&')
+        .any(|p| p == "motion=packet")
+}
+fn switch_motion() {
+    let location = web_sys::window().unwrap().location();
+    let old = location.search().unwrap_or_default();
+    let mut parts = old
+        .trim_start_matches('?')
+        .split('&')
+        .filter(|p| !p.is_empty() && !p.starts_with("motion="))
+        .map(str::to_owned)
+        .collect::<Vec<_>>();
+    parts.push(format!("motion={}", value("motion")));
+    if let Err(e) = location.set_search(&parts.join("&")) {
+        fail(format!("Switch motion: {e:?}"));
+    }
+}
 fn switch_renderer(webgl: bool) {
     let location = web_sys::window().unwrap().location();
     let old = location.search().unwrap_or_default();
@@ -470,11 +507,19 @@ fn toggle_pause() {
     engine(|e| {
         e.paused = !e.paused;
         e.ui.paused.set(e.paused);
-        e.offset = 0;
+        e.offset = if e.paused {
+            (e.playback.received().saturating_sub(e.display_head) as usize)
+                .min(e.filled.saturating_sub(e.visible.min(e.filled)))
+        } else {
+            0
+        };
         e.dirty = true;
         if !e.paused {
             e.write = 0;
             e.filled = 0;
+            e.playback.reset();
+            e.display_offset = 0;
+            e.display_head = 0;
             if let Some(g) = &e.gpu {
                 g.borrow_mut().reset();
             }
@@ -502,10 +547,31 @@ fn start_animation() {
             if (!e.paused || e.dirty)
                 && let Some(g) = &e.gpu
             {
+                let offset = if !e.paused && e.smooth {
+                    e.playback.offset(
+                        timestamp,
+                        e.config.rate,
+                        e.config.batch as usize,
+                        e.filled,
+                        e.visible,
+                    )
+                } else {
+                    e.offset
+                };
+                e.display_offset = offset;
+                e.display_head = e.playback.received().saturating_sub(offset as u64);
+                if e.measure_motion {
+                    record_motion(
+                        timestamp,
+                        e.display_head as f64,
+                        e.playback.received() as f64,
+                        offset,
+                    );
+                }
                 let t = now();
                 if let Err(err) =
                     g.borrow_mut()
-                        .render(e.visible, e.offset, e.config.amplitude as f32)
+                        .render(e.visible, offset, e.config.amplitude as f32)
                 {
                     error = Some(err);
                 }
@@ -520,11 +586,18 @@ fn start_animation() {
                     s["latency_p95_ms"].as_f64().unwrap(),s["wasm_p95_ms"].as_f64().unwrap(),s["raf_p95_ms"].as_f64().unwrap(),s["submit_p95_ms"].as_f64().unwrap(),e.metrics.gaps));
                 let span = e.visible.min(e.filled) as f64 / e.config.rate as f64;
                 e.ui.view.set(format!(
-                    "{:.3} s across screen · {} frames · {:.2}× DPR · {}",
+                    "{:.3} s across screen · {} frames · {:.2}× DPR · {} · {:.1} ms buffer",
                     span,
                     e.visible,
                     web_sys::window().unwrap().device_pixel_ratio(),
-                    if e.paused { "Frozen history" } else { "Live" }
+                    if e.paused {
+                        "Frozen history"
+                    } else if e.smooth {
+                        "Clocked"
+                    } else {
+                        "Packet head"
+                    },
+                    e.display_offset as f64 * 1000. / e.config.rate as f64
                 ));
                 e.last_ui = timestamp;
             }
@@ -668,6 +741,16 @@ fn App() -> impl IntoView {
             write: 0,
             filled: 0,
             drag: None,
+            playback: playback::PlaybackClock::default(),
+            smooth: !packet_motion(),
+            measure_motion: web_sys::window()
+                .unwrap()
+                .location()
+                .search()
+                .unwrap_or_default()
+                .contains("measure="),
+            display_offset: 0,
+            display_head: 0,
         })
     });
     spawn_local(async {
@@ -681,6 +764,7 @@ fn App() -> impl IntoView {
             <header><div><h1>"Wavebench"</h1><p>"Rust source → WASM → GPU"</p></div><div class="legend"><span class="a">"● Phase A"</span><span class="b">"● Phase B"</span><span class="c">"● Phase C"</span></div></header>
             <section class="toolbar" aria-label="Stream settings">
                 <label>"Renderer"<select id="renderer" disabled=move||ui.busy.get() on:change=move|_|switch_renderer(value("renderer")=="webgl")><option value="webgpu" selected=!webgl_selected()>"WebGPU / compute"</option><option value="webgl" selected=webgl_selected()>"WebGL2 / no compute"</option></select></label>
+                <label>"Scrolling"<select id="motion" disabled=move||ui.busy.get() on:change=move|_|switch_motion()><option value="clocked" selected=!packet_motion()>"Clocked / buffered"</option><option value="packet" selected=packet_motion()>"Packet head"</option></select></label>
                 <label>"Transport"<select id="transport" disabled=move||ui.busy.get()><option value="binary">"Binary Channel"</option><option value="json">"JSON Channel"</option><option value="invoke">"Binary invoke pull"</option><option value="ws" selected>"Binary WebSocket"</option><option value="protocol">"Custom protocol fetch"</option></select></label>
                 <label>"Frames / second"<select id="rate" disabled=move||ui.busy.get()><option value="20000">"20,000"</option><option value="200000">"200,000"</option><option value="1000000" selected>"1,000,000"</option><option value="4000000">"4,000,000"</option><option value="8000000">"8,000,000"</option></select></label>
                 <label>"Frames / batch"<select id="batch" disabled=move||ui.busy.get()><option value="256">"256"</option><option value="1024">"1,024"</option><option value="4096">"4,096"</option><option value="16384" selected>"16,384"</option><option value="65536">"65,536"</option></select></label>

@@ -91,6 +91,9 @@ fn main() {
     std::fs::create_dir_all(&logs).unwrap();
     #[cfg(feature = "cef")]
     let runtime = tauri_runtime_cef::Cef::default()
+        .allow_chromium_command_line_args(
+            std::env::var_os("WAVEBENCH_ALLOW_CHROMIUM_ARGS").is_some(),
+        )
         .log_file(logs.join("cef.log"))
         .command_line_arg("--password-store", Some("basic"))
         .command_line_arg("--use-gl", Some("angle"))

@@ -5,8 +5,10 @@
   },
   "cef": {
     "url": "https://github.com/okhsunrog/cef",
-    "rev": "e6f58aee4915b073b6fa855f06e92b528bf0d409",
-    "runtime_rev": "a09c27de3f5bb45f4cfb8656a46d85d272e1587e"
+    "rev": "e11964081eed4e386afa7ff652721232c6beeefd",
+    "runtime_rev": "a09c27de3f5bb45f4cfb8656a46d85d272e1587e",
+    "chromium_reader_patch_sha256": "1ad8496c4e63c3a3e276b72ff804c43fe7d82908a97121ecb04e7a40adc3c147",
+    "runtime_source": "runtime_rev base plus chromium_reader_patch_sha256 overlay"
   },
   "cef-rs": {
     "url": "https://github.com/okhsunrog/cef-rs",
@@ -22,8 +24,8 @@
     "narHash": "sha256-zp8ToDMnqZcu4o4IH9pdwXFXGp7yLm/M0dEnNWnyd7I="
   },
   "sdk": {
-    "filename": "cef-wayland-154-linux-x86_64.tar.zst",
-    "sha256": "90ae4e47589368b446fb0e2312ee0b7ea6120f0591d770f939234a3ed7731cb2",
+    "filename": "cef-wayland-154-reader-opt-in.tar.zst",
+    "sha256": "b20026d7ec4eaefbf7035427e4e34b3f4ccbf7d32f06d8814fb93d494891f836",
     "experimental_api": 999999,
     "api_hash": "a15420be190a255a6479f26806ed67fd59e1eeae"
   }

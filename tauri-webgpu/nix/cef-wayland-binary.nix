@@ -6,8 +6,9 @@
   libxtst, libxi, libxshmfence, at-spi2-core, atk, at-spi2-atk, expat,
   libuuid, pciutils, libffi, cairo, pango, harfbuzz, udev, zlib }:
 let
-  archiveHash = "90ae4e47589368b446fb0e2312ee0b7ea6120f0591d770f939234a3ed7731cb2";
+  archiveHash = "b20026d7ec4eaefbf7035427e4e34b3f4ccbf7d32f06d8814fb93d494891f836";
   revision = "a09c27de3f5bb45f4cfb8656a46d85d272e1587e";
+  readerPatch = "1ad8496c4e63c3a3e276b72ff804c43fe7d82908a97121ecb04e7a40adc3c147";
   apiHash = "a15420be190a255a6479f26806ed67fd59e1eeae";
   runtimeLibraries = [
     stdenv.cc.cc.lib glib gtk3 gtk4 gdk-pixbuf graphene nss nspr alsa-lib
@@ -19,14 +20,14 @@ let
   rpath = lib.makeLibraryPath runtimeLibraries;
 in stdenv.mkDerivation {
   pname = "cef-wayland-binary";
-  version = "154.0.8037.98-${builtins.substring 0 9 revision}";
+  version = "154.0.8037.98-${builtins.substring 0 9 revision}-reader-${builtins.substring 0 7 readerPatch}";
   src = requireFile {
-    name = "cef-wayland-154-linux-x86_64.tar.zst";
+    name = "cef-wayland-154-reader-opt-in.tar.zst";
     sha256 = archiveHash;
     meta.license = lib.licenses.bsd3;
     message = ''
       Import the verified custom CEF archive once:
-        nix-store --add-fixed sha256 /path/to/cef-wayland-154-linux-x86_64.tar.zst
+        nix-store --add-fixed sha256 /path/to/cef-wayland-154-reader-opt-in.tar.zst
       Expected SHA256: ${archiveHash}
     '';
   };
@@ -37,7 +38,7 @@ in stdenv.mkDerivation {
   dontPatchELF = true;
   installPhase = ''
     runHook preInstall
-    echo '6f3b732cecf21d0820e50778e2430bd5211fa1f606c9582c9836a76167fc6f31  Release/libcef.so' | sha256sum -c -
+    echo 'a510fd54890b575f832700509bbd1775db9ce711ae463f749b2373960c5eb94d  Release/libcef.so' | sha256sum -c -
     grep -q cef_set_wayland_display include/internal/cef_types_linux.h
     sed -i 's/-O0/-O2/g' cmake/cef_variables.cmake
     mkdir -p "$out"
@@ -57,7 +58,7 @@ in stdenv.mkDerivation {
     done
     mkdir -p "$out/nix-support"
     cat > "$out/nix-support/cef-provenance.json" <<JSON
-    {"cef_revision":"${revision}","chromium_version":"154.0.8037.98","api_version":999999,"api_hash":"${apiHash}","archive_sha256":"${archiveHash}","original_libcef_sha256":"6f3b732cecf21d0820e50778e2430bd5211fa1f606c9582c9836a76167fc6f31"}
+    {"cef_base_revision":"${revision}","chromium_reader_patch_sha256":"${readerPatch}","chromium_version":"154.0.8037.98","api_version":999999,"api_hash":"${apiHash}","archive_sha256":"${archiveHash}","original_libcef_sha256":"a510fd54890b575f832700509bbd1775db9ce711ae463f749b2373960c5eb94d"}
     JSON
     runHook postInstall
   '';
@@ -72,7 +73,7 @@ in stdenv.mkDerivation {
     if grep -q 'not found' "$TMPDIR/cef-ldd.txt"; then exit 1; fi
     runHook postInstallCheck
   '';
-  passthru = { inherit revision apiHash runtimeLibraries; apiVersion = 999999; buildType = "Release"; };
+  passthru = { inherit revision readerPatch apiHash runtimeLibraries; apiVersion = 999999; buildType = "Release"; };
   meta = {
     description = "CEF 154 SDK with native shared-display GTK Wayland embedding";
     license = lib.licenses.bsd3;
