@@ -112,7 +112,8 @@ failure. The retained cloud disk contains the Chromium sources and incremental
 build cache; neither the VM nor the disk is deleted by these experiments.
 
 The final exact binary also completed a quiet 30 s control at about 3.999 million
-samples/s with 1800 RAF callbacks and no RAF gaps. The trace document origin
+samples/s with 1800 RAF callbacks and native presentations, no gaps in either, and a
+16.667 ms maximum native presentation interval. The trace document origin
 matched the report at both ends. A parallel read-only process I/O sampler saw
 maximum host CPU 13.3%, without large disk writes. Perfetto's shared-memory
 implementation uses memfd, and CDP creates the output stream file when stopping
@@ -126,3 +127,9 @@ are retained as loaded observations rather than quiet acceptance results.
 WebGPU system information reports `webgpu_on_vk_via_gl_interop: enabled` on the
 Intel adapter. The compositor reports OpenGL; its separate Vulkan status must
 not be substituted for the WebGPU interop status.
+
+Compatibility checks also rebuilt the WebKitGTK target after the common Tauri
+pin update. A short WebKitGTK 2.54.1 / WebGL2 smoke run delivered approximately
+999,345 samples/s at a requested 1 million/s, with no sequence gaps or frontend
+errors. Compute was explicitly disabled in that control; it is not a WebGPU
+result or a timing comparison against CEF.
