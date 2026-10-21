@@ -90,3 +90,7 @@ This uses the frozen benchmark binary, matching candidate resources, and GTK
 reader by default. Log: `cppgc-candidate/demo.log`. To test the normal threaded
 reader, prefix `WAVEBENCH_WAYLAND_READER=threaded`; that reader/SDK combination
 was not measured in this series. Ordinary `./run.sh` continues to use the stable SDK.
+
+Follow-up object attribution, video-paused physical-display repeats and direct
+Wayland discard matches are in
+[FINALIZER_PRESENTATION_VALIDATION.md](FINALIZER_PRESENTATION_VALIDATION.md).
