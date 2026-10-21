@@ -1,3 +1,3 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Wavebench</title><link rel="stylesheet" href="style.css"></head>
-<body><script type="module">import init from './pkg/plot_frontend.js';init().catch(error=>{document.body.textContent='WASM startup failed: '+error;console.error(error)});</script></body></html>
+<body><script src="measure.js"></script><script type="module">import init from './pkg/plot_frontend.js';init().catch(error=>{document.body.textContent='WASM startup failed: '+error;console.error(error)});</script></body></html>

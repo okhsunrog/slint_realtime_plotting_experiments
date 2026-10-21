@@ -130,9 +130,10 @@ min/max; it does not invoke WebGPU or compute. This follows the older plot's
 non-compute approach in spirit; it does not reproduce its storage-buffer WGSL
 shader verbatim (that shader is not WebGL compatible).
 
-Runtime checks and timing comparisons are **pending**: the user requested that
-they be deferred while the laptop is under unrelated load. No rendering,
-acceleration, WebGL extrema readback, or microstutter result is claimed here.
+Runtime checks and timing comparisons were initially deferred at the user request
+while the laptop was under unrelated load. The completed comparison is recorded
+below. WebGL extrema readback has not been implemented; screenshots validate
+its waveform visually and the compute mode retains its separate numeric check.
 Later compare CEF/WebGPU, CEF/WebGL2 and WebKitGTK/WebGL2 at equal transport,
 rate, batch size, view and physical canvas size. WebGL repeats reduction work
 across quad vertices, so GPU execution costs differ from the compute pipeline.
@@ -140,6 +141,51 @@ Switching renderers reloads and resets controls/history; reapply equal settings.
 
 Compilation checks: WASM frontend `cargo check` and release compilation passed;
 WebKitGTK/Wry native `cargo check --no-default-features --features
-custom-protocol,webkit` passed. The CEF native release build passed. These checks
-do not compile the GLSL through a browser driver or validate the WebKitGTK
-executable at runtime; both remain part of the deferred GUI checks.
+custom-protocol,webkit` passed. The CEF native release build passed. Those source checks alone did not compile GLSL through a browser driver or
+validate the WebKitGTK executable at runtime; the completed runtime comparison
+is recorded below.
+
+## Completed frame timing comparison (2026-10-21)
+
+Release builds, virtual KWin/Wayland at approximately 60 Hz, physical canvas
+1280 × 368, DPR 1, WebSocket, batch 16384, 262144 visible samples. Each cell is
+the count of rAF intervals longer than 25 ms in two separate 30-second runs
+(five-second warmup per run; second pass reverses engine order).
+
+| Runtime / renderer | 1 Mframe/s | 4 Mframe/s |
+|---|---:|---:|
+| CEF / WebGPU compute | 30 / 31 | 26 / 39 |
+| CEF / WebGL2 vertex reduction | 19 / 20 | 25 / 29 |
+| WebKitGTK / WebGL2 vertex reduction | 1 / 1 | 6 / 0 |
+
+All accepted trials have matching canvas dimensions, visible document and no
+JavaScript errors. Native device maps show Mesa and renderD128 usage; CEF WebGL
+reports ANGLE Intel Arc/MTL and WebGPU passes all 102 known extrema. WebKit's
+reported Apple GPU identity is generic and is not used as hardware evidence.
+
+CEF's maximum rAF interval was about 50.1 ms. One WebKitGTK interval reached
+192 ms; two additional 4 Mframe/s trials had 0 and 2 intervals above 25 ms, with
+maxima 20 and 34 ms. The rare WebKit outlier was not traced to a cause and is
+retained in the results. Normal callback p99 was around 0.7-1.4 ms; WebKit's
+coarser timer precision limits direct CPU comparisons. One CEF callback reached
+24.9 ms. rAF timings do not establish physical presentation or uniformly paced
+packet-driven motion. This is Wry on Tauri 3, not a Tauri 2 reconstruction.
+
+Compute shaders are not required to reproduce CEF's pauses. The earlier native
+GTK/CEF shared-reader block remains a separately measured mechanism; these new
+trials do not prove that it explains every delay. WebKit's rare tail needs its
+own diagnosis. No production native reader-coordination patch is included.
+
+Before measurement, fixed WebKitGTK's missing direct Nix RUNPATH libraries and
+unset GDK font DPI (-1), which caused negative DPR and a 1×1 canvas. DPI is
+initialized before the first WebView only when GDK's value is invalid, preserving
+positive existing settings. See the [independent reproduction](https://github.com/yetone/magpie/issues/1371).
+The opt-in timing probe disables canvas flex shrinking for equal physical work.
+Preflight trials, overlapping early startup checks and a rejected two-pixel
+canvas mismatch are excluded. No screenshots or compilation ran during accepted
+measurement windows; native driver maps were collected afterward.
+
+Full report, raw rAF/callback arrays, host load, native device maps, journals and
+controller scripts are retained locally under
+`/home/okhsunrog/tmp_zfs/codex_tmp/wavebench-comparison/`. The virtual session and
+all test applications were closed after measurement.

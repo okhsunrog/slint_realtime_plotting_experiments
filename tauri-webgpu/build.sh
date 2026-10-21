@@ -8,7 +8,7 @@ esac
 export TMPDIR="${WAVEBENCH_TMP:-${XDG_CACHE_HOME:-$HOME/.cache}/tauri-webgpu/tmp}"
 mkdir -p "$TMPDIR" logs
 wasm-pack build frontend --target web --release --out-dir ../dist/pkg 2>&1 | tee logs/frontend-build.log
-cp frontend/index.html frontend/style.css dist/
+cp frontend/index.html frontend/style.css frontend/measure.js dist/
 export WAVEBENCH_TMP="$TMPDIR"
 if [ "${1:-cef}" = webkit ]; then
   unset CEF_PATH LD_LIBRARY_PATH

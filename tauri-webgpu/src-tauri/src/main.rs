@@ -48,7 +48,11 @@ fn stream_stats(session: u32, state: State<Streams>) -> Result<Value, String> {
 }
 #[tauri::command]
 fn save_benchmark(report: Value) -> Result<String, String> {
-    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../logs/benchmark.json");
+    let path = std::env::var_os("WAVEBENCH_REPORT_PATH")
+        .map(std::path::PathBuf::from)
+        .unwrap_or_else(|| {
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../logs/benchmark.json")
+        });
     std::fs::write(
         &path,
         serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,
@@ -88,6 +92,7 @@ fn main() {
     #[cfg(feature = "cef")]
     let runtime = tauri_runtime_cef::Cef::default()
         .log_file(logs.join("cef.log"))
+        .command_line_arg("--password-store", Some("basic"))
         .command_line_arg("--use-gl", Some("angle"))
         .command_line_arg("--use-angle", Some("gl"))
         .command_line_arg("--enable-unsafe-webgpu", None::<String>)
@@ -101,12 +106,36 @@ fn main() {
             ("--force-renderer-accessibility", None),
         ]);
     #[cfg(feature = "webkit")]
-    let runtime = tauri_runtime_wry::Wry::default();
+    let runtime = {
+        use gtk3::prelude::*;
+        gtk3::init().expect("Initialize GTK3");
+        if let Some(screen) = gtk3::gdk::Screen::default()
+            && screen.resolution() <= 0.0
+        {
+            let configured = gtk3::Settings::default()
+                .map(|s| s.property::<i32>("gtk-xft-dpi"))
+                .unwrap_or(-1);
+            let dpi = if configured > 0 {
+                configured as f64 / 1024.0
+            } else {
+                96.0
+            };
+            // WebKitGTK 2.54 forwards GDK's unset (-1) sentinel as a negative DPR.
+            // Set a valid font DPI before the first WebView; preserve valid settings.
+            screen.set_resolution(dpi);
+            println!("Initialized unset GDK font resolution to {dpi} DPI");
+        }
+        tauri_runtime_wry::Wry::default()
+    };
     let mut context = tauri::generate_context!();
     #[cfg(feature = "webkit")]
     {
         context.config_mut().app.windows[0].url =
             tauri::WebviewUrl::App("index.html?renderer=webgl".into());
+    }
+    if let Ok(query) = std::env::var("WAVEBENCH_QUERY") {
+        context.config_mut().app.windows[0].url =
+            tauri::WebviewUrl::App(format!("index.html?{query}").into());
     }
     context.config_mut().app.windows[0].title = if cfg!(feature = "webkit") {
         "Wavebench · WebKitGTK / WebGL2"

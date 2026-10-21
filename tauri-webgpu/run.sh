@@ -7,5 +7,5 @@ mkdir -p "$TMPDIR" logs
 {
   launcher=$(nix-build ./nix/runtime.nix --out-link "$TMPDIR/nix-runtime")
   binary="$PWD/target/release/wavebench-cef"
-  "$launcher" "$binary"
+  "$launcher" "$binary" "$@"
 } 2>&1 | tee -a logs/runtime.log

@@ -149,7 +149,8 @@ Metrics:
 
 The frontend keeps a bounded history of timing samples. `wasm-bindgen` provides
 thin JavaScript glue for Tauri's official Channel API, timers and adapter info;
-UI, transports, sample processing, benchmarking and rendering are written in Rust.
+UI, transports, sample processing, transport benchmarking and rendering are
+written in Rust. The optional frame-timing probe described below is JavaScript.
 There are still copies across process and JS/WASM boundaries: this does not
 claim to be shared-memory or zero-copy IPC.
 
@@ -163,3 +164,33 @@ cargo fmt --all -- --check
 ```
 
 Runtime measurements and screenshots are described in [VALIDATION.md](VALIDATION.md).
+
+## Frame timing probe
+
+The opt-in `frontend/measure.js` probe uses the same rAF wrapper in both engines.
+It applies binary WebSocket, batch 16384, a five-second warmup and a physical
+1280 × 368 canvas, then records raw callback timestamps and CPU durations.
+Normal launches do not install the wrapper. For example:
+
+```sh
+WAVEBENCH_QUERY='renderer=webgl&measure=cef-webgl&rate=1000000&seconds=30' \
+WAVEBENCH_REPORT_PATH="$PWD/logs/frame-timing.json" ./run.sh
+```
+
+Use `renderer=webgpu` for CEF/WebGPU, or the same WebGL query with
+`./run-webkit.sh` for WebKitGTK. The report's parent directory must exist. Query
+settings reload the app; reports distinguish the runtime, renderer, DPR and
+physical canvas dimensions. The probe fixes canvas flex shrinking so scrollbar
+and toolkit differences do not silently change the rendering workload.
+
+These are rAF scheduling measurements, not compositor presentation timestamps.
+The frame probe is diagnostic JavaScript; the application and transport benchmark
+remain Rust/WASM. WebKit may have coarser timer precision and no longtask observer.
+Repeat runs in reverse order and do not measure while building or under unrelated
+host load. CEF uses the basic password store for this credential-free benchmark,
+preventing a fresh virtual-session KWallet prompt from blocking startup.
+
+The WebKitGTK host supplies a valid GDK font DPI before its first WebView only
+when GDK reports an unset/nonpositive value, using GTK's configured font DPI or
+96 as fallback. This prevents WebKitGTK 2.54's negative-DPR startup issue while
+preserving valid existing font DPI and device scale.
