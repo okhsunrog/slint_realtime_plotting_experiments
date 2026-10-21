@@ -114,6 +114,20 @@ fn main() {
         Ok("threaded") | Err(_) => runtime,
         Ok(other) => panic!("Unknown WAVEBENCH_WAYLAND_READER={other}; use gtk or threaded"),
     };
+    #[cfg(feature = "cef")]
+    let runtime = if let Ok(port) = std::env::var("WAVEBENCH_DEBUG_PORT") {
+        let port = port
+            .parse::<u16>()
+            .ok()
+            .filter(|port| *port >= 1024)
+            .expect("WAVEBENCH_DEBUG_PORT must be an integer between 1024 and 65535");
+        runtime.remote_debugging(tauri_runtime_cef::RemoteDebugging::Port {
+            port,
+            allowed_origins: Vec::new(),
+        })
+    } else {
+        runtime
+    };
     #[cfg(feature = "webkit")]
     let runtime = {
         use gtk3::prelude::*;

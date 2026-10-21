@@ -4,8 +4,15 @@
   if (!query.has('measure')) return;
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
   const raf = window.requestAnimationFrame.bind(window);
-  const probe = {active:false, frames:[], motion:[], longtasks:[], errors:[], longtaskSupported:false};
-  window.__wavebenchMotion = (timestamp,head,received,offset) => { if (probe.active) probe.motion.push([timestamp,head,received,offset]); };
+  const probe = {active:false, frames:[], motion:[], longtasks:[], errors:[], longtaskSupported:false, receivedFirst:null, receivedLast:null, receivedStart:null, receivedEnd:null};
+  window.__wavebenchMotion = (timestamp,head,received,offset) => {
+    if (!probe.active) return;
+    const sampledAt = performance.now();
+    if (probe.receivedFirst === null) { probe.receivedFirst = received; probe.receivedStart = sampledAt; }
+    probe.receivedLast = received;
+    probe.receivedEnd = sampledAt;
+    probe.motion.push([timestamp,head,received,offset]);
+  };
   window.requestAnimationFrame = callback => raf(timestamp => {
     const start = performance.now();
     try { return callback(timestamp); }
@@ -38,10 +45,19 @@
     canvas.style.width = `${1280/devicePixelRatio+2}px`;
     canvas.style.height = `${368/devicePixelRatio+2}px`;
     canvas.parentElement.style.height = canvas.style.height;
-    document.querySelector('#transport').value = 'ws';
+    const transport = query.get('transport') || 'ws';
+    if (!['ws','binary','protocol','invoke','json'].includes(transport)) throw Error('Invalid transport: '+transport);
+    document.querySelector('#transport').value = transport;
     document.querySelector('#rate').value = query.get('rate') || '1000000';
     document.querySelector('#batch').value = query.get('batch') || '16384';
     button('Apply / restart').click();
+    await sleep(0);
+    let streaming = false;
+    for (let i=0; i<120; ++i) {
+      if (!button('Apply / restart').disabled && document.querySelector('footer').innerText.startsWith(`Streaming ${transport} ·`)) { streaming=true;break; }
+      await sleep(250);
+    }
+    if (!streaming) throw Error('Requested stream did not start: '+document.body.innerText);
     await sleep(5000);
     let graphics = null;
     if (query.get('renderer') === 'webgl') {
@@ -54,10 +70,13 @@
     const start = performance.now();
     await sleep(Number(query.get('seconds') || 30)*1000);
     probe.active = false;
+    const end = performance.now();
     const intervals = probe.frames.slice(1).map((f,i) => f[0]-probe.frames[i][0]);
     const cpu = probe.frames.map(f => f[2]-f[1]);
     const report = {
-      tag:query.get('measure'), query:location.search, start, end:performance.now(),
+      tag:query.get('measure'), query:location.search, transport, start, end,
+      delivery:{first:probe.receivedFirst,last:probe.receivedLast,start:probe.receivedStart,end:probe.receivedEnd,
+        frames_per_s:probe.receivedEnd > probe.receivedStart ? (probe.receivedLast-probe.receivedFirst)*1000/(probe.receivedEnd-probe.receivedStart) : null},
       motion:probe.motion, frames:probe.frames, longtasks:probe.longtasks, errors:probe.errors,
       longtaskSupported:probe.longtaskSupported, graphics,
       viewport:[innerWidth,innerHeight],canvas:[canvas.width,canvas.height],dpr:devicePixelRatio,visibility:document.visibilityState,

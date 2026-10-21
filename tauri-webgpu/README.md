@@ -168,7 +168,8 @@ Runtime measurements and screenshots are described in [VALIDATION.md](VALIDATION
 ## Frame timing probe
 
 The opt-in `frontend/measure.js` probe uses the same rAF wrapper in both engines.
-It applies binary WebSocket, batch 16384, a five-second warmup and a physical
+It selects `transport=ws` by default (also `binary`, `protocol`, `invoke`, or
+`json`), batch 16384, a five-second warmup after stream startup, and a physical
 1280 × 368 canvas, then records raw callback timestamps and CPU durations.
 Normal launches do not install the wrapper. For example:
 
@@ -180,7 +181,9 @@ WAVEBENCH_REPORT_PATH="$PWD/logs/frame-timing.json" ./run.sh
 Use `renderer=webgpu` for CEF/WebGPU, or the same WebGL query with
 `./run-webkit.sh` for WebKitGTK. The report's parent directory must exist. Query
 settings reload the app; reports distinguish the runtime, renderer, DPR and
-physical canvas dimensions. The probe fixes canvas flex shrinking so scrollbar
+physical canvas dimensions. `delivery.frames_per_s` measures received sample
+counts over monotonic frontend time, independently of the requested source
+rate and rounded telemetry. The probe fixes canvas flex shrinking so scrollbar
 and toolkit differences do not silently change the rendering workload.
 
 These are rAF scheduling measurements, not compositor presentation timestamps.
@@ -241,3 +244,8 @@ history. The backlog bound has a focused regression test in `playback.rs`.
 The Linux wakeup-pipe scheduling fix and remaining renderer GC pauses are
 recorded in [PUMP_VALIDATION.md](PUMP_VALIDATION.md). The pipe fix changes only
 the Tauri runtime; it uses the same CEF SDK and reader opt-in setting.
+
+For opt-in local Chromium tracing, set `WAVEBENCH_DEBUG_PORT=9227` when
+launching CEF. The normal launcher leaves remote debugging disabled. Transport
+GC comparisons and their limits are recorded in
+[TRANSPORT_VALIDATION.md](TRANSPORT_VALIDATION.md).
