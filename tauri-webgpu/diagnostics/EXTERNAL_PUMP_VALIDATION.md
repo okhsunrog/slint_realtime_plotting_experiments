@@ -106,7 +106,7 @@ that idle interval in the average even when rendering has resumed at 60 fps.
 The per-run frame report also includes its document time origin for aligning
 performance timestamps with the native trace.
 
-Final physical-screen A/B tests must include both frame sources and, separately,
+The physical-screen follow-up below includes both frame sources and, separately,
 FIFO. A locked or occluded physical desktop must not be ranked as a renderer
 failure. The retained cloud disk contains the Chromium sources and incremental
 build cache; neither the VM nor the disk is deleted by these experiments.
@@ -133,3 +133,66 @@ pin update. A short WebKitGTK 2.54.1 / WebGL2 smoke run delivered approximately
 999,345 samples/s at a requested 1 million/s, with no sequence gaps or frontend
 errors. Compute was explicitly disabled in that control; it is not a WebGPU
 result or a timing comparison against CEF.
+
+## Physical screen follow-up, 2026-10-22
+
+[Machine-readable results](physical-validation-2026-10-22.json) retain all 18
+physical captures, including runs affected by background CPU activity. The
+screen was checked unlocked before and after every capture. The app was on the
+built-in 2256×1504 / 60 Hz panel at 135% scale, with a second 4K / 60 Hz display
+at 150% still connected. KWin was 6.8.0. WebGPU used the hardware Intel adapter;
+compute correctness and stream sequence checks passed in the app captures.
+
+The detailed trace series retained occasional native presentation failures even
+when RAF was uniform. Six relatively quiet detailed captures had 2, 5, 3, 2,
+3 and 7 failed presentation feedbacks per 30 seconds. Two further runs had CPU
+spikes near 80% and are not suitable for ranking configurations. Native Wayland
+events confirmed both that FIFO constraints were applied and that failures
+included actual compositor `discarded` callbacks. FIFO is still optional:
+these captures do not establish an advantage from enabling it.
+
+Detailed traces were about 350 MB. Reducing the categories to
+`viz,wayland,blink.user_timing` produced about 43 MB and retained native
+presentation feedback. Each following capture waited for eight consecutive
+one-second host CPU samples below 15%. These reduced traces do not contain GC
+events and cannot exclude GC as a cause of a delay.
+
+| Frame source | FIFO | RAF callbacks | Successful presentations | Native maximum interval |
+| --- | --- | ---: | ---: | ---: |
+| Timer | Off | 1800 | 1800 | 16.678 ms |
+| Timer | On | 1800 | 1800 | 16.678 ms |
+| Wayland | On | 1800 | 1800 | 16.678 ms |
+| Wayland | Off | 1800 | 1800 | 16.678 ms |
+
+All four runs delivered approximately 3.997–3.999 million samples/s without
+sequence gaps. Host CPU median was 6.8–6.9%, maximum 8.0–12.3%; app CPU averaged
+0.765–0.780 logical cores. This demonstrates smooth physical presentation with
+the candidate under those conditions, including fractional scaling and compute.
+
+A subsequent baseline/candidate/candidate/baseline sequence used the same
+reduced trace categories. The baseline used the earlier profiling SDK, main-thread
+buffer reclamation and the 33 ms pump bound; the candidate used Worker reclamation,
+the combined native patch and the 4 ms bound. Both used timer pacing, FIFO off
+and the 4 million samples/s stream. One quiet candidate run and one quiet baseline
+run each produced 1800 successful presentations without gaps. Their app CPU was
+0.764 and 0.699 logical cores respectively. The other two captures had background
+CPU spikes of 44.7% and 65.3%. Consequently this comparison does **not** establish
+a general microstutter fix or a CPU saving from the combined preset. The previous
+scoped evidence about pump deadlines and main-thread finalization remains useful,
+but must not be substituted for that missing overall result.
+
+Standalone CEF with its own native event loop and a Canvas2D page, without Tauri,
+WASM or a data stream, also produced 1800 successful presentations without gaps
+in its quiet Wayland-source capture. Its timer-source capture had a CPU spike of
+66.6%, so it cannot establish a difference between the frame sources.
+
+A separate read-only process I/O sample observed the session indexer
+`agentsview-linu` writing up to 20–29 MB/s to its SQLite database while ZFS worker
+CPU activity was high. Trace export and analysis also generated disk traffic after
+measurement. This identifies competing work, not a proven causal attribution for
+every stall. A paused-indexer causal control has not yet been run. No indexer,
+compositor, network, filesystem or scheduler settings were changed for these captures.
+
+The preset remains experimental and the stable SDK stays the default. Quiet
+physical presentation is verified; a universal fix for pauses under background
+load, including the earlier rare 103.6 ms callback, is not established.
