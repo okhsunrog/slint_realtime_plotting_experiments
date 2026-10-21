@@ -218,3 +218,22 @@ from the executable command line. Release builds otherwise disable those
 arguments. A reader-mode comparison must verify the actual `wayland-fd` thread
 presence/absence; supplying a command-line string alone is not proof that CEF
 received the switch.
+
+The GTK-owned native reader is experimental and remains opt-in. Paired tests did
+not establish a consistent frame-pacing improvement, so the default CEF watcher
+is preserved:
+
+```sh
+WAVEBENCH_WAYLAND_READER=gtk ./run.sh
+WAVEBENCH_WAYLAND_READER=threaded ./run.sh
+```
+
+This selects CEF's native event integration independently of **Scrolling** and
+**Renderer**. It is supplied through the runtime API and does not require allowing
+arbitrary Chromium command-line arguments.
+
+After a delayed frame or producer burst, scrolling catches up if its lag exceeds
+that target by more than one batch. This keeps stale display history from
+accumulating latency; a recovery may make a corrective jump. The transport still
+receives every packet, and retained ring data remains available for frozen
+history. The backlog bound has a focused regression test in `playback.rs`.

@@ -171,7 +171,7 @@ fn snapshot(e: &Engine) -> Value {
         "raf_p95_ms":percentile(&m.frame_times,0.95),"raf_p99_ms":percentile(&m.frame_times,0.99),
         "submit_p95_ms":percentile(&m.submit,0.95),"render_fps":m.rendered as f64/seconds,"sequence_gaps":m.gaps,
         "clock_rtt_ms":e.clock_rtt,"dpr":web_sys::window().unwrap().device_pixel_ratio(),"canvas":[e.gpu.as_ref().map(|g|g.borrow().canvas.width()),e.gpu.as_ref().map(|g|g.borrow().canvas.height())],
-        "motion":if e.smooth{"clocked"}else{"packet"},"display_offset_frames":e.display_offset,"playback_underruns":e.playback.underruns,
+        "motion":if e.smooth{"clocked"}else{"packet"},"display_offset_frames":e.display_offset,"playback_underruns":e.playback.underruns,"playback_catchups":e.playback.catchups,
         "runtime":e.ui.runtime.get_untracked(),"gpu":e.ui.gpu.get_untracked(),"renderer":if webgl_selected(){"webgl2"}else{"webgpu"},"compute_check":e.ui.check.get_untracked(),"errors":FAULTS.with_borrow(Clone::clone)})
 }
 fn receive(generation: u32, value: JsValue, json_mode: bool) -> Option<(u32, u32)> {

@@ -108,6 +108,12 @@ fn main() {
             ("--enable-unsafe-webgpu", None),
             ("--force-renderer-accessibility", None),
         ]);
+    #[cfg(feature = "cef")]
+    let runtime = match std::env::var("WAVEBENCH_WAYLAND_READER").as_deref() {
+        Ok("gtk") => runtime.command_line_arg("--wayland-external-reader", None::<String>),
+        Ok("threaded") | Err(_) => runtime,
+        Ok(other) => panic!("Unknown WAVEBENCH_WAYLAND_READER={other}; use gtk or threaded"),
+    };
     #[cfg(feature = "webkit")]
     let runtime = {
         use gtk3::prelude::*;

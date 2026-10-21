@@ -5,7 +5,7 @@
   },
   "cef": {
     "url": "https://github.com/okhsunrog/cef",
-    "rev": "e11964081eed4e386afa7ff652721232c6beeefd",
+    "rev": "8c7f51a77b47bf218c54824d74026ac5938d5eea",
     "runtime_rev": "a09c27de3f5bb45f4cfb8656a46d85d272e1587e",
     "chromium_reader_patch_sha256": "1ad8496c4e63c3a3e276b72ff804c43fe7d82908a97121ecb04e7a40adc3c147",
     "runtime_source": "runtime_rev base plus chromium_reader_patch_sha256 overlay"
@@ -27,6 +27,8 @@
     "filename": "cef-wayland-154-reader-opt-in.tar.zst",
     "sha256": "b20026d7ec4eaefbf7035427e4e34b3f4ccbf7d32f06d8814fb93d494891f836",
     "experimental_api": 999999,
-    "api_hash": "a15420be190a255a6479f26806ed67fd59e1eeae"
+    "api_hash": "a15420be190a255a6479f26806ed67fd59e1eeae",
+    "native_reader_default": "threaded",
+    "gtk_reader_opt_in": "WAVEBENCH_WAYLAND_READER=gtk"
   }
 }

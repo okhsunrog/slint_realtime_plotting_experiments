@@ -6,6 +6,7 @@ pub struct PlaybackClock {
     head: u64,
     anchor: Option<(f64, u64)>,
     pub underruns: u64,
+    pub catchups: u64,
 }
 impl PlaybackClock {
     pub fn received(&self) -> u64 {
@@ -46,6 +47,14 @@ impl PlaybackClock {
             .head
             .max(desired.min(self.received))
             .max(self.received.saturating_sub(available));
+        // A late callback or a burst after starvation must not leave the
+        // display permanently behind the producer. Allow one batch of jitter
+        // beyond the target buffer, then resume the clock from recent history.
+        if self.received - self.head > lead.saturating_add(batch as u64) {
+            self.head = self.received.saturating_sub(lead.min(available));
+            self.anchor = Some((now_ms, self.received));
+            self.catchups += 1;
+        }
         (self.received - self.head) as usize
     }
 }
@@ -92,5 +101,17 @@ mod tests {
         assert_eq!(c.offset(10., 1000, 100, 1000, 1000), 0);
         c.reset();
         assert_eq!(c.offset(10., 1000, 100, 0, 1000), 0);
+    }
+    #[test]
+    fn backlog_is_bounded_and_normal_speed_resumes_after_catchup() {
+        let mut c = PlaybackClock::default();
+        c.receive(1000, 0.);
+        c.receive(1000, 20.);
+        assert_eq!(c.offset(20., 1000, 100, 2000, 50), 217);
+        assert_eq!(c.catchups, 1);
+        let head = c.received - 217;
+        let next = c.received - c.offset(30., 1000, 100, 2000, 50) as u64;
+        assert_eq!(next - head, 10);
+        assert_eq!(c.catchups, 1);
     }
 }

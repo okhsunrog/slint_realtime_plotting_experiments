@@ -31,7 +31,8 @@ Only x86_64-linux is supported by this archive/bindings combination. The SDK's
 generated version header identifies base CEF commit `a09c27de3`. The library also
 contains the separately hashed Chromium reader-coordination patch recorded in
 `nix-support/cef-provenance.json`; it is not an unmodified a09c27de3 build.
-Tauri enables that path with `--wayland-external-reader` only for GTK4 Wayland.
+The GTK reader path remains opt-in; use `WAVEBENCH_WAYLAND_READER=gtk` in this demo.
+The default retains the existing threaded watcher.
 
 The package patches RPATHs, the sandbox interpreter, and retains headers,
 resources and wrapper sources. It uses nixpkgs' Vulkan loader instead of the
