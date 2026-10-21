@@ -1,5 +1,5 @@
-{ pkgs ? import ./pkgs.nix }:
-let cef = import ./default.nix { inherit pkgs; };
+{ pkgs ? import ./pkgs.nix, variant ? "stable" }:
+let cef = import ./default.nix { inherit pkgs variant; };
 in pkgs.mkShell {
   nativeBuildInputs = with pkgs; [ pkg-config cmake ninja clang patchelf ];
   buildInputs = with pkgs; [ gtk4 glib openssl wayland ];

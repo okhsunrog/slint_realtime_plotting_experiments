@@ -14,6 +14,20 @@ use tauri::{
     ipc::{Channel, Response},
 };
 
+#[cfg(feature = "cef")]
+fn cef_pump_max_delay() -> std::time::Duration {
+    let milliseconds = std::env::var("WAVEBENCH_PUMP_MAX_DELAY_MS")
+        .map(|value| {
+            value
+                .parse::<u64>()
+                .ok()
+                .filter(|v| (1..=33).contains(v))
+                .expect("WAVEBENCH_PUMP_MAX_DELAY_MS must be an integer from 1 to 33")
+        })
+        .unwrap_or(33);
+    std::time::Duration::from_millis(milliseconds)
+}
+
 #[tauri::command]
 fn runtime_info(app: tauri::AppHandle) -> Value {
     json!({"name": if cfg!(feature = "webkit") { "WebKitGTK" } else { "CEF" }, "version": app.webview_version().ok()})
@@ -91,6 +105,7 @@ fn main() {
     std::fs::create_dir_all(&logs).unwrap();
     #[cfg(feature = "cef")]
     let runtime = tauri_runtime_cef::Cef::default()
+        .message_pump_max_delay(cef_pump_max_delay())
         .allow_chromium_command_line_args(
             std::env::var_os("WAVEBENCH_ALLOW_CHROMIUM_ARGS").is_some(),
         )
@@ -108,6 +123,36 @@ fn main() {
             ("--enable-unsafe-webgpu", None),
             ("--force-renderer-accessibility", None),
         ]);
+    #[cfg(feature = "cef")]
+    let runtime = {
+        let mut runtime = runtime;
+        for (variable, switch) in [
+            ("WAVEBENCH_PUMP_YIELD", "--external-pump-yield"),
+            ("WAVEBENCH_WAYLAND_FIFO", "--wayland-fifo"),
+        ] {
+            match std::env::var(variable).as_deref() {
+                Ok("1") => runtime = runtime.command_line_arg(switch, None::<String>),
+                Ok("0") | Err(_) => (),
+                Ok(value) => panic!("{variable} must be 0 or 1, got {value}"),
+            }
+        }
+        let frame_source =
+            std::env::var("WAVEBENCH_FRAME_SOURCE").unwrap_or_else(|_| "default".into());
+        runtime = match frame_source.as_str() {
+            "default" => runtime,
+            "timer" => runtime.disable_features(["WaylandExternalBeginFrameSource"]),
+            "wayland" => runtime.enable_features(["WaylandExternalBeginFrameSource"]),
+            value => {
+                panic!("WAVEBENCH_FRAME_SOURCE must be default, timer or wayland; got {value}")
+            }
+        };
+        eprintln!(
+            "CEF message pump max delay: {:?}; frame source: {}",
+            cef_pump_max_delay(),
+            frame_source
+        );
+        runtime
+    };
     #[cfg(feature = "cef")]
     let runtime = match std::env::var("WAVEBENCH_WAYLAND_READER").as_deref() {
         Ok("gtk") => runtime.command_line_arg("--wayland-external-reader", None::<String>),

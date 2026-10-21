@@ -17,6 +17,10 @@ if [ "${1:-cef}" = webkit ]; then
   exit 0
 fi
 unset CEF_PATH LD_LIBRARY_PATH
-nix-shell ./nix/shell.nix --run 'export TMPDIR="$WAVEBENCH_TMP"; cargo build -p tauri-webgpu-plot --release' 2>&1 | tee logs/backend-build.log
+mkdir -p target/release
+printf 'building:%s\n' "${WAVEBENCH_CEF_VARIANT:-stable}" > target/release/wavebench-cef.variant
+nix-shell ./nix/shell.nix --argstr variant "${WAVEBENCH_CEF_VARIANT:-stable}" --run 'export TMPDIR="$WAVEBENCH_TMP"; cargo build -p tauri-webgpu-plot --release' 2>&1 | tee logs/backend-build.log
 
 cp target/release/tauri-webgpu-plot target/release/wavebench-cef
+
+printf '%s\n' "${WAVEBENCH_CEF_VARIANT:-stable}" > target/release/wavebench-cef.variant

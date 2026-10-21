@@ -590,7 +590,7 @@ fn start_animation() {
             }
             if timestamp - e.last_ui > 500. {
                 let s = snapshot(e);
-                e.ui.stats.set(format!("{:.1} MiB/s   |   {:.2} Mframes/s   |   {:.1} fps\nDelivery p95 {:.2} ms   |   WASM p95 {:.2} ms\nFrame p95 {:.2} ms   |   CPU submit p95 {:.2} ms   |   Gaps {}",
+                e.ui.stats.set(format!("{:.1} MiB/s   |   {:.2} Mframes/s   |   {:.1} avg fps\nDelivery p95 {:.2} ms   |   WASM p95 {:.2} ms\nFrame p95 {:.2} ms   |   CPU submit p95 {:.2} ms   |   Gaps {}",
                     s["payload_mib_s"].as_f64().unwrap(),s["frames_per_s"].as_f64().unwrap()/1e6,s["render_fps"].as_f64().unwrap(),
                     s["latency_p95_ms"].as_f64().unwrap(),s["wasm_p95_ms"].as_f64().unwrap(),s["raf_p95_ms"].as_f64().unwrap(),s["submit_p95_ms"].as_f64().unwrap(),e.metrics.gaps));
                 let span = e.visible.min(e.filled) as f64 / e.config.rate as f64;
@@ -794,7 +794,7 @@ fn App() -> impl IntoView {
             </section>
             <section class="telemetry"><pre>{move||ui.stats.get()}</pre><div class="device"><strong>{move||ui.runtime.get()}</strong><strong>{move||ui.gpu.get()}</strong><span>{move||ui.check.get()}</span><button disabled=move||ui.runtime.get().starts_with("WebKitGTK") on:click=move|_|spawn_local(async{if let Err(e)=invoke("open_gpu",json!({})).await{fail(e);}})>"GPU diagnostics"</button></div></section>
             <section class="comparison"><div class="comparison-head"><div><h2>"Transport comparison"</h2><p>"Same source and load. Two passes, reverse order; 2 s warmup + 6 s per run."</p></div><div><button class="primary" disabled=move||ui.busy.get() on:click=move|_|spawn_local(compare())>{move||if ui.busy.get(){"Measuring…"}else{"Compare all · 80 s"}}</button><button on:click=move|_|spawn_local(async{if let Err(e)=save_results().await{fail(e);}})>"Save report"</button></div></div>
-                <div class="table-scroll"><table><thead><tr><th>"Transport / pass"</th><th>"Payload MiB/s"</th><th>"Delivery p95 ms"</th><th>"WASM p95 ms"</th><th>"Frame p95 ms"</th><th>"Render fps"</th><th>"Gaps"</th></tr></thead><tbody>{move||ui.rows.get().into_iter().map(row_view).collect_view()}</tbody></table></div>
+                <div class="table-scroll"><table><thead><tr><th>"Transport / pass"</th><th>"Payload MiB/s"</th><th>"Delivery p95 ms"</th><th>"WASM p95 ms"</th><th>"Frame p95 ms"</th><th>"Avg render fps"</th><th>"Gaps"</th></tr></thead><tbody>{move||ui.rows.get().into_iter().map(row_view).collect_view()}</tbody></table></div>
                 <p class="method">"Delivery: packet creation → WASM entry, calibrated clocks. WASM: decode + ring copy + GPU upload call. Submit is CPU time, not GPU execution. Payload excludes transport encoding. Four packets in flight; invoke/protocol pulls are sequential."</p>
             </section>
             <footer role="status"><span>{move||ui.status.get()}</span><span>{move||ui.saved.get()}</span></footer>

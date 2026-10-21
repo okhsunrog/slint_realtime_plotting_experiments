@@ -75,7 +75,7 @@
     const intervals = probe.frames.slice(1).map((f,i) => f[0]-probe.frames[i][0]);
     const cpu = probe.frames.map(f => f[2]-f[1]);
     const report = {
-      tag:query.get('measure'), query:location.search, transport, start, end,
+      tag:query.get('measure'), query:location.search, transport, start, end, timeOrigin:performance.timeOrigin,
       reclaim:{start:reclaimStart,end:window.__wavebenchReclaim.stats()},
       delivery:{first:probe.receivedFirst,last:probe.receivedLast,start:probe.receivedStart,end:probe.receivedEnd,
         frames_per_s:probe.receivedEnd > probe.receivedStart ? (probe.receivedLast-probe.receivedFirst)*1000/(probe.receivedEnd-probe.receivedStart) : null},

@@ -266,3 +266,53 @@ For opt-in local Chromium tracing, set `WAVEBENCH_DEBUG_PORT=9227` when
 launching CEF. The normal launcher leaves remote debugging disabled. Transport
 GC comparisons and their limits are recorded in
 [TRANSPORT_VALIDATION.md](TRANSPORT_VALIDATION.md).
+
+### Experimental frame-pacing preset
+
+The `pacing` SDK is an opt-in diagnostic build. Physical-screen acceptance is
+still pending. The stable SDK remains the default. The launcher checks that the selected
+variant matches the completed build, so switching variants requires rebuilding.
+The pacing candidate contains the finite
+external-pump deadline patch, opt-in early yield, FIFO support and the earlier
+cppgc/presentation probes; FIFO is not enabled by this preset.
+
+Import its verified archive, then build and run with the same variant:
+
+```sh
+nix-store --add-fixed sha256 /path/to/cef-wayland-154-pump-yield.tar.zst
+WAVEBENCH_CEF_VARIANT=pacing ./build.sh
+WAVEBENCH_CEF_VARIANT=pacing ./run.sh
+```
+
+Archive SHA256:
+`46adddf6ce0e0f9d159662310851d7f1519ba69f3cc9b1bc6fd6a1cc94c7e7d1`.
+The Nix expression verifies the archive, original library and runtime dependency
+closure. Its `nix-support/pacing-provenance.json` identifies the source patches.
+
+The preset selects a 4 ms maximum message-pump timer delay, early yield to GLib,
+the timer-based frame source, GTK reader, `motion=clocked` and `reclaim=worker`.
+These are settings to compare, not a claim that every source of stutter is fixed.
+Overrides remain available:
+
+| Variable | Values | Stable default / pacing default |
+| --- | --- | --- |
+| `WAVEBENCH_PUMP_MAX_DELAY_MS` | Integer 1–33 | 33 / 4 |
+| `WAVEBENCH_PUMP_YIELD` | 0, 1; experimental SDK required | 0 / 1 |
+| `WAVEBENCH_FRAME_SOURCE` | default, timer, wayland | default / timer |
+| `WAVEBENCH_WAYLAND_READER` | threaded, gtk | threaded / gtk |
+| `WAVEBENCH_WAYLAND_FIFO` | 0, 1; experimental SDK required | 0 / 0 |
+
+For example, compare the Wayland frame source without rebuilding:
+
+```sh
+WAVEBENCH_CEF_VARIANT=pacing WAVEBENCH_FRAME_SOURCE=wayland ./run.sh
+```
+
+`WAVEBENCH_QUERY` overrides the preset's entire default query. Include
+`motion=clocked&reclaim=worker` when adding other query options if those paths
+should remain selected. The startup log records the effective timer bound and
+configured frame source. Runtime tracing, rather than the setting alone, is
+needed to verify which native path executed.
+
+See [external pump measurements](diagnostics/EXTERNAL_PUMP_VALIDATION.md) for
+what improved, what remains unresolved and the limitations of virtual tests.
