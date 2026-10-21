@@ -4,7 +4,10 @@
   if (!query.has('measure')) return;
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
   const raf = window.requestAnimationFrame.bind(window);
-  const probe = {active:false, frames:[], motion:[], longtasks:[], errors:[], longtaskSupported:false, receivedFirst:null, receivedLast:null, receivedStart:null, receivedEnd:null};
+  const probe = {active:false, frames:[], motion:[], flow:[], longtasks:[], errors:[], longtaskSupported:false, receivedFirst:null, receivedLast:null, receivedStart:null, receivedEnd:null};
+  window.__wavebenchFlow = (kind,seq,bytes,inflight) => {
+    if (probe.active) probe.flow.push([performance.now(),kind,seq,bytes,inflight]);
+  };
   window.__wavebenchMotion = (timestamp,head,received,offset) => {
     if (!probe.active) return;
     const sampledAt = performance.now();
@@ -67,16 +70,21 @@
     }
     const startText = document.querySelector('.telemetry').innerText;
     const reclaimStart = window.__wavebenchReclaim.stats();
+    const frontendStart = window.__wavebenchSnapshot?.();
+    const backendStart = frontendStart?.session == null ? null : await window.__TAURI__.core.invoke('stream_stats',{session:frontendStart.session});
     probe.active = true;
     const start = performance.now();
     await sleep(Number(query.get('seconds') || 30)*1000);
     probe.active = false;
     const end = performance.now();
+    const frontendEnd = window.__wavebenchSnapshot?.();
+    const backendEnd = frontendEnd?.session == null ? null : await window.__TAURI__.core.invoke('stream_stats',{session:frontendEnd.session});
     const intervals = probe.frames.slice(1).map((f,i) => f[0]-probe.frames[i][0]);
     const cpu = probe.frames.map(f => f[2]-f[1]);
     const report = {
       tag:query.get('measure'), query:location.search, transport, start, end, timeOrigin:performance.timeOrigin,
       reclaim:{start:reclaimStart,end:window.__wavebenchReclaim.stats()},
+      frontend:{start:frontendStart,end:frontendEnd}, backend:{start:backendStart,end:backendEnd},flow:probe.flow,
       delivery:{first:probe.receivedFirst,last:probe.receivedLast,start:probe.receivedStart,end:probe.receivedEnd,
         frames_per_s:probe.receivedEnd > probe.receivedStart ? (probe.receivedLast-probe.receivedFirst)*1000/(probe.receivedEnd-probe.receivedStart) : null},
       motion:probe.motion, frames:probe.frames, longtasks:probe.longtasks, errors:probe.errors,

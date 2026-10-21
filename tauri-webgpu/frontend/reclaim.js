@@ -32,6 +32,7 @@
           perSocket.set(item.socket, perSocket.get(item.socket)-1);
           stats.completed++;
           stats.outstanding = pending.size;
+          window.__wavebenchFlow?.('receipt', item.seq, item.bytes, stats.outstanding);
           // Old sessions may close while the worker still holds their last packets.
           try {
             if (item.socket.readyState === WebSocket.OPEN) item.socket.send(String(item.seq));
@@ -41,13 +42,14 @@
     },
     acknowledge: (buffer, socket, seq) => {
       if (!ready || failure) throw Error(failure || 'Reclaimer not ready');
-      if (mode === 'main') { socket.send(String(seq)); return; }
+      if (mode === 'main') { window.__wavebenchFlow?.('consumed', seq, buffer.byteLength, 0); socket.send(String(seq)); return; }
       if (!(buffer instanceof ArrayBuffer) || buffer.byteLength === 0) throw Error('Invalid source buffer');
       const inflight = (perSocket.get(socket) || 0)+1;
       if (inflight > 4) throw Error('Worker exceeded WebSocket credit window');
       const id = next++, bytes = buffer.byteLength;
       pending.set(id, {socket, seq, bytes});
       perSocket.set(socket, inflight);
+      window.__wavebenchFlow?.('consumed', seq, bytes, inflight);
       try {
         worker.postMessage({id, buffer}, [buffer]);
         if (buffer.byteLength !== 0) throw Error('Source buffer was not detached');

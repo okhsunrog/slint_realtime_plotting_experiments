@@ -31,7 +31,8 @@
     "CPU max <=20% is a screening rule, not proof of equal load. All runs retained.",
     "Minimal traces do not contain GC events; they cannot exclude GC as a cause of any gap.",
     "Baseline also has a zero-gap quiet capture; a general stutter fix is not established.",
-    "Indexer write activity and CPU spikes are correlated; a paused-indexer control is pending user approval."
+    "Paused-indexer follow-up controls are recorded in producer-clock-validation-2026-10-22.json; the initial captures did not isolate the writer.",
+    "Successful RAF/presentation cadence alone does not prove continuous plot movement. Motion reanalysis found head stalls in one quiet native capture and in the untraced control; see producer-clock-validation-2026-10-22.json."
   ],
   "runs": [
     {
@@ -66,7 +67,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1800,
+        "flat_head_intervals": 0,
+        "flat_head_intervals_ms": 0,
+        "starved_flat_intervals": 0,
+        "flat_with_raf_under25": 0,
+        "slow_intervals": 0,
+        "empty_buffer_intervals": 0,
+        "speed_ratio_min": 0.9999849397591238,
+        "speed_ratio_max": 1.0000150602408324,
+        "buffer_min_ms": 9.407,
+        "buffer_max_ms": 25.38275,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-final-2-timer-on",
@@ -100,7 +120,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1800,
+        "flat_head_intervals": 0,
+        "flat_head_intervals_ms": 0,
+        "starved_flat_intervals": 0,
+        "flat_with_raf_under25": 0,
+        "slow_intervals": 0,
+        "empty_buffer_intervals": 0,
+        "speed_ratio_min": 0.9999849397591238,
+        "speed_ratio_max": 1.0000150602409419,
+        "buffer_min_ms": 16.60275,
+        "buffer_max_ms": 27.851,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-final-3-timer-on",
@@ -134,7 +173,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1744,
+        "flat_head_intervals": 79,
+        "flat_head_intervals_ms": 1368.8000000000347,
+        "starved_flat_intervals": 13,
+        "flat_with_raf_under25": 77,
+        "slow_intervals": 189,
+        "empty_buffer_intervals": 97,
+        "speed_ratio_min": 0.0,
+        "speed_ratio_max": 4.432530120482316,
+        "buffer_min_ms": 0.0,
+        "buffer_max_ms": 28.32275,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-final-4-timer-off",
@@ -168,7 +226,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1800,
+        "flat_head_intervals": 0,
+        "flat_head_intervals_ms": 0,
+        "starved_flat_intervals": 0,
+        "flat_with_raf_under25": 0,
+        "slow_intervals": 0,
+        "empty_buffer_intervals": 0,
+        "speed_ratio_min": 0.999984939759069,
+        "speed_ratio_max": 1.0000150602409419,
+        "buffer_min_ms": 3.46675,
+        "buffer_max_ms": 27.46675,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-final-5-wayland-off",
@@ -202,7 +279,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1800,
+        "flat_head_intervals": 2,
+        "flat_head_intervals_ms": 33.39999999999782,
+        "starved_flat_intervals": 0,
+        "flat_with_raf_under25": 2,
+        "slow_intervals": 3,
+        "empty_buffer_intervals": 2,
+        "speed_ratio_min": 0.0,
+        "speed_ratio_max": 1.2797767857143412,
+        "buffer_min_ms": 0.0,
+        "buffer_max_ms": 28.423,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-final-6-wayland-on",
@@ -236,7 +332,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1737,
+        "flat_head_intervals": 39,
+        "flat_head_intervals_ms": 683.0999999999985,
+        "starved_flat_intervals": 6,
+        "flat_with_raf_under25": 38,
+        "slow_intervals": 103,
+        "empty_buffer_intervals": 52,
+        "speed_ratio_min": 0.0,
+        "speed_ratio_max": 1.308192771084452,
+        "buffer_min_ms": 0.0,
+        "buffer_max_ms": 28.82275,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-final-7-wayland-on",
@@ -270,7 +385,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1799,
+        "flat_head_intervals": 1,
+        "flat_head_intervals_ms": 16.700000000000728,
+        "starved_flat_intervals": 0,
+        "flat_with_raf_under25": 1,
+        "slow_intervals": 1,
+        "empty_buffer_intervals": 1,
+        "speed_ratio_min": 0.0,
+        "speed_ratio_max": 1.3008383233532368,
+        "buffer_min_ms": 0.0,
+        "buffer_max_ms": 28.86275,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-final-8-wayland-off",
@@ -304,7 +438,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1798,
+        "flat_head_intervals": 1,
+        "flat_head_intervals_ms": 16.69999999999891,
+        "starved_flat_intervals": 0,
+        "flat_with_raf_under25": 1,
+        "slow_intervals": 2,
+        "empty_buffer_intervals": 1,
+        "speed_ratio_min": 0.0,
+        "speed_ratio_max": 1.422891566265029,
+        "buffer_min_ms": 0.0,
+        "buffer_max_ms": 28.495,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-quiet-1-timer-off",
@@ -337,7 +490,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1800,
+        "flat_head_intervals": 0,
+        "flat_head_intervals_ms": 0,
+        "starved_flat_intervals": 0,
+        "flat_with_raf_under25": 0,
+        "slow_intervals": 0,
+        "empty_buffer_intervals": 0,
+        "speed_ratio_min": 0.9999849397591238,
+        "speed_ratio_max": 1.0000150602406133,
+        "buffer_min_ms": 7.71075,
+        "buffer_max_ms": 25.08675,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-quiet-2-timer-on",
@@ -370,7 +542,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1800,
+        "flat_head_intervals": 0,
+        "flat_head_intervals_ms": 0,
+        "starved_flat_intervals": 0,
+        "flat_with_raf_under25": 0,
+        "slow_intervals": 0,
+        "empty_buffer_intervals": 0,
+        "speed_ratio_min": 0.9999849397591238,
+        "speed_ratio_max": 1.0000150602409419,
+        "buffer_min_ms": 1.41075,
+        "buffer_max_ms": 25.319,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-quiet-3-wayland-on",
@@ -403,7 +594,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1800,
+        "flat_head_intervals": 1,
+        "flat_head_intervals_ms": 16.700000000000728,
+        "starved_flat_intervals": 0,
+        "flat_with_raf_under25": 1,
+        "slow_intervals": 3,
+        "empty_buffer_intervals": 1,
+        "speed_ratio_min": 0.0,
+        "speed_ratio_max": 1.308192771084452,
+        "buffer_min_ms": 0.0,
+        "buffer_max_ms": 28.32275,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-quiet-4-wayland-off",
@@ -436,7 +646,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1800,
+        "flat_head_intervals": 0,
+        "flat_head_intervals_ms": 0,
+        "starved_flat_intervals": 0,
+        "flat_with_raf_under25": 0,
+        "slow_intervals": 0,
+        "empty_buffer_intervals": 0,
+        "speed_ratio_min": 0.9999849397591238,
+        "speed_ratio_max": 1.0000150602409419,
+        "buffer_min_ms": 2.76275,
+        "buffer_max_ms": 18.347,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-matched-1-baseline",
@@ -469,7 +698,26 @@
       "compute_pass": true,
       "stream_gaps_zero": true,
       "locked_before": false,
-      "locked_after": false
+      "locked_after": false,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1791,
+        "flat_head_intervals": 32,
+        "flat_head_intervals_ms": 532.9000000000033,
+        "starved_flat_intervals": 2,
+        "flat_with_raf_under25": 32,
+        "slow_intervals": 82,
+        "empty_buffer_intervals": 35,
+        "speed_ratio_min": 0.0,
+        "speed_ratio_max": 3.384337349397887,
+        "buffer_min_ms": 0.0,
+        "buffer_max_ms": 28.672,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-matched-2-final",
@@ -503,7 +751,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1797,
+        "flat_head_intervals": 6,
+        "flat_head_intervals_ms": 101.30000000000473,
+        "starved_flat_intervals": 0,
+        "flat_with_raf_under25": 6,
+        "slow_intervals": 15,
+        "empty_buffer_intervals": 7,
+        "speed_ratio_min": 0.0,
+        "speed_ratio_max": 1.2094161676647497,
+        "buffer_min_ms": 0.0,
+        "buffer_max_ms": 28.672,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-matched-3-final",
@@ -536,7 +803,26 @@
       "stream_gaps_zero": true,
       "locked_before": false,
       "locked_after": false,
-      "document_origin_verified": true
+      "document_origin_verified": true,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1800,
+        "flat_head_intervals": 0,
+        "flat_head_intervals_ms": 0,
+        "starved_flat_intervals": 0,
+        "flat_with_raf_under25": 0,
+        "slow_intervals": 0,
+        "empty_buffer_intervals": 0,
+        "speed_ratio_min": 0.999984939759069,
+        "speed_ratio_max": 1.0000151515151514,
+        "buffer_min_ms": 9.159,
+        "buffer_max_ms": 26.54275,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "physical-matched-4-baseline",
@@ -568,7 +854,26 @@
       "compute_pass": true,
       "stream_gaps_zero": true,
       "locked_before": false,
-      "locked_after": false
+      "locked_after": false,
+      "motion": {
+        "mode": "clocked",
+        "rate": 4000000,
+        "motion_frames": 1800,
+        "flat_head_intervals": 0,
+        "flat_head_intervals_ms": 0,
+        "starved_flat_intervals": 0,
+        "flat_with_raf_under25": 0,
+        "slow_intervals": 2,
+        "empty_buffer_intervals": 1,
+        "speed_ratio_min": 0.4764608433735357,
+        "speed_ratio_max": 1.0000150602409419,
+        "buffer_min_ms": 0.0,
+        "buffer_max_ms": 28.95075,
+        "matched_worker_receipts": 0,
+        "worker_receipt_max_ms": null,
+        "consume_gap_max_ms": null,
+        "backend": null
+      }
     },
     {
       "tag": "cefsimple-control-physical-1-timer",
@@ -635,5 +940,57 @@
       "locked_before": false,
       "locked_after": false
     }
-  ]
+  ],
+  "untraced_control": {
+    "tag": "physical-untraced-1",
+    "duration_seconds": 60,
+    "trace_categories": null,
+    "devtools_enabled": false,
+    "summary": {
+      "callback_max": 4.5,
+      "callback_p95": 0.6000000089406967,
+      "callback_p99": 1.300000011920929,
+      "frames": 3600,
+      "over100": 0,
+      "over25": 0,
+      "over50": 0,
+      "raf_max": 16.80000000000291,
+      "raf_p50": 16.69999999999709,
+      "raf_p95": 16.799999999995634,
+      "raf_p99": 16.80000000000291
+    },
+    "rate": 3986964.164254152,
+    "cpu_median": 6.196120689655173,
+    "cpu_max": 53.74331550802139,
+    "app_cores": 0.7375830374850341,
+    "canvas": [
+      1281,
+      369
+    ],
+    "dpr": 1.350000023841858,
+    "compute_pass": true,
+    "stream_gaps_zero": true,
+    "native_presentation_measured": false,
+    "locked_before": false,
+    "locked_after": false,
+    "motion": {
+      "mode": "clocked",
+      "rate": 4000000,
+      "motion_frames": 3600,
+      "flat_head_intervals": 7,
+      "flat_head_intervals_ms": 116.99999999999636,
+      "starved_flat_intervals": 1,
+      "flat_with_raf_under25": 7,
+      "slow_intervals": 17,
+      "empty_buffer_intervals": 8,
+      "speed_ratio_min": 0.0,
+      "speed_ratio_max": 1.2495958083829068,
+      "buffer_min_ms": 0.0,
+      "buffer_max_ms": 28.37875,
+      "matched_worker_receipts": 0,
+      "worker_receipt_max_ms": null,
+      "consume_gap_max_ms": null,
+      "backend": null
+    }
+  }
 }

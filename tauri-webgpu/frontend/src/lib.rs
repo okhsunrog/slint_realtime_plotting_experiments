@@ -169,7 +169,7 @@ pub fn fail(message: String) {
 fn snapshot(e: &Engine) -> Value {
     let seconds = ((now() - e.metrics.since) / 1000.).max(0.001);
     let m = &e.metrics;
-    json!({"mode":e.config.mode,"config":e.config,"seconds":seconds,"frames":m.frames,"packets":m.packets,
+    json!({"session":e.session,"mode":e.config.mode,"config":e.config,"seconds":seconds,"frames":m.frames,"packets":m.packets,
         "frames_per_s":m.frames as f64/seconds,"payload_mib_s":m.frames as f64*12./seconds/1048576.,
         "latency_p50_ms":percentile(&m.latency,0.5),"latency_p95_ms":percentile(&m.latency,0.95),
         "wasm_p95_ms":percentile(&m.processing,0.95),"raf_p50_ms":percentile(&m.frame_times,0.5),
@@ -178,6 +178,16 @@ fn snapshot(e: &Engine) -> Value {
         "clock_rtt_ms":e.clock_rtt,"dpr":web_sys::window().unwrap().device_pixel_ratio(),"canvas":[e.gpu.as_ref().map(|g|g.borrow().canvas.width()),e.gpu.as_ref().map(|g|g.borrow().canvas.height())],
         "motion":if e.smooth{"clocked"}else{"packet"},"display_offset_frames":e.display_offset,"playback_underruns":e.playback.underruns,"playback_catchups":e.playback.catchups,
         "runtime":e.ui.runtime.get_untracked(),"gpu":e.ui.gpu.get_untracked(),"renderer":if webgl_selected(){"webgl2"}else{"webgpu"},"compute_check":e.ui.check.get_untracked(),"errors":FAULTS.with_borrow(Clone::clone)})
+}
+#[wasm_bindgen]
+pub fn measurement_snapshot() -> String {
+    ENGINE.with_borrow(|engine| {
+        engine
+            .as_ref()
+            .map(snapshot)
+            .unwrap_or(Value::Null)
+            .to_string()
+    })
 }
 fn receive(generation: u32, value: JsValue, json_mode: bool) -> Option<(u32, u32)> {
     let began = now();

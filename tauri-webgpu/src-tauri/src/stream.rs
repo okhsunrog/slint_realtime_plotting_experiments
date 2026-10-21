@@ -22,6 +22,54 @@ use tauri::ipc::{Channel, InvokeResponseBody};
 use tokio::sync::{Mutex as AsyncMutex, Notify, mpsc};
 
 const WINDOW: u32 = 4;
+#[derive(Clone, Copy)]
+enum SourceClockMode {
+    Catchup,
+    Reset,
+}
+impl SourceClockMode {
+    fn from_env() -> Result<Self, String> {
+        match std::env::var("WAVEBENCH_SOURCE_CLOCK").as_deref() {
+            Ok("catchup") | Err(std::env::VarError::NotPresent) => Ok(Self::Catchup),
+            Ok("reset") => Ok(Self::Reset),
+            _ => Err("WAVEBENCH_SOURCE_CLOCK must be catchup or reset".into()),
+        }
+    }
+    fn label(self) -> &'static str {
+        match self {
+            Self::Catchup => "catchup",
+            Self::Reset => "reset",
+        }
+    }
+}
+struct ProducerClock {
+    deadline: Instant,
+    period: Duration,
+    max_lag: Duration,
+    mode: SourceClockMode,
+}
+impl ProducerClock {
+    fn new(start: Instant, period: Duration, mode: SourceClockMode) -> Self {
+        Self {
+            deadline: start,
+            period,
+            max_lag: Duration::from_millis(250).max(period * WINDOW),
+            mode,
+        }
+    }
+    fn complete(&mut self, now: Instant) -> Duration {
+        let next = self.deadline + self.period;
+        // Preserve the sample clock across short scheduling/credit delays.
+        // After a long pause, bound recovery work instead of replaying minutes.
+        // Existing credits still bound the number of queued packets.
+        let floor = match self.mode {
+            SourceClockMode::Reset => now,
+            SourceClockMode::Catchup => now.checked_sub(self.max_lag).unwrap_or(self.deadline),
+        };
+        self.deadline = next.max(floor);
+        self.deadline.saturating_duration_since(next)
+    }
+}
 #[derive(Default)]
 struct Counters {
     packets: u64,
@@ -29,9 +77,16 @@ struct Counters {
     generation_ms: f64,
     delivery_ms: f64,
     blocked_ms: f64,
+    blocked_max_ms: f64,
+    generation_max_ms: f64,
+    delivery_max_ms: f64,
+    producer_late_max_ms: f64,
+    discarded_clock_ms: f64,
+    clock_rebases: u64,
 }
 pub struct Session {
     pub id: u32,
+    source_clock: SourceClockMode,
     token: String,
     config: Config,
     cancelled: AtomicBool,
@@ -108,10 +163,12 @@ impl Streams {
     }
     pub fn start(&self, config: Config, channel: Channel) -> Result<Value, String> {
         config.validate()?;
+        let source_clock = SourceClockMode::from_env()?;
         self.stop();
         let (tx, rx) = mpsc::channel(WINDOW as usize);
         let s = Arc::new(Session {
             id: self.next.fetch_add(1, Ordering::Relaxed),
+            source_clock,
             token: uuid::Uuid::new_v4().to_string(),
             config,
             cancelled: AtomicBool::new(false),
@@ -132,20 +189,24 @@ impl Streams {
             .spawn(move || {
                 let period = Duration::from_secs_f64(s.config.batch as f64 / s.config.rate as f64);
                 let generator = Generator::new(s.config.clone());
-                let mut deadline = Instant::now();
+                let mut clock = ProducerClock::new(Instant::now(), period, s.source_clock);
                 let mut seq = 0u32;
                 let mut first = 0u64;
                 while !s.cancelled.load(Ordering::Acquire) {
                     let blocked = Instant::now();
                     s.wait_for_credit(seq);
                     let blocked_ms = blocked.elapsed().as_secs_f64() * 1000.;
-                    while Instant::now() < deadline && !s.cancelled.load(Ordering::Acquire) {
-                        s.wait(deadline.saturating_duration_since(Instant::now()));
+                    while Instant::now() < clock.deadline && !s.cancelled.load(Ordering::Acquire) {
+                        s.wait(clock.deadline.saturating_duration_since(Instant::now()));
                     }
                     if s.cancelled.load(Ordering::Acquire) {
                         break;
                     }
                     let gen_start = Instant::now();
+                    let producer_late_ms = gen_start
+                        .saturating_duration_since(clock.deadline)
+                        .as_secs_f64()
+                        * 1000.;
                     let samples = generator.batch(first);
                     let generation_ms = gen_start.elapsed().as_secs_f64() * 1000.;
                     let packet = Batch {
@@ -173,17 +234,25 @@ impl Streams {
                     if result.is_err() {
                         break;
                     }
+                    let delivery_ms = delivery.elapsed().as_secs_f64() * 1000.;
+                    let now = Instant::now();
+                    let discarded = clock.complete(now);
                     {
                         let mut c = s.counters.lock().unwrap();
                         c.packets += 1;
                         c.frames += s.config.batch as u64;
                         c.generation_ms += generation_ms;
-                        c.delivery_ms += delivery.elapsed().as_secs_f64() * 1000.;
+                        c.delivery_ms += delivery_ms;
                         c.blocked_ms += blocked_ms;
+                        c.blocked_max_ms = c.blocked_max_ms.max(blocked_ms);
+                        c.generation_max_ms = c.generation_max_ms.max(generation_ms);
+                        c.delivery_max_ms = c.delivery_max_ms.max(delivery_ms);
+                        c.producer_late_max_ms = c.producer_late_max_ms.max(producer_late_ms);
+                        c.discarded_clock_ms += discarded.as_secs_f64() * 1000.;
+                        c.clock_rebases += u64::from(!discarded.is_zero());
                     }
                     seq += 1;
                     first += s.config.batch as u64;
-                    deadline = (deadline + period).max(Instant::now());
                 }
                 s.stop();
             })
@@ -197,6 +266,7 @@ impl Streams {
         Ok(
             json!({"packets":c.packets,"frames":c.frames,"elapsed_s":s.started.elapsed().as_secs_f64(),
             "generation_ms":c.generation_ms/n,"delivery_ms":c.delivery_ms/n,"blocked_ms":c.blocked_ms,
+            "source_clock":s.source_clock.label(),"clock_rebases":c.clock_rebases,"blocked_max_ms":c.blocked_max_ms,"generation_max_ms":c.generation_max_ms,"delivery_max_ms":c.delivery_max_ms,"producer_late_max_ms":c.producer_late_max_ms,"discarded_clock_ms":c.discarded_clock_ms,
             "inflight":s.sent.load(Ordering::Acquire).saturating_sub(s.acknowledged.load(Ordering::Acquire)),"window":WINDOW}),
         )
     }
@@ -284,6 +354,79 @@ async fn socket_stream(socket: WebSocket, s: Arc<Session>) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    mod playback {
+        include!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../frontend/src/playback.rs"
+        ));
+    }
+    #[test]
+    fn short_delays_preserve_the_original_sample_schedule() {
+        let start = Instant::now();
+        let mut clock =
+            ProducerClock::new(start, Duration::from_millis(4), SourceClockMode::Catchup);
+        assert!(clock.complete(start + Duration::from_millis(1)).is_zero());
+        assert!(clock.complete(start + Duration::from_millis(35)).is_zero());
+        assert_eq!(clock.deadline, start + Duration::from_millis(8));
+        for expected in [12, 16, 20, 24, 28, 32, 36] {
+            assert!(clock.complete(start + Duration::from_millis(35)).is_zero());
+            assert_eq!(clock.deadline, start + Duration::from_millis(expected));
+        }
+    }
+    #[test]
+    fn long_pause_has_bounded_catchup_debt() {
+        let start = Instant::now();
+        let mut clock =
+            ProducerClock::new(start, Duration::from_millis(4), SourceClockMode::Catchup);
+        let now = start + Duration::from_secs(60);
+        assert_eq!(clock.complete(now), Duration::from_millis(59_746));
+        assert_eq!(
+            now.duration_since(clock.deadline),
+            Duration::from_millis(250)
+        );
+    }
+    fn simulate_movement(mode: SourceClockMode) -> usize {
+        let start = Instant::now();
+        let mut clock = ProducerClock::new(start, Duration::from_micros(4096), mode);
+        let mut display = playback::PlaybackClock::default();
+        let (mut produced, mut previous_head, mut flat) = (0usize, 0u64, 0usize);
+        let (mut next_packet_us, mut next_draw_us) = (0u64, 0u64);
+        while next_draw_us < 30_000_000 {
+            if next_packet_us <= next_draw_us {
+                display.receive(16_384, next_packet_us as f64 / 1000.);
+                produced += 1;
+                clock.complete(start + Duration::from_micros(next_packet_us + 200));
+                next_packet_us = (clock.deadline.duration_since(start).as_micros() as u64)
+                    .max(next_packet_us + 200);
+                if produced % 500 == 0 {
+                    next_packet_us += 15_000;
+                }
+            } else {
+                let offset = display.offset(
+                    next_draw_us as f64 / 1000.,
+                    4_000_000,
+                    16_384,
+                    (produced * 16_384).min(1 << 20),
+                    262_144,
+                );
+                let head = display.received() - offset as u64;
+                if next_draw_us > 5_000_000 && head == previous_head {
+                    flat += 1;
+                }
+                previous_head = head;
+                next_draw_us += 16_667;
+            }
+        }
+        flat
+    }
+    #[test]
+    fn small_repeated_source_delays_do_not_freeze_a_uniform_raf_plot() {
+        assert!(
+            simulate_movement(SourceClockMode::Reset) > 0,
+            "Regression must reproduce buffer depletion with the old schedule"
+        );
+        assert_eq!(simulate_movement(SourceClockMode::Catchup), 0);
+    }
     #[test]
     fn producer_obeys_credit_window_and_wakes_on_ack() {
         let streams = Streams::new(0);
@@ -319,6 +462,10 @@ mod tests {
             panic!("Expected binary")
         };
         assert_eq!(Batch::decode(&bytes).unwrap().seq, WINDOW);
+        assert!(
+            rx.recv_timeout(Duration::from_millis(20)).is_err(),
+            "Catchup must still obey credits"
+        );
         streams.stop();
     }
 }

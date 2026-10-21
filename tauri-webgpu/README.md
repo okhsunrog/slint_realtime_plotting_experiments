@@ -232,6 +232,25 @@ stops at received data and rebuilds its buffer; it never predicts missing sample
 The opt-in `measure` probe also records `[rAF timestamp, displayed head, received
 head, offset]` for checking movement independently of callback cadence.
 
+The backend preserves its sample-clock schedule across short scheduling or
+credit delays, then catches up within the existing four-packet credit window.
+Recovery after a long pause is limited to the larger of 250 ms or four packet
+periods. Previously each late batch moved the schedule forward permanently;
+small repeated delays could drain the display buffer even with uniform RAF.
+`WAVEBENCH_SOURCE_CLOCK=reset` selects that previous behavior for comparisons;
+`catchup` is the default. This does not predict or skip missing samples.
+
+The measurement report includes plot movement, Worker receipt events, frontend
+buffer counters and backend scheduling statistics. Analyze movement separately:
+
+```sh
+uv run --no-project python diagnostics/analyze-motion.py /path/to/capture-tag
+```
+
+See [source clock validation](diagnostics/SOURCE_CLOCK_VALIDATION.md) for the
+reproduction, measured limits and physical-screen results. A steady FPS counter
+alone does not establish that the displayed sample position keeps moving.
+
 For controlled native-runtime experiments only,
 `WAVEBENCH_ALLOW_CHROMIUM_ARGS=1` enables forwarding explicit Chromium arguments
 from the executable command line. Release builds otherwise disable those

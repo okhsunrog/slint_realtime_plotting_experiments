@@ -190,9 +190,25 @@ A separate read-only process I/O sample observed the session indexer
 `agentsview-linu` writing up to 20–29 MB/s to its SQLite database while ZFS worker
 CPU activity was high. Trace export and analysis also generated disk traffic after
 measurement. This identifies competing work, not a proven causal attribution for
-every stall. A paused-indexer causal control has not yet been run. No indexer,
-compositor, network, filesystem or scheduler settings were changed for these captures.
+every stall. The controlled source-clock follow-up below measures the indexer's
+contribution. These initial captures did not change compositor, network,
+filesystem or scheduler settings.
 
 The preset remains experimental and the stable SDK stays the default. Quiet
 physical presentation is verified; a universal fix for pauses under background
 load, including the earlier rare 103.6 ms callback, is not established.
+
+### Movement and source-clock follow-up
+
+Presentation cadence alone missed another defect. Reanalysis of the recorded
+sample positions found one stationary-head interval in the quiet Wayland/FIFO
+capture despite all 1800 native presentations succeeding. A subsequent 60-second
+run without DevTools or Chromium tracing had 3600 regular RAF callbacks but seven
+stationary-head intervals. Buffer depletion and recovery can freeze the plotted
+position while frames continue to be drawn.
+
+[Source clock validation](SOURCE_CLOCK_VALIDATION.md) documents the application
+fix, its regression test, the additional flow measurements and the temporary
+paused-indexer controls. Both indexer pauses were followed by a verified resume.
+The final corrected-clock capture also verified 1800 native
+presentations and continuous plotted-head movement without gaps.
