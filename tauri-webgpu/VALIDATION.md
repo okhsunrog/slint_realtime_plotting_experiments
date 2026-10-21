@@ -189,3 +189,14 @@ Full report, raw rAF/callback arrays, host load, native device maps, journals an
 controller scripts are retained locally under
 `/home/okhsunrog/tmp_zfs/codex_tmp/wavebench-comparison/`. The virtual session and
 all test applications were closed after measurement.
+
+## GTK reader and bounded scrolling follow-up, 2026-10-21
+
+See [READER_VALIDATION.md](READER_VALIDATION.md) for the correctly verified
+16-run native OFF/ON comparison, direct GTK reader probe, 8 bounded-clock
+motion runs, input/resize checks and 125%/150% fractional-scale smoke checks.
+The native reader removed reader_cond waits in the instrumented pair, but a
+universal pacing improvement was not established; it remains opt-in. Scrolling
+now advances independently of packet arrivals and bounds display backlog.
+Both CEF and WebKitGTK release executables were rebuilt. Five focused clock
+regressions pass. The previous historical validation and SDK remain separate.

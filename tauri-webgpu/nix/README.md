@@ -49,3 +49,6 @@ schema paths and unsets `LD_LIBRARY_PATH`, without modifying the immutable SDK.
 The Tauri fork also unlinks previously staged runtime files before copying
 again: a store-backed SDK carries read-only permissions into Cargo output.
 This permits repeated builds without chmodding or changing `/nix/store`.
+
+Matching SDK release: [cef-154.0.8037.98-wayland.2](https://github.com/okhsunrog/cef/releases/tag/cef-154.0.8037.98-wayland.2).
+The previous release remains available for comparisons; its archive hash differs.
