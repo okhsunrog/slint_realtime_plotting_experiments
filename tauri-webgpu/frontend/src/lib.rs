@@ -1,4 +1,6 @@
 mod gpu;
+mod renderer;
+mod webgl;
 use leptos::{mount::mount_to_body, prelude::*};
 use plot_wire::{Batch, CAPACITY, CHANNELS, Config};
 use serde_json::{Value, json};
@@ -88,6 +90,7 @@ struct Ui {
     status: RwSignal<String>,
     stats: RwSignal<String>,
     gpu: RwSignal<String>,
+    runtime: RwSignal<String>,
     check: RwSignal<String>,
     view: RwSignal<String>,
     paused: RwSignal<bool>,
@@ -109,7 +112,7 @@ struct Metrics {
 }
 struct Engine {
     ui: Ui,
-    gpu: Option<Rc<RefCell<gpu::Gpu>>>,
+    gpu: Option<Rc<RefCell<renderer::Renderer>>>,
     generation: u32,
     session: u32,
     config: Config,
@@ -160,7 +163,7 @@ fn snapshot(e: &Engine) -> Value {
         "raf_p95_ms":percentile(&m.frame_times,0.95),"raf_p99_ms":percentile(&m.frame_times,0.99),
         "submit_p95_ms":percentile(&m.submit,0.95),"render_fps":m.rendered as f64/seconds,"sequence_gaps":m.gaps,
         "clock_rtt_ms":e.clock_rtt,"dpr":web_sys::window().unwrap().device_pixel_ratio(),"canvas":[e.gpu.as_ref().map(|g|g.borrow().canvas.width()),e.gpu.as_ref().map(|g|g.borrow().canvas.height())],
-        "gpu":e.ui.gpu.get_untracked(),"compute_check":e.ui.check.get_untracked(),"errors":FAULTS.with_borrow(Clone::clone)})
+        "runtime":e.ui.runtime.get_untracked(),"gpu":e.ui.gpu.get_untracked(),"renderer":if webgl_selected(){"webgl2"}else{"webgpu"},"compute_check":e.ui.check.get_untracked(),"errors":FAULTS.with_borrow(Clone::clone)})
 }
 fn receive(generation: u32, value: JsValue, json_mode: bool) -> Option<(u32, u32)> {
     let began = now();
@@ -382,20 +385,58 @@ async fn apply_settings() {
     }
     engine(|e| e.ui.busy.set(false));
 }
-async fn initialize() -> Result<(), String> {
-    let mut gpu = gpu::Gpu::new().await?;
-    let info = JsFuture::from(adapter_details())
-        .await
-        .map_err(|e| format!("Adapter info: {e:?}"))?;
-    let info: Value = serde_wasm_bindgen::from_value(info).map_err(|e| e.to_string())?;
-    if info["isFallbackAdapter"].as_bool() != Some(false) {
-        return Err("Hardware WebGPU adapter required".into());
+fn webgl_selected() -> bool {
+    web_sys::window()
+        .unwrap()
+        .location()
+        .search()
+        .unwrap_or_default()
+        .trim_start_matches('?')
+        .split('&')
+        .any(|part| part == "renderer=webgl")
+}
+fn switch_renderer(webgl: bool) {
+    let location = web_sys::window().unwrap().location();
+    let old = location.search().unwrap_or_default();
+    let mut parts = old
+        .trim_start_matches('?')
+        .split('&')
+        .filter(|p| !p.is_empty() && !p.starts_with("renderer="))
+        .map(str::to_owned)
+        .collect::<Vec<_>>();
+    if webgl {
+        parts.push("renderer=webgl".into());
     }
-    gpu.description = format!(
-        "{} {} · WebGPU · hardware adapter",
-        info["vendor"].as_str().unwrap_or("unknown"),
-        info["architecture"].as_str().unwrap_or("unknown")
-    );
+    if let Err(e) = location.set_search(&parts.join("&")) {
+        fail(format!("Switch renderer: {e:?}"));
+    }
+}
+async fn initialize() -> Result<(), String> {
+    let runtime = invoke("runtime_info", json!({})).await?;
+    let runtime: Value = serde_wasm_bindgen::from_value(runtime).map_err(|e| e.to_string())?;
+    engine(|e| {
+        e.ui.runtime.set(format!(
+            "{} · {}",
+            runtime["name"].as_str().unwrap_or("unknown"),
+            runtime["version"].as_str().unwrap_or("unknown")
+        ))
+    });
+    let webgl = webgl_selected();
+    let mut gpu = renderer::Renderer::new(webgl).await?;
+    if !webgl {
+        let info = JsFuture::from(adapter_details())
+            .await
+            .map_err(|e| format!("Adapter info: {e:?}"))?;
+        let info: Value = serde_wasm_bindgen::from_value(info).map_err(|e| e.to_string())?;
+        if info["isFallbackAdapter"].as_bool() != Some(false) {
+            return Err("Hardware WebGPU adapter required".into());
+        }
+        gpu.description = format!(
+            "{} {} · WebGPU · hardware adapter",
+            info["vendor"].as_str().unwrap_or("unknown"),
+            info["architecture"].as_str().unwrap_or("unknown")
+        );
+    }
     engine(|e| e.ui.gpu.set(gpu.description.clone()));
     let check = gpu.verify_compute().await?;
     engine(|e| {
@@ -583,8 +624,9 @@ fn row_view(row: Value) -> impl IntoView {
 #[component]
 fn App() -> impl IntoView {
     let ui = Ui {
-        status: RwSignal::new("Initializing WebGPU…".into()),
+        status: RwSignal::new("Initializing renderer…".into()),
         stats: RwSignal::new("Waiting for samples".into()),
+        runtime: RwSignal::new(String::new()),
         gpu: RwSignal::new("Requesting hardware adapter…".into()),
         check: RwSignal::new("Pending compute readback".into()),
         view: RwSignal::new(String::new()),
@@ -636,8 +678,9 @@ fn App() -> impl IntoView {
     });
     view! {
         <main>
-            <header><div><h1>"Wavebench"</h1><p>"Rust source → WASM → WebGPU"</p></div><div class="legend"><span class="a">"● Phase A"</span><span class="b">"● Phase B"</span><span class="c">"● Phase C"</span></div></header>
+            <header><div><h1>"Wavebench"</h1><p>"Rust source → WASM → GPU"</p></div><div class="legend"><span class="a">"● Phase A"</span><span class="b">"● Phase B"</span><span class="c">"● Phase C"</span></div></header>
             <section class="toolbar" aria-label="Stream settings">
+                <label>"Renderer"<select id="renderer" disabled=move||ui.busy.get() on:change=move|_|switch_renderer(value("renderer")=="webgl")><option value="webgpu" selected=!webgl_selected()>"WebGPU / compute"</option><option value="webgl" selected=webgl_selected()>"WebGL2 / no compute"</option></select></label>
                 <label>"Transport"<select id="transport" disabled=move||ui.busy.get()><option value="binary">"Binary Channel"</option><option value="json">"JSON Channel"</option><option value="invoke">"Binary invoke pull"</option><option value="ws" selected>"Binary WebSocket"</option><option value="protocol">"Custom protocol fetch"</option></select></label>
                 <label>"Frames / second"<select id="rate" disabled=move||ui.busy.get()><option value="20000">"20,000"</option><option value="200000">"200,000"</option><option value="1000000" selected>"1,000,000"</option><option value="4000000">"4,000,000"</option><option value="8000000">"8,000,000"</option></select></label>
                 <label>"Frames / batch"<select id="batch" disabled=move||ui.busy.get()><option value="256">"256"</option><option value="1024">"1,024"</option><option value="4096">"4,096"</option><option value="16384" selected>"16,384"</option><option value="65536">"65,536"</option></select></label>
@@ -656,7 +699,7 @@ fn App() -> impl IntoView {
                     on:pointermove=move|event:web_sys::PointerEvent|{engine(|e|if let Some((x,offset))=e.drag{let width=e.gpu.as_ref().map(|g|g.borrow().canvas.client_width()).unwrap_or(1).max(1) as f64;e.offset=(offset as f64+(event.client_x() as f64-x)*e.visible as f64/width).clamp(0.,e.filled.saturating_sub(e.visible) as f64) as usize;e.dirty=true;});}></canvas></div>
                 <div class="plotfoot"><span>"Wheel to zoom · double-click to freeze · drag frozen history"</span><span>"3 × f32 · 1,048,576-frame ring · GPU min/max"</span></div>
             </section>
-            <section class="telemetry"><pre>{move||ui.stats.get()}</pre><div class="device"><strong>{move||ui.gpu.get()}</strong><span>{move||ui.check.get()}</span><button on:click=move|_|spawn_local(async{if let Err(e)=invoke("open_gpu",json!({})).await{fail(e);}})>"GPU diagnostics"</button></div></section>
+            <section class="telemetry"><pre>{move||ui.stats.get()}</pre><div class="device"><strong>{move||ui.runtime.get()}</strong><strong>{move||ui.gpu.get()}</strong><span>{move||ui.check.get()}</span><button disabled=move||ui.runtime.get().starts_with("WebKitGTK") on:click=move|_|spawn_local(async{if let Err(e)=invoke("open_gpu",json!({})).await{fail(e);}})>"GPU diagnostics"</button></div></section>
             <section class="comparison"><div class="comparison-head"><div><h2>"Transport comparison"</h2><p>"Same source and load. Two passes, reverse order; 2 s warmup + 6 s per run."</p></div><div><button class="primary" disabled=move||ui.busy.get() on:click=move|_|spawn_local(compare())>{move||if ui.busy.get(){"Measuring…"}else{"Compare all · 80 s"}}</button><button on:click=move|_|spawn_local(async{if let Err(e)=save_results().await{fail(e);}})>"Save report"</button></div></div>
                 <div class="table-scroll"><table><thead><tr><th>"Transport / pass"</th><th>"Payload MiB/s"</th><th>"Delivery p95 ms"</th><th>"WASM p95 ms"</th><th>"Frame p95 ms"</th><th>"Render fps"</th><th>"Gaps"</th></tr></thead><tbody>{move||ui.rows.get().into_iter().map(row_view).collect_view()}</tbody></table></div>
                 <p class="method">"Delivery: packet creation → WASM entry, calibrated clocks. WASM: decode + ring copy + GPU upload call. Submit is CPU time, not GPU execution. Payload excludes transport encoding. Four packets in flight; invoke/protocol pulls are sequential."</p>

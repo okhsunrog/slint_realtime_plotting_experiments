@@ -121,3 +121,25 @@ Local evidence: `logs/nix-webgpu-report.json`, `logs/nix-runtime-tree.json`,
 `logs/nix-repeat-build.log` and `logs/nix-exit.json`. Package build logs and
 loaded-library/environment evidence are under
 `/home/okhsunrog/tmp_zfs/codex_tmp/tauri-webgpu-nix/`.
+
+## WebGL2 / WebKitGTK comparison preparation (2026-10-21)
+
+Added an explicit WebGL2 renderer and an optional WebKitGTK/Wry host using the
+same pinned Tauri 3 branch. WebGL2 uses an R32F texture ring and vertex-shader
+min/max; it does not invoke WebGPU or compute. This follows the older plot's
+non-compute approach in spirit; it does not reproduce its storage-buffer WGSL
+shader verbatim (that shader is not WebGL compatible).
+
+Runtime checks and timing comparisons are **pending**: the user requested that
+they be deferred while the laptop is under unrelated load. No rendering,
+acceleration, WebGL extrema readback, or microstutter result is claimed here.
+Later compare CEF/WebGPU, CEF/WebGL2 and WebKitGTK/WebGL2 at equal transport,
+rate, batch size, view and physical canvas size. WebGL repeats reduction work
+across quad vertices, so GPU execution costs differ from the compute pipeline.
+Switching renderers reloads and resets controls/history; reapply equal settings.
+
+Compilation checks: WASM frontend `cargo check` and release compilation passed;
+WebKitGTK/Wry native `cargo check --no-default-features --features
+custom-protocol,webkit` passed. The CEF native release build passed. These checks
+do not compile the GLSL through a browser driver or validate the WebKitGTK
+executable at runtime; both remain part of the deferred GUI checks.

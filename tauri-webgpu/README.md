@@ -2,8 +2,9 @@
 
 A second demo alongside the existing Slint application. The Rust backend generates
 three interleaved current channels; the Rust/WASM frontend renders them with
-`wgpu` on browser WebGPU. Leptos owns the controls and telemetry. There is no
-Canvas 2D, SVG waveform, JavaScript generator or WebGL fallback.
+`wgpu` on browser WebGPU, or an explicitly selected WebGL2 renderer without
+compute shaders. Leptos owns the controls and telemetry. Both renderers keep
+reduction on the GPU; the source and transport remain the same.
 
 Uses pinned commits from our [Tauri](https://github.com/okhsunrog/tauri/tree/feat/cef-wayland)
 and [cef-rs](https://github.com/okhsunrog/cef-rs/tree/feat/wayland-154) forks.
@@ -35,6 +36,29 @@ release mode. `build.sh` embeds the generated WASM and assets into the native
 application, so no frontend server or internet connection is needed at runtime.
 Rebuild after changing frontend code. The separate Cargo workspace leaves the
 original Slint dependencies and build configuration intact.
+
+For a WebKitGTK comparison using the same Tauri 3 branch and Rust backend:
+
+```sh
+./build.sh webkit
+./run-webkit.sh
+```
+
+This uses the optional Wry runtime and defaults to WebGL2. It is a WebKitGTK
+control, not a reconstruction of Tauri 2. The Nix shell supplies GTK 3 and
+WebKitGTK 4.1. CEF and WebKitGTK are separate feature builds; only one runtime
+may be enabled. The scripts retain `wavebench-cef` and `wavebench-webkit`
+executables alongside the normal Cargo output so either can be launched.
+
+Select **Renderer → WebGL2 / no compute** in CEF, or open with
+`?renderer=webgl`. Switching reloads the page and resets stream/view settings.
+WebGL2 stores the interleaved ring in an R32F texture and computes column extrema
+in its vertex shader. It has no storage buffers or compute dispatches and does
+not call `navigator.gpu`. Extrema are recomputed by quad vertices, so its GPU
+cost differs from the compute pipeline; equal input does not mean equal GPU work.
+There is no automatic WebGL fallback on WebGPU failure. WebGL requests a context
+with `failIfMajorPerformanceCaveat`; actual hardware acceleration still needs
+runtime verification. Context loss is reported and requires reloading.
 
 Set `WAVEBENCH_TMP` to select a temporary directory on a large disk.
 
@@ -90,18 +114,20 @@ URL token prevents other pages from joining the current stream.
 
 ## GPU and measurements
 
-The GPU owns a 1,048,576-frame ring (12 MiB). Each incoming batch uploads one
-contiguous range, or two when wrapping. Each rendered frame runs a compute
+Both renderers keep a 1,048,576-frame ring (12 MiB) on the GPU. WebGPU uploads
+one contiguous range per batch, or two when wrapping. WebGL2 uploads texture
+rows, splitting at row and ring boundaries. In WebGPU, each rendered frame runs a compute
 shader over every contributing sample to produce min/max for each physical
 pixel column and channel. The render pass draws those extrema and the grid.
 Zoomed-in rendering connects adjacent column values. Canvas backing dimensions
 follow CSS size × device pixel ratio; no native-only push constants are used.
 
-On startup the **actual reduction shader** is run on a known wrapped ring,
+On WebGPU startup the **actual reduction shader** is run on a known wrapped ring,
 including a narrow spike. All 102 extrema are read back and compared with a CPU
 reference. Validation errors, device loss and packet-sequence discontinuities
 are recorded. **PASS** covers this deterministic compute check, not every
-possible GPU/driver behavior.
+possible GPU/driver behavior. WebGL2 explicitly reports that compute is disabled;
+it does not run or claim this readback check.
 
 Metrics:
 
@@ -112,8 +138,8 @@ Metrics:
   Clocks are calibrated using the minimum RTT of nine IPC exchanges; RTT is
   saved in the report. This excludes the time needed to accumulate a batch of
   samples at a real acquisition device.
-- **WASM p95:** JS→WASM copy/decoding, CPU history copy and `queue.write_buffer`
-  call. JSON parsing before callback entry is counted in delivery latency.
+- **WASM p95:** JS→WASM copy/decoding, CPU history copy and GPU upload calls (`queue.write_buffer` or
+  `texSubImage2D`). JSON parsing before callback entry is counted in delivery latency.
 - **Frame p95/p99:** intervals between `requestAnimationFrame` callbacks.
   **Render fps** counts render submissions. These do not prove compositor
   presentation timing or absence of every dropped frame.

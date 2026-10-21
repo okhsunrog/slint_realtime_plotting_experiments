@@ -1,3 +1,10 @@
+#[cfg(any(
+    all(feature = "cef", feature = "webkit"),
+    not(any(feature = "cef", feature = "webkit"))
+))]
+compile_error!(
+    "Choose exactly one runtime: cef (default) or webkit (--no-default-features --features custom-protocol,webkit)"
+);
 mod stream;
 use plot_wire::Config;
 use serde_json::{Value, json};
@@ -7,6 +14,10 @@ use tauri::{
     ipc::{Channel, Response},
 };
 
+#[tauri::command]
+fn runtime_info(app: tauri::AppHandle) -> Value {
+    json!({"name": if cfg!(feature = "webkit") { "WebKitGTK" } else { "CEF" }, "version": app.webview_version().ok()})
+}
 #[tauri::command]
 fn clock(state: State<Streams>) -> f64 {
     state.now()
@@ -47,25 +58,34 @@ fn save_benchmark(report: Value) -> Result<String, String> {
 }
 #[tauri::command]
 async fn open_gpu(app: tauri::AppHandle) -> Result<(), String> {
-    if let Some(w) = app.get_webview_window("gpu") {
-        return w.set_focus().map_err(|e| e.to_string());
+    #[cfg(feature = "webkit")]
+    {
+        let _ = app;
+        Err("chrome://gpu is available only in CEF".into())
     }
-    tauri::WebviewWindowBuilder::new(
-        &app,
-        "gpu",
-        tauri::WebviewUrl::External("chrome://gpu".parse().unwrap()),
-    )
-    .title("CEF GPU diagnostics")
-    .inner_size(1000., 800.)
-    .build()
-    .map(|_| ())
-    .map_err(|e| e.to_string())
+    #[cfg(feature = "cef")]
+    {
+        if let Some(w) = app.get_webview_window("gpu") {
+            return w.set_focus().map_err(|e| e.to_string());
+        }
+        tauri::WebviewWindowBuilder::new(
+            &app,
+            "gpu",
+            tauri::WebviewUrl::External("chrome://gpu".parse().unwrap()),
+        )
+        .title("CEF GPU diagnostics")
+        .inner_size(1000., 800.)
+        .build()
+        .map(|_| ())
+        .map_err(|e| e.to_string())
+    }
 }
 fn main() {
     let _ = env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
         .try_init();
     let logs = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../logs");
     std::fs::create_dir_all(&logs).unwrap();
+    #[cfg(feature = "cef")]
     let runtime = tauri_runtime_cef::Cef::default()
         .log_file(logs.join("cef.log"))
         .command_line_arg("--use-gl", Some("angle"))
@@ -80,6 +100,20 @@ fn main() {
             ("--enable-unsafe-webgpu", None),
             ("--force-renderer-accessibility", None),
         ]);
+    #[cfg(feature = "webkit")]
+    let runtime = tauri_runtime_wry::Wry::default();
+    let mut context = tauri::generate_context!();
+    #[cfg(feature = "webkit")]
+    {
+        context.config_mut().app.windows[0].url =
+            tauri::WebviewUrl::App("index.html?renderer=webgl".into());
+    }
+    context.config_mut().app.windows[0].title = if cfg!(feature = "webkit") {
+        "Wavebench · WebKitGTK / WebGL2"
+    } else {
+        "Wavebench · CEF / WebGPU + WebGL2"
+    }
+    .into();
     tauri::Builder::default().runtime(runtime)
         .register_asynchronous_uri_scheme_protocol("wave-data",|context,request,responder|{
             use tauri::http::{Response as HttpResponse,StatusCode};
@@ -96,7 +130,7 @@ fn main() {
                     .header("Cache-Control","no-store").header("Access-Control-Allow-Origin",origin).header("Vary","Origin").body(body).unwrap());
             });
         })
-        .invoke_handler(tauri::generate_handler![clock,start_stream,stop_stream,acknowledge,pull_batch,stream_stats,save_benchmark,open_gpu])
+        .invoke_handler(tauri::generate_handler![runtime_info,clock,start_stream,stop_stream,acknowledge,pull_batch,stream_stats,save_benchmark,open_gpu])
         .setup(|app|{
             // Only the browser process owns the source and listener. CEF also
             // executes main() in its renderer/GPU subprocesses.
@@ -105,8 +139,8 @@ fn main() {
             let streams=Streams::new(listener.local_addr()?.port());
             rt.spawn(stream::serve(listener,streams.clone()));
             app.manage(streams);app.manage(rt);
-            println!("{}",json!({"runtime":"CEF Wayland WebGPU","version":app.handle().webview_version().ok()}));Ok(())
+            println!("{}",json!({"runtime":if cfg!(feature="webkit"){"WebKitGTK Wayland"}else{"CEF Wayland"},"version":app.handle().webview_version().ok()}));Ok(())
         })
-        .build(tauri::generate_context!()).expect("Build Wavebench")
+        .build(context).expect("Build Wavebench")
         .run(move |app,event|{if matches!(event,tauri::RunEvent::Exit){app.state::<Streams>().stop();}});
 }
