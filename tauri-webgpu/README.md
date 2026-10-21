@@ -193,6 +193,23 @@ Repeat runs in reverse order and do not measure while building or under unrelate
 host load. CEF uses the basic password store for this credential-free benchmark,
 preventing a fresh virtual-session KWallet prompt from blocking startup.
 
+`reclaim=worker` enables an experimental WebSocket buffer ownership path. Rust
+first copies and decodes the incoming packet into owned WASM memory, then transfers
+the consumed ArrayBuffer to `frontend/reclaim-worker.js`. The original must be
+detached immediately. The worker checks receipt length and drops the buffer; its
+receipt releases the existing WebSocket credit (four packets per connection).
+This bounds queued transfers but adds one worker round trip before acknowledgement.
+No SharedArrayBuffer or cross-origin isolation is required. Other transports keep
+their existing ownership path. `reclaim=main` is the default and acknowledges
+immediately. Measurement JSON includes both endpoint snapshots in `reclaim`, with
+transfer/receipt counts, bytes, outstanding/peak queue, readiness and failures.
+Transfer counts and bytes during the sample are the end minus start counters;
+an outstanding receipt at either endpoint is allowed. Successful transfer alone
+does not prove that GC or compositor presentation improves.
+See [WORKER_RECLAIM_VALIDATION.md](WORKER_RECLAIM_VALIDATION.md) for ownership
+checks, per-thread finalizer traces and the measured limitations. Run
+`node diagnostics/check-reclaim.mjs` for the transfer/credit regression check.
+
 The WebKitGTK host supplies a valid GDK font DPI before its first WebView only
 when GDK reports an unset/nonpositive value, using GTK's configured font DPI or
 96 as fallback. This prevents WebKitGTK 2.54's negative-DPR startup issue while

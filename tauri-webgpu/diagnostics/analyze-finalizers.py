@@ -117,6 +117,52 @@ v8_spans = merge_intervals(
     ]
 )
 
+# Transferred buffers may finalize on a Worker rather than the renderer main
+# thread. Keep each thread separate: overlapping threads are not one pause.
+finalizer_threads = []
+thread_names = {
+    e["tid"]: e.get("args", {}).get("name", "?")
+    for e in es
+    if e["pid"] == pid and e["name"] == "thread_name"
+}
+for tid in sorted(
+    {e["tid"] for e in es if e["pid"] == pid and e["name"] == "CppGC.FinalizeObject"}
+):
+    thread_objects = [
+        e
+        for e in es
+        if e["pid"] == pid
+        and e["tid"] == tid
+        and e["name"] == "CppGC.FinalizeObject"
+        and e.get("ph") == "X"
+        and lo <= e["ts"] < hi
+    ]
+    array_buffers = [
+        e for e in thread_objects if "ArrayBuffer" in e.get("args", {}).get("type", "")
+    ]
+    spans = merge_intervals(
+        [
+            e
+            for e in es
+            if e["pid"] == pid
+            and e["tid"] == tid
+            and e.get("ph") == "X"
+            and e["name"].startswith("CppGC.")
+        ]
+    )
+    finalizer_threads.append(
+        {
+            "tid": tid,
+            "name": thread_names.get(tid, "?"),
+            "main": tid == main,
+            "object_count": len(thread_objects),
+            "array_buffer_count": len(array_buffers),
+            "array_buffer_ms": sum(map(clipped, array_buffers)),
+            "cppgc_union_ms": sum((b - a) / 1000 for a, b in spans),
+            "cppgc_longest_ms": max(((b - a) / 1000 for a, b in spans), default=0),
+        }
+    )
+
 
 def span_overlap(start, end, spans):
     return sum(max(0, min(end, b) - max(start, a)) / 1000 for a, b in spans)
@@ -202,6 +248,7 @@ result = {
     "errors": d["errors"],
     "status": d["endText"],
     "object_types": types,
+    "finalizer_threads": finalizer_threads,
     "phases": phases,
     "gc_task_max_ms": max((clipped(e) for e in gc), default=0),
     "cppgc_total_union_ms": sum((b - a) / 1000 for a, b in cppgc_spans),

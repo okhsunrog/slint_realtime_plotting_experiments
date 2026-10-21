@@ -66,6 +66,7 @@
       graphics = {renderer:gl?.getParameter(ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER), vendor:gl?.getParameter(ext ? ext.UNMASKED_VENDOR_WEBGL : gl.VENDOR), version:gl?.getParameter(gl.VERSION)};
     }
     const startText = document.querySelector('.telemetry').innerText;
+    const reclaimStart = window.__wavebenchReclaim.stats();
     probe.active = true;
     const start = performance.now();
     await sleep(Number(query.get('seconds') || 30)*1000);
@@ -75,6 +76,7 @@
     const cpu = probe.frames.map(f => f[2]-f[1]);
     const report = {
       tag:query.get('measure'), query:location.search, transport, start, end,
+      reclaim:{start:reclaimStart,end:window.__wavebenchReclaim.stats()},
       delivery:{first:probe.receivedFirst,last:probe.receivedLast,start:probe.receivedStart,end:probe.receivedEnd,
         frames_per_s:probe.receivedEnd > probe.receivedStart ? (probe.receivedLast-probe.receivedFirst)*1000/(probe.receivedEnd-probe.receivedStart) : null},
       motion:probe.motion, frames:probe.frames, longtasks:probe.longtasks, errors:probe.errors,

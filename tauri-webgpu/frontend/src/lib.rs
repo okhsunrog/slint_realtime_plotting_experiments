@@ -11,6 +11,8 @@ use wasm_bindgen_futures::{JsFuture, spawn_local};
 
 #[wasm_bindgen(inline_js = "
 const channels = new Map();
+export function init_reclaim() { return window.__wavebenchReclaim.init(); }
+export function ws_ack(buffer,socket,seq) { window.__wavebenchReclaim.acknowledge(buffer,socket,seq); }
 export function rpc(command,args) { return window.__TAURI__.core.invoke(command,args); }
 export function make_channel(callback) { const c = new window.__TAURI__.core.Channel(callback); channels.set(c.id,c); return c.id; }
 export function record_motion(timestamp,head,received,offset) { window.__wavebenchMotion?.(timestamp,head,received,offset); }
@@ -26,6 +28,9 @@ export async function adapter_details() {
 }
 ")]
 extern "C" {
+    fn init_reclaim() -> js_sys::Promise;
+    #[wasm_bindgen(catch)]
+    fn ws_ack(buffer: &JsValue, socket: &web_sys::WebSocket, seq: u32) -> Result<(), JsValue>;
     fn rpc(command: &str, args: &JsValue) -> js_sys::Promise;
     fn make_channel(callback: &js_sys::Function) -> u32;
     fn drop_channel(id: u32);
@@ -308,8 +313,9 @@ async fn start_stream(config: Config) -> Result<(), String> {
         let sender = ws.clone();
         let message = Closure::<dyn FnMut(web_sys::MessageEvent)>::new(
             move |event: web_sys::MessageEvent| {
-                if let Some((_, seq)) = receive(generation, event.data(), false) {
-                    if let Err(e) = sender.send_with_str(&seq.to_string()) {
+                let buffer = event.data();
+                if let Some((_, seq)) = receive(generation, buffer.clone(), false) {
+                    if let Err(e) = ws_ack(&buffer, &sender, seq) {
                         fail(format!("WebSocket ack: {e:?}"));
                     }
                 }
@@ -449,6 +455,9 @@ fn switch_renderer(webgl: bool) {
     }
 }
 async fn initialize() -> Result<(), String> {
+    JsFuture::from(init_reclaim())
+        .await
+        .map_err(|e| format!("Buffer reclaimer: {e:?}"))?;
     let runtime = invoke("runtime_info", json!({})).await?;
     let runtime: Value = serde_wasm_bindgen::from_value(runtime).map_err(|e| e.to_string())?;
     engine(|e| {
