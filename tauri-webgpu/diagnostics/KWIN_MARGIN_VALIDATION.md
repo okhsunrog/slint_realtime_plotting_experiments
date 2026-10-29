@@ -65,5 +65,6 @@ Capture 3 extends recording to 36 seconds, covering its complete gap window.
 The final two captures omit kernel recording to reduce measurement disturbance.
 
 [Full results and timing summaries](kwin-margin-validation-2026-10-29.json)
-retain all five captures. Raw traces and the reproducible helper scripts remain
+retain summaries of all five captures. Large raw traces were selected for removal
+during [experiment closeout](CLOSEOUT.md); reproducible helper scripts are retained
 under `/home/okhsunrog/tmp_zfs/codex_tmp/cef-frame-pacing/`.
