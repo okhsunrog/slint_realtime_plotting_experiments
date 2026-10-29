@@ -17,7 +17,9 @@ struct Params {
     pad: [u32; 2],
 }
 pub struct Gpu {
-    pub canvas: web_sys::HtmlCanvasElement,
+    pub canvas: Option<web_sys::HtmlCanvasElement>,
+    offscreen: Option<web_sys::OffscreenCanvas>,
+    dimensions: (u32, u32, f64),
     pub description: String,
     surface: wgpu::Surface<'static>,
     device: wgpu::Device,
@@ -44,12 +46,24 @@ impl Gpu {
             .unwrap()
             .dyn_into::<web_sys::HtmlCanvasElement>()
             .unwrap();
+        Self::new_target(Some(canvas), None).await
+    }
+    pub async fn new_offscreen(canvas: web_sys::OffscreenCanvas) -> Result<Self, String> {
+        Self::new_target(None, Some(canvas)).await
+    }
+    async fn new_target(
+        canvas: Option<web_sys::HtmlCanvasElement>,
+        offscreen: Option<web_sys::OffscreenCanvas>,
+    ) -> Result<Self, String> {
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
             backends: wgpu::Backends::BROWSER_WEBGPU,
             ..wgpu::InstanceDescriptor::new_without_display_handle()
         });
         let surface = instance
-            .create_surface(wgpu::SurfaceTarget::Canvas(canvas.clone()))
+            .create_surface(match &canvas {
+                Some(c) => wgpu::SurfaceTarget::Canvas(c.clone()),
+                None => wgpu::SurfaceTarget::OffscreenCanvas(offscreen.as_ref().unwrap().clone()),
+            })
             .map_err(|e| e.to_string())?;
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
@@ -188,6 +202,8 @@ impl Gpu {
         });
         Ok(Self {
             canvas,
+            offscreen,
+            dimensions: (1, 1, 1.),
             description,
             surface,
             device,
@@ -236,6 +252,9 @@ impl Gpu {
         self.filled = 0;
         self.uploaded = 0;
     }
+    pub fn resize(&mut self, width: u32, height: u32, dpr: f64) {
+        self.dimensions = (width.clamp(1, 8192), height.clamp(1, 4096), dpr);
+    }
     pub fn upload(&mut self, samples: &[f32]) {
         let frames = samples.len() / CHANNELS;
         let first = frames.min(CAPACITY - self.write);
@@ -256,12 +275,25 @@ impl Gpu {
         self.uploaded += (frames * CHANNELS * 4) as u64;
     }
     pub fn render(&mut self, visible: usize, offset: usize, amplitude: f32) -> Result<(), String> {
-        let dpr = web_sys::window().unwrap().device_pixel_ratio();
-        let width = ((self.canvas.client_width() as f64 * dpr).round() as u32).clamp(1, 8192);
-        let height = ((self.canvas.client_height() as f64 * dpr).round() as u32).clamp(1, 4096);
+        let (width, height, dpr) = if let Some(canvas) = &self.canvas {
+            let dpr = web_sys::window().unwrap().device_pixel_ratio();
+            (
+                ((canvas.client_width() as f64 * dpr).round() as u32).clamp(1, 8192),
+                ((canvas.client_height() as f64 * dpr).round() as u32).clamp(1, 4096),
+                dpr,
+            )
+        } else {
+            self.dimensions
+        };
         if self.config.width != width || self.config.height != height {
-            self.canvas.set_width(width);
-            self.canvas.set_height(height);
+            if let Some(canvas) = &self.canvas {
+                canvas.set_width(width);
+                canvas.set_height(height);
+            }
+            if let Some(canvas) = &self.offscreen {
+                canvas.set_width(width);
+                canvas.set_height(height);
+            }
             self.config.width = width;
             self.config.height = height;
             self.surface.configure(&self.device, &self.config);

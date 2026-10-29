@@ -1,0 +1,1015 @@
+{
+  "date": "2026-10-29",
+  "margin_us": 2000,
+  "active_kwin_pid": 3553,
+  "commit_thread": 456370,
+  "kwin_exe": "/nix/store/8l3hirn5nvm0j2ia56xg53xxy2py5q6w-kwin-6.8.0/bin/.kwin_wayland-wrapped",
+  "kernel": "7.2.9",
+  "binary_sha256": "77f5010d4663803aef2f2a6f7f0fd6c9ed525c970f7119a754e35e33f31bb4fe",
+  "raw_directory": "/home/okhsunrog/tmp_zfs/codex_tmp/cef-frame-pacing",
+  "captures": [
+    {
+      "tag": "margin2000-20261029-1",
+      "native": {
+        "sample": [
+          142164538219.04883,
+          142194548719.04883
+        ],
+        "unique_presentation_count": 1798,
+        "presentation_over25": 1,
+        "presentation_max_ms": 50.003,
+        "presentation_gaps": [
+          {
+            "start": 142193202611,
+            "end": 142193252614,
+            "ms": 50.003,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          }
+        ],
+        "host_cpu_median": 9.01312107509382,
+        "host_cpu_max": 17.889662560257097
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 39,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 780,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704256,
+          "frames_per_s": 20003.806158595224,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.2049735587970645,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2751,
+          "paused": false,
+          "payload_mib_s": 0.2289253939658572,
+          "playback_catchups": 1,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000004366,
+          "render_fps": 59.93279573711253,
+          "renderer": "webgpu",
+          "seconds": 35.20609999999404,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 103936,
+          "frames_per_s": 20005.004330670778,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.304378546875114,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 406,
+          "paused": false,
+          "payload_mib_s": 0.22893910595707825,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 59.47454527956886,
+          "renderer": "webgpu",
+          "seconds": 5.1955,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.1968,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "latency": {
+        "tag": "margin2000-20261029-1",
+        "matched": 1798,
+        "missing": 0,
+        "swap_to_present_p50_ms": 22.2605,
+        "swap_to_present_p95_ms": 23.805,
+        "swap_to_present_max_ms": 26.151
+      },
+      "trace_data_loss": false,
+      "kernel_recording": true
+    },
+    {
+      "tag": "margin2000-20261029-2",
+      "native": {
+        "sample": [
+          142268823443.1953,
+          142298881543.1953
+        ],
+        "unique_presentation_count": 1756,
+        "presentation_over25": 29,
+        "presentation_max_ms": 150.001,
+        "presentation_gaps": [
+          {
+            "start": 142273403075,
+            "end": 142273436399,
+            "ms": 33.324,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142275919749,
+            "end": 142275953085,
+            "ms": 33.336,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142276203087,
+            "end": 142276236418,
+            "ms": 33.331,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142276769756,
+            "end": 142276803088,
+            "ms": 33.332,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142277286426,
+            "end": 142277319759,
+            "ms": 33.333,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142277386436,
+            "end": 142277419760,
+            "ms": 33.324,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142277419760,
+            "end": 142277453093,
+            "ms": 33.333,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142277453093,
+            "end": 142277603094,
+            "ms": 150.001,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": [
+              {
+                "id": -3755297756365130393,
+                "start": 142277551504,
+                "end": 142277563550,
+                "ms": 12.046
+              }
+            ]
+          },
+          {
+            "start": 142277819762,
+            "end": 142277853096,
+            "ms": 33.334,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142279903112,
+            "end": 142279936454,
+            "ms": 33.342,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142280036444,
+            "end": 142280069779,
+            "ms": 33.335,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142280203119,
+            "end": 142280286453,
+            "ms": 83.334,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142285219813,
+            "end": 142285253151,
+            "ms": 33.338,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142285986494,
+            "end": 142286053163,
+            "ms": 66.669,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": [
+              {
+                "id": -3755297756365155273,
+                "start": 142286009741,
+                "end": 142286029766,
+                "ms": 20.025
+              }
+            ]
+          },
+          {
+            "start": 142287903166,
+            "end": 142287936501,
+            "ms": 33.335,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142288403173,
+            "end": 142288436513,
+            "ms": 33.34,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142288569848,
+            "end": 142288603174,
+            "ms": 33.326,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142288769842,
+            "end": 142288803174,
+            "ms": 33.332,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142288819840,
+            "end": 142288853174,
+            "ms": 33.334,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142289286510,
+            "end": 142289319844,
+            "ms": 33.334,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142289903184,
+            "end": 142289969848,
+            "ms": 66.664,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142290936531,
+            "end": 142290969859,
+            "ms": 33.328,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142291953204,
+            "end": 142291986532,
+            "ms": 33.328,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142292386542,
+            "end": 142292486542,
+            "ms": 100.0,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142292519876,
+            "end": 142292553203,
+            "ms": 33.327,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142292936546,
+            "end": 142292969873,
+            "ms": 33.327,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 30.021,
+            "gc_task_max_ms": 2.218,
+            "backend_delays": []
+          },
+          {
+            "start": 142293403211,
+            "end": 142293436543,
+            "ms": 33.332,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142293436543,
+            "end": 142293469883,
+            "ms": 33.34,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          },
+          {
+            "start": 142298203241,
+            "end": 142298236574,
+            "ms": 33.333,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0.0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          }
+        ],
+        "host_cpu_median": 16.164817749603802,
+        "host_cpu_max": 36.83937823834197
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 47.7,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 954,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704768,
+          "frames_per_s": 20001.92989924791,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.6296006837965251,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2753,
+          "paused": false,
+          "payload_mib_s": 0.22890392188165176,
+          "playback_catchups": 2,
+          "playback_underruns": 1,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 58.83354618986803,
+          "renderer": "webgpu",
+          "seconds": 35.235,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 103680,
+          "frames_per_s": 20034.395470526622,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.4330986599538846,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 405,
+          "paused": false,
+          "payload_mib_s": 0.22927546085960343,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 59.9022241113354,
+          "renderer": "webgpu",
+          "seconds": 5.175100000023842,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.184,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.19999998807907104
+        }
+      },
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "latency": null,
+      "trace_data_loss": false,
+      "kernel_recording": true
+    },
+    {
+      "tag": "margin2000-20261029-3",
+      "native": {
+        "sample": [
+          142371646892.90234,
+          142401652192.9023
+        ],
+        "unique_presentation_count": 1799,
+        "presentation_over25": 1,
+        "presentation_max_ms": 33.331,
+        "presentation_gaps": [
+          {
+            "start": 142396054584,
+            "end": 142396087915,
+            "ms": 33.331,
+            "gc_overlap_ms": 0,
+            "v8_gc_overlap_ms": 0,
+            "gc_task_max_ms": 0,
+            "backend_delays": []
+          }
+        ],
+        "host_cpu_median": 7.272356004142297,
+        "host_cpu_max": 12.94619072988812
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 30.55,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 611,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20004.94080968163,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.194389474709169,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.22893837901704747,
+          "playback_catchups": 1,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 59.971207005767965,
+          "renderer": "webgpu",
+          "seconds": 35.21689999997616,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20041.446005088543,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.182706462789611,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.22935614782434707,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999955,
+          "render_fps": 60.0583314146055,
+          "renderer": "webgpu",
+          "seconds": 5.211599999994039,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "latency": null,
+      "trace_data_loss": false,
+      "kernel_recording": true
+    },
+    {
+      "tag": "margin2000-20261029-light-1",
+      "native": {
+        "sample": [
+          142460167171.04883,
+          142490171371.04883
+        ],
+        "unique_presentation_count": 1800,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.678,
+        "presentation_gaps": [],
+        "host_cpu_median": 6.011808910359635,
+        "host_cpu_max": 8.073196986006458
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 27.4,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 548,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20002.38491371385,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.904717531249844,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.22890912910896888,
+          "playback_catchups": 1,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000004366,
+          "render_fps": 59.96354489031222,
+          "renderer": "webgpu",
+          "seconds": 35.22140000000596,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20019.550342085244,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 0.7990475252895521,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.22910557184698385,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 59.80104651817743,
+          "renderer": "webgpu",
+          "seconds": 5.217300000011921,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "latency": {
+        "tag": "margin2000-20261029-light-1",
+        "matched": 1800,
+        "missing": 0,
+        "swap_to_present_p50_ms": 22.383499999999998,
+        "swap_to_present_p95_ms": 24.7,
+        "swap_to_present_max_ms": 25.843
+      },
+      "trace_data_loss": false,
+      "kernel_recording": false
+    },
+    {
+      "tag": "margin2000-20261029-light-2",
+      "native": {
+        "sample": [
+          142507995331.9024,
+          142538004831.9024
+        ],
+        "unique_presentation_count": 1800,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.677,
+        "presentation_gaps": [],
+        "host_cpu_median": 6.062231759656652,
+        "host_cpu_max": 12.553879310344827
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 41.6,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 832,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20003.74797694426,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.0875070960064477,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.22892472812970271,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000004366,
+          "render_fps": 59.9960248729379,
+          "renderer": "webgpu",
+          "seconds": 35.219,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104192,
+          "frames_per_s": 20000.76784272292,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.0156800960066903,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 407,
+          "paused": false,
+          "payload_mib_s": 0.2288906232001067,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 59.89173417277288,
+          "renderer": "webgpu",
+          "seconds": 5.20940000000596,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2096,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "latency": {
+        "tag": "margin2000-20261029-light-2",
+        "matched": 1800,
+        "missing": 0,
+        "swap_to_present_p50_ms": 21.775,
+        "swap_to_present_p95_ms": 23.19,
+        "swap_to_present_max_ms": 24.972
+      },
+      "trace_data_loss": false,
+      "kernel_recording": false
+    }
+  ],
+  "kernel_comparison": [
+    {
+      "tag": "physical-indexer-paused-pipeline-6",
+      "commit_thread": 3770,
+      "markers_us": [
+        142365606987,
+        142396611334
+      ],
+      "pipe_updates": 1775,
+      "crossed_or_unsafe_updates": [
+        {
+          "start_us": 142370119429,
+          "end_us": 142370119587,
+          "start_frame": 857773,
+          "end_frame": 857774,
+          "start_scanline": 1501,
+          "end_scanline": 1515,
+          "unsafe_range": [
+            1495,
+            1504
+          ]
+        },
+        {
+          "start_us": 142396019872,
+          "end_us": 142396020020,
+          "start_frame": 859327,
+          "end_frame": 859328,
+          "start_scanline": 1502,
+          "end_scanline": 1515,
+          "unsafe_range": [
+            1495,
+            1504
+          ]
+        }
+      ],
+      "update_to_next_hardware_vblank_ms": {
+        "n": 1775,
+        "min": 0.3595710144042969,
+        "p50": 1.4340350036621095,
+        "p95": 1.546522003173828,
+        "max": 2.2089339904785157
+      },
+      "commit_wakeup_to_next_hardware_vblank_ms": {
+        "n": 1775,
+        "min": 1.5040090026855468,
+        "p50": 1.5795509948730468,
+        "p95": 1.707875,
+        "max": 2.3579339904785157
+      },
+      "atomic_ioctl_ms": {
+        "n": 1775,
+        "min": 0.037,
+        "p50": 0.064,
+        "p95": 0.083,
+        "max": 0.636
+      },
+      "gaps_inside_kernel": 2
+    },
+    {
+      "tag": "margin2000-20261029-1",
+      "commit_thread": 456370,
+      "markers_us": [
+        142161450614,
+        142192457237
+      ],
+      "pipe_updates": 1675,
+      "crossed_or_unsafe_updates": [],
+      "update_to_next_hardware_vblank_ms": {
+        "n": 1675,
+        "min": 1.8801090087890624,
+        "p50": 2.3720870056152346,
+        "p95": 2.4767359924316406,
+        "max": 2.6990480041503906
+      },
+      "commit_wakeup_to_next_hardware_vblank_ms": {
+        "n": 1675,
+        "min": 2.573821014404297,
+        "p50": 2.7395880126953127,
+        "p95": 2.8589309997558594,
+        "max": 3.113635986328125
+      },
+      "atomic_ioctl_ms": {
+        "n": 1675,
+        "min": 0.05,
+        "p50": 0.172,
+        "p95": 0.206,
+        "max": 0.41
+      },
+      "gaps_inside_kernel": 0
+    },
+    {
+      "tag": "margin2000-20261029-2",
+      "commit_thread": 456370,
+      "markers_us": [
+        142267100563,
+        142298108031
+      ],
+      "pipe_updates": 1754,
+      "crossed_or_unsafe_updates": [],
+      "update_to_next_hardware_vblank_ms": {
+        "n": 1754,
+        "min": 1.3893479919433593,
+        "p50": 2.4248625030517577,
+        "p95": 2.605302001953125,
+        "max": 3.4015450134277345
+      },
+      "commit_wakeup_to_next_hardware_vblank_ms": {
+        "n": 1756,
+        "min": 2.587875,
+        "p50": 2.644154998779297,
+        "p95": 2.862957000732422,
+        "max": 3.804602996826172
+      },
+      "atomic_ioctl_ms": {
+        "n": 1774,
+        "min": 0.024,
+        "p50": 0.1,
+        "p95": 0.135,
+        "max": 1.285
+      },
+      "gaps_inside_kernel": 28
+    },
+    {
+      "tag": "margin2000-20261029-3",
+      "commit_thread": 456370,
+      "markers_us": [
+        142368300862,
+        142404305622
+      ],
+      "pipe_updates": 1800,
+      "crossed_or_unsafe_updates": [],
+      "update_to_next_hardware_vblank_ms": {
+        "n": 1800,
+        "min": 2.195135986328125,
+        "p50": 2.426248992919922,
+        "p95": 2.4613599853515624,
+        "max": 2.5135350036621094
+      },
+      "commit_wakeup_to_next_hardware_vblank_ms": {
+        "n": 1801,
+        "min": 2.55243798828125,
+        "p50": 2.5967349853515627,
+        "p95": 2.6210230102539063,
+        "max": 2.6725289916992185
+      },
+      "atomic_ioctl_ms": {
+        "n": 1801,
+        "min": 0.046,
+        "p50": 0.074,
+        "p95": 0.094,
+        "max": 0.128
+      },
+      "gaps_inside_kernel": 1
+    }
+  ],
+  "limitations": [
+    "KWin store build changed since baseline; no same-build 1000/2000 ABBA",
+    "Background load varied; loaded capture retained",
+    "Kernel capture 1 and 2 end before native sampling ends; only covered windows usable for kernel attribution",
+    "GC task source annotations reveal sweeper work not counted by old name-only GC overlap metric"
+  ]
+}

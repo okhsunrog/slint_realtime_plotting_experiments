@@ -37,3 +37,39 @@ delay to that process. The indexer was verified resumed and the timer removed.
 
 All captures passed hardware compute and stream-sequence checks. No application
 code, display configuration, SDK or system tuning changed for this comparison.
+
+## Repeated WebGPU check and new interactive defaults
+
+The CEF frontend now defaults to 20,000 samples/s and 256 samples per packet.
+WebGPU with compute reduction was already enabled during the preceding tests
+and remains the default. WebGL2 is available as an explicit comparison option.
+The application was rebuilt; the CEF SDK was unchanged.
+
+Two further untraced 60-second captures used the rebuilt application, hardware
+Intel Xe-LPG WebGPU, compute reduction, binary WebSocket and Worker reclamation.
+As above, steady movement is ranked from 20 seconds of stream age (45 seconds
+per capture); full raw startup data remain in the local diagnostic directory.
+
+| Run | Steady RAF frames | RAF intervals over 25 ms | Flat-head intervals | Display buffer median / p95 | Host CPU max |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | 2698 | 2 (max 33.4 ms) | 3 | 42.1 / 48.9 ms | 89.0% |
+| 2 | 2700 | 0 (max 16.8 ms) | 0 | 36.9 / 42.6 ms | 11.4% |
+
+The loaded first capture also had two empty-buffer observations and a 69.3 ms
+maximum consume gap. The second had neither empty buffers nor slow-head
+intervals. Both passed the actual wrapped-ring/spike compute check and had
+zero stream sequence gaps. These captures do not establish immunity to host
+load or identify a specific cause for every delay.
+
+A subsequent 30-second native-presentation capture with the indexer temporarily
+paused under the previously authorized automatic recovery procedure recorded
+1800 successful native presentations, no gaps or discards, and a maximum native
+interval of 16.678 ms. Its steady 15-second motion segment had no head stalls,
+slow-head intervals or empty buffers; the display buffer ranged from 34.1 to
+47.3 ms. Host CPU maximum was 7.3%. The indexer was verified resumed and its
+recovery timer removed.
+
+[Repeat results and binary identity](webgpu-20k-repeat-2026-10-22.json) retain
+the loaded capture alongside the quieter run and native control. Raw captures
+are under `/home/okhsunrog/tmp_zfs/codex_tmp/cef-frame-pacing/`, with prefixes
+`webgpu-restored-20k-` and `physical-indexer-paused-webgpu20k-repeat`.

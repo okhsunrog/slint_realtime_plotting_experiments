@@ -1,0 +1,5500 @@
+{
+  "date": "2026-10-22",
+  "binary_sha256": "77f5010d4663803aef2f2a6f7f0fd6c9ed525c970f7119a754e35e33f31bb4fe",
+  "sdk": "/nix/store/dfajyj7h1h44rpwiax2pac0r80zgkqx0-cef-wayland-pacing-candidate-154.0.8037.98-yield-d3c693f",
+  "raw_directory": "/home/okhsunrog/tmp_zfs/codex_tmp/cef-frame-pacing",
+  "rate": 20000,
+  "batch": 256,
+  "execution": "worker",
+  "refresh_hz": 60,
+  "latency_scope": "backend swap-send to hardware presentation, not end-to-end data-to-pixel latency",
+  "captures": [
+    {
+      "tag": "physical-indexer-paused-sync-1-timer-off",
+      "pacing": "timer",
+      "fifo": "off",
+      "summary": {
+        "unique_presentation_count": 1799,
+        "presentation_over25": 2,
+        "presentation_max_ms": 33.334,
+        "host_cpu_median": 4.937601736299512,
+        "host_cpu_max": 6.462035541195476,
+        "feedback_flags": {
+          "7": 1799,
+          "16": 2
+        },
+        "wayland_flags": {
+          "7": 1799
+        }
+      },
+      "raf": {
+        "callback_max": 3.7000000178813934,
+        "callback_p95": 0.5,
+        "callback_p99": 0.6000000238418579,
+        "frames": 1801,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999995634,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 35.9,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 718,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704768,
+          "frames_per_s": 20004.82544656331,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.9593665312495432,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2753,
+          "paused": false,
+          "payload_mib_s": 0.22893705879093143,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000004366,
+          "render_fps": 60.00584730582949,
+          "renderer": "webgpu",
+          "seconds": 35.22990000000596,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20009.19540229885,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 0.9256125431711552,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.2289870689655173,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 59.96168582375479,
+          "renderer": "webgpu",
+          "seconds": 5.22,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "sync",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        136818200531.14648,
+        136848210431.1465
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-sync-1-timer-off",
+        "matched": 1799,
+        "missing": 0,
+        "swap_to_present_p50_ms": 47.229,
+        "swap_to_present_p95_ms": 47.795,
+        "swap_to_present_max_ms": 48.298
+      },
+      "observed_throttle_limits": [
+        2
+      ],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.0006349999999999999,
+          "blocked_ms": 0.2880360000000021,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.078934,
+          "delivery_ms": 0.01026401053013797,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.24481974,
+          "frames": 705024,
+          "generation_max_ms": 0.05051,
+          "generation_ms": 0.008890494190268711,
+          "inflight": 0,
+          "packets": 2754,
+          "producer_late_max_ms": 0.380804,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000463,
+          "blocked_ms": 0.04495000000000001,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.062834,
+          "delivery_ms": 0.01088602689486553,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.224477977,
+          "frames": 104704,
+          "generation_max_ms": 0.016862,
+          "generation_ms": 0.009443731051344738,
+          "inflight": 1,
+          "packets": 409,
+          "producer_late_max_ms": 0.17769,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-sync-2-wayland-off",
+      "pacing": "wayland",
+      "fifo": "off",
+      "summary": {
+        "unique_presentation_count": 1799,
+        "presentation_over25": 2,
+        "presentation_max_ms": 33.332,
+        "host_cpu_median": 5.083829096809086,
+        "host_cpu_max": 6.317494600431965,
+        "feedback_flags": {
+          "7": 1799,
+          "16": 1
+        },
+        "wayland_flags": {
+          "7": 1799
+        }
+      },
+      "raf": {
+        "callback_max": 3.899999976158142,
+        "callback_p95": 0.5,
+        "callback_p99": 0.699999988079071,
+        "frames": 1800,
+        "over100": 0,
+        "over25": 1,
+        "over50": 0,
+        "raf_max": 33.400000000001455,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999999272,
+        "raf_p99": 16.80000000000291
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 33.4,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 668,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704768,
+          "frames_per_s": 20008.119440954328,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.0395344880780613,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2753,
+          "paused": false,
+          "payload_mib_s": 0.22897475556512065,
+          "playback_catchups": 1,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 59.95894856079666,
+          "renderer": "webgpu",
+          "seconds": 35.22409999999404,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20038.37004064933,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.031697476158115,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.22932094620494076,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999727,
+          "render_fps": 59.85726344863081,
+          "renderer": "webgpu",
+          "seconds": 5.21240000000596,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "sync",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        136868678741.0,
+        136898690341.0
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-sync-2-wayland-off",
+        "matched": 1799,
+        "missing": 0,
+        "swap_to_present_p50_ms": 20.094,
+        "swap_to_present_p95_ms": 20.99,
+        "swap_to_present_max_ms": 36.086
+      },
+      "observed_throttle_limits": [],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 2135,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.001125,
+          "blocked_ms": 0.3307530000000005,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.209095,
+          "delivery_ms": 0.011026364329822028,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.239688357,
+          "frames": 704768,
+          "generation_max_ms": 0.096502,
+          "generation_ms": 0.008932027243007642,
+          "inflight": 0,
+          "packets": 2753,
+          "producer_late_max_ms": 0.215173,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000407,
+          "blocked_ms": 0.051295000000000035,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.018974,
+          "delivery_ms": 0.010713245098039214,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.220602979,
+          "frames": 104448,
+          "generation_max_ms": 0.021772,
+          "generation_ms": 0.009445127450980388,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 0.180779,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-sync-3-wayland-on",
+      "pacing": "wayland",
+      "fifo": "on",
+      "summary": {
+        "unique_presentation_count": 1794,
+        "presentation_over25": 4,
+        "presentation_max_ms": 66.668,
+        "host_cpu_median": 5.1891891891891895,
+        "host_cpu_max": 6.6558441558441555,
+        "feedback_flags": {
+          "7": 1794,
+          "16": 4
+        },
+        "wayland_flags": {
+          "7": 1794
+        }
+      },
+      "raf": {
+        "callback_max": 3,
+        "callback_p95": 0.5,
+        "callback_p99": 0.699999988079071,
+        "frames": 1798,
+        "over100": 0,
+        "over25": 2,
+        "over50": 0,
+        "raf_max": 33.400000000001455,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.700000000004366,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 33.55,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 671,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20000.851689613624,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.259552896585319,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.22889158275162075,
+          "playback_catchups": 1,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000004366,
+          "render_fps": 59.930558907122034,
+          "renderer": "webgpu",
+          "seconds": 35.22409999999404,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20010.345422082148,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.3575688965847803,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.22900022989748553,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999727,
+          "render_fps": 59.96513209550889,
+          "renderer": "webgpu",
+          "seconds": 5.219700000017881,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "sync",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        136919181777.95119,
+        136949186077.95117
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-sync-3-wayland-on",
+        "matched": 1794,
+        "missing": 0,
+        "swap_to_present_p50_ms": 20.2705,
+        "swap_to_present_p95_ms": 22.57,
+        "swap_to_present_max_ms": 36.318
+      },
+      "observed_throttle_limits": [],
+      "fifo_events": 2132,
+      "wayland_begin_frame_callbacks": 2139,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.002396,
+          "blocked_ms": 0.29833500000000107,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.103735,
+          "delivery_ms": 0.010781896476571,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.239472364,
+          "frames": 704768,
+          "generation_max_ms": 0.241889,
+          "generation_ms": 0.008948958227388304,
+          "inflight": 0,
+          "packets": 2753,
+          "producer_late_max_ms": 0.216314,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000789,
+          "blocked_ms": 0.04589900000000001,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.04037399999999999,
+          "delivery_ms": 0.010535365196078427,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.222701099,
+          "frames": 104448,
+          "generation_max_ms": 0.039542,
+          "generation_ms": 0.009148350490196078,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 0.16953700000000002,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-sync-4-timer-on",
+      "pacing": "timer",
+      "fifo": "on",
+      "summary": {
+        "unique_presentation_count": 1800,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.678,
+        "host_cpu_median": 5.086580086580087,
+        "host_cpu_max": 6.0507833603457595,
+        "feedback_flags": {
+          "7": 1800
+        },
+        "wayland_flags": {
+          "7": 1800
+        }
+      },
+      "raf": {
+        "callback_max": 3.199999988079071,
+        "callback_p95": 0.5,
+        "callback_p99": 0.6000000238418579,
+        "frames": 1800,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999999272,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 40.2,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 804,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20001.873812890175,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.1037533340841037,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.22890328002422533,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999995634,
+          "render_fps": 59.99040380665899,
+          "renderer": "webgpu",
+          "seconds": 35.22230000001192,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20019.550342085244,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.3089313340851731,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.22910557184698385,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 59.99271653906903,
+          "renderer": "webgpu",
+          "seconds": 5.217300000011921,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "sync",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        136969842447.04883,
+        136999847347.04884
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-sync-4-timer-on",
+        "matched": 1800,
+        "missing": 0,
+        "swap_to_present_p50_ms": 47.172,
+        "swap_to_present_p95_ms": 47.701,
+        "swap_to_present_max_ms": 48.239
+      },
+      "observed_throttle_limits": [],
+      "fifo_events": 2131,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.0006770000000000001,
+          "blocked_ms": 0.2558260000000028,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.07519100000000001,
+          "delivery_ms": 0.010720003269160916,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.238245961,
+          "frames": 704768,
+          "generation_max_ms": 0.113417,
+          "generation_ms": 0.008569504540501283,
+          "inflight": 0,
+          "packets": 2753,
+          "producer_late_max_ms": 0.573545,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000303,
+          "blocked_ms": 0.03952000000000001,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.044446,
+          "delivery_ms": 0.01069888235294117,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.220999206,
+          "frames": 104448,
+          "generation_max_ms": 0.0284,
+          "generation_ms": 0.008856002450980395,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 0.573545,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-sync-repeat-1-timer-on",
+      "pacing": "timer",
+      "fifo": "on",
+      "summary": {
+        "unique_presentation_count": 1800,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.678,
+        "host_cpu_median": 4.970286331712588,
+        "host_cpu_max": 9.585352719439957,
+        "feedback_flags": {
+          "7": 1800
+        },
+        "wayland_flags": {
+          "7": 1800
+        }
+      },
+      "raf": {
+        "callback_max": 3.199999988079071,
+        "callback_p95": 0.5,
+        "callback_p99": 0.6000000238418579,
+        "frames": 1800,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999995634,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 41.5,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 830,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704768,
+          "frames_per_s": 20005.22294005093,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.960874578124276,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2753,
+          "paused": false,
+          "payload_mib_s": 0.22894160774289243,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 60.00703961483448,
+          "renderer": "webgpu",
+          "seconds": 35.22920000001788,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104704,
+          "frames_per_s": 20042.49535807497,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.0359345662036503,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 409,
+          "paused": false,
+          "payload_mib_s": 0.22936815671625105,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 60.10604697466707,
+          "renderer": "webgpu",
+          "seconds": 5.224099999994039,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2352,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "sync-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        137214059607.0488,
+        137244064607.0488
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-sync-repeat-1-timer-on",
+        "matched": 1800,
+        "missing": 0,
+        "swap_to_present_p50_ms": 47.231,
+        "swap_to_present_p95_ms": 47.785,
+        "swap_to_present_max_ms": 48.828
+      },
+      "observed_throttle_limits": [
+        2
+      ],
+      "fifo_events": 2131,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.016976,
+          "blocked_ms": 0.3672760000000013,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.053505,
+          "delivery_ms": 0.010151034132171366,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.240758733,
+          "frames": 705024,
+          "generation_max_ms": 0.097488,
+          "generation_ms": 0.008823729484386337,
+          "inflight": 0,
+          "packets": 2754,
+          "producer_late_max_ms": 0.202857,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000416,
+          "blocked_ms": 0.05199299999999997,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.023961,
+          "delivery_ms": 0.010192325183374084,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.227831387,
+          "frames": 104704,
+          "generation_max_ms": 0.021808,
+          "generation_ms": 0.00873568948655257,
+          "inflight": 0,
+          "packets": 409,
+          "producer_late_max_ms": 0.202857,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-sync-repeat-2-timer-off",
+      "pacing": "timer",
+      "fifo": "off",
+      "summary": {
+        "unique_presentation_count": 1799,
+        "presentation_over25": 1,
+        "presentation_max_ms": 33.339,
+        "host_cpu_median": 5.086580086580087,
+        "host_cpu_max": 6.1688311688311686,
+        "feedback_flags": {
+          "7": 1799,
+          "16": 1
+        },
+        "wayland_flags": {
+          "7": 1799
+        }
+      },
+      "raf": {
+        "callback_max": 2.7999999821186066,
+        "callback_p95": 0.5,
+        "callback_p99": 0.6000000238418579,
+        "frames": 1800,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999999272,
+        "raf_p99": 16.80000000000291
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 36.25,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 725,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20000.681345881854,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.203938927836134,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.22888963332231735,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 59.98682731287524,
+          "renderer": "webgpu",
+          "seconds": 35.22440000000596,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20010.3454221964,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.0846049218748703,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.229000229898793,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 59.96513209585126,
+          "renderer": "webgpu",
+          "seconds": 5.219699999988079,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "sync-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        137264984701.09767,
+        137294989301.09766
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-sync-repeat-2-timer-off",
+        "matched": 1799,
+        "missing": 0,
+        "swap_to_present_p50_ms": 47.204,
+        "swap_to_present_p95_ms": 47.794,
+        "swap_to_present_max_ms": 48.185
+      },
+      "observed_throttle_limits": [
+        2
+      ],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.000818,
+          "blocked_ms": 0.25600300000000265,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.202512,
+          "delivery_ms": 0.011167493280058113,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.236944502,
+          "frames": 704768,
+          "generation_max_ms": 0.051561,
+          "generation_ms": 0.009287177261169625,
+          "inflight": 0,
+          "packets": 2753,
+          "producer_late_max_ms": 0.267197,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000414,
+          "blocked_ms": 0.03770999999999997,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.072185,
+          "delivery_ms": 0.011066860294117645,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.223334332,
+          "frames": 104448,
+          "generation_max_ms": 0.034878,
+          "generation_ms": 0.009314514705882354,
+          "inflight": 1,
+          "packets": 408,
+          "producer_late_max_ms": 0.173577,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-sync-repeat-3-timer-off",
+      "pacing": "timer",
+      "fifo": "off",
+      "summary": {
+        "unique_presentation_count": 1800,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.678,
+        "host_cpu_median": 5.037919826652221,
+        "host_cpu_max": 6.4935064935064934,
+        "feedback_flags": {
+          "7": 1800
+        },
+        "wayland_flags": {
+          "7": 1800
+        }
+      },
+      "raf": {
+        "callback_max": 3.7999999821186066,
+        "callback_p95": 0.5,
+        "callback_p99": 0.6000000238418579,
+        "frames": 1800,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.700000000004366,
+        "raf_p99": 16.800000000000182
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 37.3,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 746,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20006.41784730515,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.2499412105316878,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.22895528237119847,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000004366,
+          "render_fps": 60.004032452755645,
+          "renderer": "webgpu",
+          "seconds": 35.21429999998212,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20046.83121573816,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.2461712224539951,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.22941777666936675,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999727,
+          "render_fps": 60.074469310336674,
+          "renderer": "webgpu",
+          "seconds": 5.210199999988079,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "sync-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        137316085063.95113,
+        137346089163.95113
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-sync-repeat-3-timer-off",
+        "matched": 1800,
+        "missing": 0,
+        "swap_to_present_p50_ms": 30.4865,
+        "swap_to_present_p95_ms": 31.082,
+        "swap_to_present_max_ms": 31.495
+      },
+      "observed_throttle_limits": [],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.053953,
+          "blocked_ms": 0.3554440000000006,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.27502,
+          "delivery_ms": 0.010017105377906965,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.224755184,
+          "frames": 704512,
+          "generation_max_ms": 0.072655,
+          "generation_ms": 0.008766493459302301,
+          "inflight": 0,
+          "packets": 2752,
+          "producer_late_max_ms": 1.227885,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.053953,
+          "blocked_ms": 0.09934200000000012,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.27502,
+          "delivery_ms": 0.01105298039215686,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.213360992,
+          "frames": 104448,
+          "generation_max_ms": 0.072655,
+          "generation_ms": 0.00882642892156862,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 1.227885,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-sync-repeat-4-timer-on",
+      "pacing": "timer",
+      "fifo": "on",
+      "summary": {
+        "unique_presentation_count": 1800,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.678,
+        "host_cpu_median": 4.975662520281233,
+        "host_cpu_max": 5.885529157667387,
+        "feedback_flags": {
+          "7": 1800
+        },
+        "wayland_flags": {
+          "7": 1800
+        }
+      },
+      "raf": {
+        "callback_max": 4.300000011920929,
+        "callback_p95": 0.5,
+        "callback_p99": 0.6000000238418579,
+        "frames": 1800,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999999272,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 37.8,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 756,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20004.713592460568,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.040873671875488,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.2289357787223118,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 59.99892098483657,
+          "renderer": "webgpu",
+          "seconds": 35.21730000001192,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20037.601197122247,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.061325648033289,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.2293121474890394,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999727,
+          "render_fps": 60.04680965360049,
+          "renderer": "webgpu",
+          "seconds": 5.21259999999404,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "sync-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        137367060251.95113,
+        137397064951.95116
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-sync-repeat-4-timer-on",
+        "matched": 1800,
+        "missing": 0,
+        "swap_to_present_p50_ms": 30.482,
+        "swap_to_present_p95_ms": 31.082,
+        "swap_to_present_max_ms": 31.563
+      },
+      "observed_throttle_limits": [
+        2
+      ],
+      "fifo_events": 2135,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.000757,
+          "blocked_ms": 0.25298600000000243,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.090743,
+          "delivery_ms": 0.011049695604794777,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.229377515,
+          "frames": 704768,
+          "generation_max_ms": 0.06742100000000001,
+          "generation_ms": 0.009103940428623327,
+          "inflight": 0,
+          "packets": 2753,
+          "producer_late_max_ms": 0.334427,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.00037,
+          "blocked_ms": 0.037824,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.041658,
+          "delivery_ms": 0.010669852941176478,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.216383881,
+          "frames": 104448,
+          "generation_max_ms": 0.026505,
+          "generation_ms": 0.009192007352941168,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 0.210266,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-sync-stress-1-timer-on",
+      "pacing": "timer",
+      "fifo": "on",
+      "summary": {
+        "unique_presentation_count": 1807,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.678,
+        "host_cpu_median": 5.51948051948052,
+        "host_cpu_max": 6.915180983252296,
+        "feedback_flags": {
+          "7": 1807
+        },
+        "wayland_flags": {
+          "7": 1807
+        }
+      },
+      "raf": {
+        "callback_max": 6,
+        "callback_p95": 0.5,
+        "callback_p99": 0.800000011920929,
+        "frames": 1807,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999999272,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 39.2,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 784,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 707072,
+          "frames_per_s": 20005.262517587213,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.0399902789940825,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2762,
+          "paused": false,
+          "payload_mib_s": 0.22894206067185072,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 60.00967624202695,
+          "renderer": "webgpu",
+          "seconds": 35.34429999998212,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104704,
+          "frames_per_s": 20049.019607934668,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 0.9619722849538448,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 409,
+          "paused": false,
+          "payload_mib_s": 0.22944282083055115,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 60.12561274537253,
+          "renderer": "webgpu",
+          "seconds": 5.222399999976158,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2352,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "sync-stress",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        137494344218.14645,
+        137524465918.14648
+      ],
+      "block_ms": 100,
+      "latency": {
+        "tag": "physical-indexer-paused-sync-stress-1-timer-on",
+        "matched": 1807,
+        "missing": 0,
+        "swap_to_present_p50_ms": 47.082,
+        "swap_to_present_p95_ms": 47.713,
+        "swap_to_present_max_ms": 48.138
+      },
+      "observed_throttle_limits": [],
+      "fifo_events": 2137,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.000953,
+          "blocked_ms": 0.32039400000000146,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.06424400000000001,
+          "delivery_ms": 0.010488110025334788,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.356333967,
+          "frames": 707328,
+          "generation_max_ms": 0.07069199999999999,
+          "generation_ms": 0.008962665580890355,
+          "inflight": 0,
+          "packets": 2763,
+          "producer_late_max_ms": 0.207847,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000953,
+          "blocked_ms": 0.04790799999999997,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.06424400000000001,
+          "delivery_ms": 0.010883330073349622,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.22744777,
+          "frames": 104704,
+          "generation_max_ms": 0.07069199999999999,
+          "generation_ms": 0.009414547677261614,
+          "inflight": 0,
+          "packets": 409,
+          "producer_late_max_ms": 0.185222,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-sync-stress-2-timer-off",
+      "pacing": "timer",
+      "fifo": "off",
+      "summary": {
+        "unique_presentation_count": 1807,
+        "presentation_over25": 1,
+        "presentation_max_ms": 33.342,
+        "host_cpu_median": 5.6521739130434785,
+        "host_cpu_max": 8.319827120475418,
+        "feedback_flags": {
+          "7": 1807,
+          "16": 1
+        },
+        "wayland_flags": {
+          "7": 1807
+        }
+      },
+      "raf": {
+        "callback_max": 5.300000011920929,
+        "callback_p95": 0.5,
+        "callback_p99": 0.699999988079071,
+        "frames": 1808,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.700000000004366,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 33.7,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 674,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 707072,
+          "frames_per_s": 20003.677812310572,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.2153288318286286,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2762,
+          "paused": false,
+          "payload_mib_s": 0.22892392515919388,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999995634,
+          "render_fps": 60.004922610300966,
+          "renderer": "webgpu",
+          "seconds": 35.34710000002384,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20009.962067466466,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.400080843750402,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.22899584275207288,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 59.96398329424215,
+          "renderer": "webgpu",
+          "seconds": 5.219800000011921,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "sync-stress",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        137545408061.04883,
+        137575535161.0488
+      ],
+      "block_ms": 100,
+      "latency": {
+        "tag": "physical-indexer-paused-sync-stress-2-timer-off",
+        "matched": 1807,
+        "missing": 0,
+        "swap_to_present_p50_ms": 47.082,
+        "swap_to_present_p95_ms": 47.731,
+        "swap_to_present_max_ms": 48.158
+      },
+      "observed_throttle_limits": [
+        2
+      ],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.018684,
+          "blocked_ms": 0.3257510000000007,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.15621600000000002,
+          "delivery_ms": 0.012014963807455674,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.35802438,
+          "frames": 707328,
+          "generation_max_ms": 0.201173,
+          "generation_ms": 0.010258858125226204,
+          "inflight": 0,
+          "packets": 2763,
+          "producer_late_max_ms": 0.717429,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.00035400000000000004,
+          "blocked_ms": 0.0460610000000001,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.128852,
+          "delivery_ms": 0.012130350490196068,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.223675314,
+          "frames": 104448,
+          "generation_max_ms": 0.201173,
+          "generation_ms": 0.011060943627450977,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 0.717429,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-sync-stress-3-timer-off",
+      "pacing": "timer",
+      "fifo": "off",
+      "summary": {
+        "unique_presentation_count": 1808,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.678,
+        "host_cpu_median": 5.591748099891422,
+        "host_cpu_max": 7.227615965480044,
+        "feedback_flags": {
+          "7": 1808
+        },
+        "wayland_flags": {
+          "7": 1808
+        }
+      },
+      "raf": {
+        "callback_max": 4.799999982118607,
+        "callback_p95": 0.5,
+        "callback_p99": 1,
+        "frames": 1808,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999999272,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 35.3,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 706,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 707072,
+          "frames_per_s": 20005.262517587213,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.1301324710061635,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2762,
+          "paused": false,
+          "payload_mib_s": 0.22894206067185072,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 60.00967624202695,
+          "renderer": "webgpu",
+          "seconds": 35.34429999998212,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20009.962067580713,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.569860459085703,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.22899584275338036,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 59.96398329458451,
+          "renderer": "webgpu",
+          "seconds": 5.2197999999821185,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.5999999940395355,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "sync-stress",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        137596529868.0,
+        137626654468.0
+      ],
+      "block_ms": 100,
+      "latency": {
+        "tag": "physical-indexer-paused-sync-stress-3-timer-off",
+        "matched": 1808,
+        "missing": 0,
+        "swap_to_present_p50_ms": 47.066500000000005,
+        "swap_to_present_p95_ms": 47.73,
+        "swap_to_present_max_ms": 48.305
+      },
+      "observed_throttle_limits": [
+        2
+      ],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.001125,
+          "blocked_ms": 0.2666380000000018,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.844817,
+          "delivery_ms": 0.010886921824104235,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.358974954,
+          "frames": 707328,
+          "generation_max_ms": 0.08881800000000001,
+          "generation_ms": 0.008424398479913144,
+          "inflight": 0,
+          "packets": 2763,
+          "producer_late_max_ms": 1.815973,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000702,
+          "blocked_ms": 0.041018999999999965,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.844817,
+          "delivery_ms": 0.012997438725490171,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.223205676,
+          "frames": 104448,
+          "generation_max_ms": 0.06877,
+          "generation_ms": 0.00913126470588235,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 1.815973,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-sync-stress-4-timer-on",
+      "pacing": "timer",
+      "fifo": "on",
+      "summary": {
+        "unique_presentation_count": 1807,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.678,
+        "host_cpu_median": 5.646036916395222,
+        "host_cpu_max": 7.019438444924406,
+        "feedback_flags": {
+          "7": 1807
+        },
+        "wayland_flags": {
+          "7": 1807
+        }
+      },
+      "raf": {
+        "callback_max": 3.5,
+        "callback_p95": 0.5,
+        "callback_p99": 0.699999988079071,
+        "frames": 1807,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999999272,
+        "raf_p99": 16.80000000000291
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 36.25,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 725,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 706816,
+          "frames_per_s": 20001.47149544228,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.082998427835264,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2761,
+          "paused": false,
+          "payload_mib_s": 0.22889867586642015,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 59.99173698718993,
+          "renderer": "webgpu",
+          "seconds": 35.33819999998808,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104192,
+          "frames_per_s": 19999.61610078093,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.085931433796759,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 407,
+          "paused": false,
+          "payload_mib_s": 0.22887744255959624,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 60.08023494648756,
+          "renderer": "webgpu",
+          "seconds": 5.209699999988079,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2096,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "sync-stress",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        137647534011.8047,
+        137677662411.8047
+      ],
+      "block_ms": 100,
+      "latency": {
+        "tag": "physical-indexer-paused-sync-stress-4-timer-on",
+        "matched": 1807,
+        "missing": 0,
+        "swap_to_present_p50_ms": 30.425,
+        "swap_to_present_p95_ms": 31.127,
+        "swap_to_present_max_ms": 32.197
+      },
+      "observed_throttle_limits": [],
+      "fifo_events": 2137,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.001796,
+          "blocked_ms": 0.3061750000000005,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.138431,
+          "delivery_ms": 0.011558455467052855,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.35041001,
+          "frames": 707072,
+          "generation_max_ms": 0.171755,
+          "generation_ms": 0.009812424330195508,
+          "inflight": 0,
+          "packets": 2762,
+          "producer_late_max_ms": 1.15383,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000488,
+          "blocked_ms": 0.046623,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.052942,
+          "delivery_ms": 0.0108788774509804,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.219380536,
+          "frames": 104448,
+          "generation_max_ms": 0.171403,
+          "generation_ms": 0.009616372549019607,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 1.145438,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-pump-repeat-1-1",
+      "pacing": "timer",
+      "fifo": "on",
+      "pump_ms": 1,
+      "summary": {
+        "unique_presentation_count": 1798,
+        "presentation_over25": 2,
+        "presentation_max_ms": 33.335,
+        "host_cpu_median": 4.986449864498645,
+        "host_cpu_max": 8.568329718004339,
+        "feedback_flags": {
+          "7": 1798,
+          "16": 2
+        },
+        "wayland_flags": {
+          "7": 1798
+        }
+      },
+      "raf": {
+        "callback_max": 3.5,
+        "callback_p95": 0.5,
+        "callback_p99": 0.5999999940395355,
+        "frames": 1800,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.700000000004366,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 37.5,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 750,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20001.41952298688,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.947870203122875,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.22889808108886964,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000004366,
+          "render_fps": 59.98904128257755,
+          "renderer": "webgpu",
+          "seconds": 35.22309999999404,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20014.563292860017,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 0.9799891912039128,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.2290484995978548,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 59.977771816264415,
+          "renderer": "webgpu",
+          "seconds": 5.21859999999404,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "pump-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        137811401557.9023,
+        137841406057.9023
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-pump-repeat-1-1",
+        "matched": 1798,
+        "missing": 0,
+        "swap_to_present_p50_ms": 47.217,
+        "swap_to_present_p95_ms": 47.781,
+        "swap_to_present_max_ms": 48.13
+      },
+      "observed_throttle_limits": [
+        2
+      ],
+      "fifo_events": 2130,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.000673,
+          "blocked_ms": 0.31128300000000136,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.07568699999999999,
+          "delivery_ms": 0.010668819469669456,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.233002949,
+          "frames": 704768,
+          "generation_max_ms": 0.599164,
+          "generation_ms": 0.008942787867780577,
+          "inflight": 0,
+          "packets": 2753,
+          "producer_late_max_ms": 0.31439100000000003,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000433,
+          "blocked_ms": 0.047063,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.047396,
+          "delivery_ms": 0.01015887009803922,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.221933789,
+          "frames": 104448,
+          "generation_max_ms": 0.109729,
+          "generation_ms": 0.009069215686274505,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 0.19998,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-pump-repeat-2-4",
+      "pacing": "timer",
+      "fifo": "on",
+      "pump_ms": 4,
+      "summary": {
+        "unique_presentation_count": 1798,
+        "presentation_over25": 1,
+        "presentation_max_ms": 50.003,
+        "host_cpu_median": 5.010775862068965,
+        "host_cpu_max": 6.182795698924731,
+        "feedback_flags": {
+          "7": 1798,
+          "16": 2
+        },
+        "wayland_flags": {
+          "7": 1798
+        }
+      },
+      "raf": {
+        "callback_max": 2.800000011920929,
+        "callback_p95": 0.5,
+        "callback_p99": 0.5999999940395355,
+        "frames": 1800,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.700000000004366,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 38.05,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 761,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20006.41784730515,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.014764773843126,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.22895528237119847,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000004366,
+          "render_fps": 59.947237343950384,
+          "renderer": "webgpu",
+          "seconds": 35.21429999998212,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20047.21598436105,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.3299817500001154,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.22942217999680764,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999727,
+          "render_fps": 59.69175255760078,
+          "renderer": "webgpu",
+          "seconds": 5.210099999994039,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.19999998807907104
+        }
+      },
+      "series": "pump-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        137863248945.90234,
+        137893252945.90234
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-pump-repeat-2-4",
+        "matched": 1798,
+        "missing": 0,
+        "swap_to_present_p50_ms": 30.493,
+        "swap_to_present_p95_ms": 31.059,
+        "swap_to_present_max_ms": 46.35
+      },
+      "observed_throttle_limits": [],
+      "fifo_events": 2132,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.000758,
+          "blocked_ms": 0.2996040000000016,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.08831800000000001,
+          "delivery_ms": 0.011078121366279073,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.225650554,
+          "frames": 704512,
+          "generation_max_ms": 0.067883,
+          "generation_ms": 0.00909533793604652,
+          "inflight": 0,
+          "packets": 2752,
+          "producer_late_max_ms": 3.076723,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.0005729999999999999,
+          "blocked_ms": 0.04769300000000005,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.045963,
+          "delivery_ms": 0.011055727941176471,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.213439208,
+          "frames": 104448,
+          "generation_max_ms": 0.041718000000000005,
+          "generation_ms": 0.009537509803921571,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 3.076723,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-pump-repeat-3-4",
+      "pacing": "timer",
+      "fifo": "on",
+      "pump_ms": 4,
+      "summary": {
+        "unique_presentation_count": 1798,
+        "presentation_over25": 1,
+        "presentation_max_ms": 49.999,
+        "host_cpu_median": 4.926908500270709,
+        "host_cpu_max": 6.504065040650406,
+        "feedback_flags": {
+          "7": 1798,
+          "16": 2
+        },
+        "wayland_flags": {
+          "7": 1798
+        }
+      },
+      "raf": {
+        "callback_max": 2.800000011920929,
+        "callback_p95": 0.5,
+        "callback_p99": 0.6000000238418579,
+        "frames": 1800,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999999272,
+        "raf_p99": 16.80000000000291
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 40.55,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 811,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20000.624565288366,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.1243084434604498,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.2288889835199932,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 60.01504634558333,
+          "renderer": "webgpu",
+          "seconds": 35.2245,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20010.345422082148,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.2942704494207646,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.22900022989748553,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 60.15671398718783,
+          "renderer": "webgpu",
+          "seconds": 5.219700000017881,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "pump-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        137915119867.0977,
+        137945124467.09766
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-pump-repeat-3-4",
+        "matched": 1798,
+        "missing": 0,
+        "swap_to_present_p50_ms": 30.5185,
+        "swap_to_present_p95_ms": 31.112,
+        "swap_to_present_max_ms": 46.428
+      },
+      "observed_throttle_limits": [
+        2
+      ],
+      "fifo_events": 2131,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.000688,
+          "blocked_ms": 0.2658070000000027,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.063722,
+          "delivery_ms": 0.011357050490374134,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.236511172,
+          "frames": 704768,
+          "generation_max_ms": 0.06768199999999999,
+          "generation_ms": 0.009946083181983282,
+          "inflight": 0,
+          "packets": 2753,
+          "producer_late_max_ms": 0.817306,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000688,
+          "blocked_ms": 0.03852399999999998,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.063722,
+          "delivery_ms": 0.010979522058823531,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.222726043,
+          "frames": 104448,
+          "generation_max_ms": 0.06768199999999999,
+          "generation_ms": 0.009669426470588232,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 0.817306,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-pump-repeat-4-1",
+      "pacing": "timer",
+      "fifo": "on",
+      "pump_ms": 1,
+      "summary": {
+        "unique_presentation_count": 1801,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.678,
+        "host_cpu_median": 5.151843817787419,
+        "host_cpu_max": 6.551164049810503,
+        "feedback_flags": {
+          "7": 1801
+        },
+        "wayland_flags": {
+          "7": 1801
+        }
+      },
+      "raf": {
+        "callback_max": 3.600000023841858,
+        "callback_p95": 0.5,
+        "callback_p99": 0.5999999940395355,
+        "frames": 1801,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999999272,
+        "raf_p99": 16.80000000000291
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 36.4,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 728,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704768,
+          "frames_per_s": 20006.869867126486,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.160196625001845,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2753,
+          "paused": false,
+          "payload_mib_s": 0.22896045532752785,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 60.01197968566307,
+          "renderer": "webgpu",
+          "seconds": 35.22629999998212,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20005.746135700883,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.2341366130790448,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.22894759524193825,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999727,
+          "render_fps": 59.95134938413734,
+          "renderer": "webgpu",
+          "seconds": 5.220900000005961,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "pump-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        137966905358.14648,
+        137996910858.14648
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-pump-repeat-4-1",
+        "matched": 1801,
+        "missing": 0,
+        "swap_to_present_p50_ms": 30.603,
+        "swap_to_present_p95_ms": 31.087,
+        "swap_to_present_max_ms": 31.429
+      },
+      "observed_throttle_limits": [],
+      "fifo_events": 2131,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.001135,
+          "blocked_ms": 0.3149390000000002,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.062123000000000005,
+          "delivery_ms": 0.010857545949872855,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.237311035,
+          "frames": 704768,
+          "generation_max_ms": 0.061484,
+          "generation_ms": 0.009000378859426075,
+          "inflight": 0,
+          "packets": 2753,
+          "producer_late_max_ms": 2.242861,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000493,
+          "blocked_ms": 0.04955999999999991,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.040224,
+          "delivery_ms": 0.010443457212713938,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.224729155,
+          "frames": 104704,
+          "generation_max_ms": 0.022526,
+          "generation_ms": 0.008985826405867963,
+          "inflight": 0,
+          "packets": 409,
+          "producer_late_max_ms": 2.242861,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-double-repeat-1-1",
+      "pacing": "timer",
+      "fifo": "off",
+      "pump_ms": 4,
+      "double_buffer": true,
+      "summary": {
+        "unique_presentation_count": 1800,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.678,
+        "host_cpu_median": 5.124786527883936,
+        "host_cpu_max": 6.3311688311688314,
+        "feedback_flags": {
+          "7": 1800
+        },
+        "wayland_flags": {
+          "7": 1800
+        }
+      },
+      "raf": {
+        "callback_max": 3.800000011920929,
+        "callback_p95": 0.5,
+        "callback_p99": 0.6000000238418579,
+        "frames": 1800,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999995634,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 40.55,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 811,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704768,
+          "frames_per_s": 20005.790815319506,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.9587410684616772,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2753,
+          "paused": false,
+          "payload_mib_s": 0.22894810655959513,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000004366,
+          "render_fps": 60.00874299568855,
+          "renderer": "webgpu",
+          "seconds": 35.22819999998808,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104704,
+          "frames_per_s": 20041.72807835712,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.0369480684603332,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 409,
+          "paused": false,
+          "payload_mib_s": 0.2293593758967261,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 60.103745956258926,
+          "renderer": "webgpu",
+          "seconds": 5.224300000011921,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2352,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "double-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        138419397675.85352,
+        138449401575.85352
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-double-repeat-1-1",
+        "matched": 1800,
+        "missing": 0,
+        "swap_to_present_p50_ms": 30.557,
+        "swap_to_present_p95_ms": 31.066,
+        "swap_to_present_max_ms": 31.534
+      },
+      "observed_throttle_limits": [
+        1
+      ],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.000468,
+          "blocked_ms": 0.32266400000000106,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.124289,
+          "delivery_ms": 0.010307895424836616,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.240413647,
+          "frames": 705024,
+          "generation_max_ms": 0.039073,
+          "generation_ms": 0.00862771350762528,
+          "inflight": 0,
+          "packets": 2754,
+          "producer_late_max_ms": 0.266467,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000396,
+          "blocked_ms": 0.045937000000000006,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.033248,
+          "delivery_ms": 0.01050184107579462,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.227234778,
+          "frames": 104704,
+          "generation_max_ms": 0.039073,
+          "generation_ms": 0.00861532029339853,
+          "inflight": 0,
+          "packets": 409,
+          "producer_late_max_ms": 0.185245,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-double-repeat-2-0",
+      "pacing": "timer",
+      "fifo": "off",
+      "pump_ms": 4,
+      "double_buffer": false,
+      "summary": {
+        "unique_presentation_count": 1800,
+        "presentation_over25": 1,
+        "presentation_max_ms": 33.334,
+        "host_cpu_median": 5.297297297297297,
+        "host_cpu_max": 6.68824163969795,
+        "feedback_flags": {
+          "7": 1800
+        },
+        "wayland_flags": {
+          "7": 1800
+        }
+      },
+      "raf": {
+        "callback_max": 2.600000023841858,
+        "callback_p95": 0.5,
+        "callback_p99": 0.5999999940395355,
+        "frames": 1800,
+        "over100": 0,
+        "over25": 1,
+        "over50": 0,
+        "raf_max": 33.29999999999927,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.700000000004366,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 45.75,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 915,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20004.884004884007,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.2466193028376438,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.22893772893772896,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999995634,
+          "render_fps": 59.971036715222766,
+          "renderer": "webgpu",
+          "seconds": 35.217,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20053.75931185786,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.4344713028353908,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.22949706243733817,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999727,
+          "render_fps": 59.90323323854599,
+          "renderer": "webgpu",
+          "seconds": 5.208400000005961,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "double-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        138470755476.04886,
+        138500763976.04886
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-double-repeat-2-0",
+        "matched": 1800,
+        "missing": 0,
+        "swap_to_present_p50_ms": 30.423,
+        "swap_to_present_p95_ms": 31.054,
+        "swap_to_present_max_ms": 31.853
+      },
+      "observed_throttle_limits": [],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.0008269999999999999,
+          "blocked_ms": 0.3518030000000003,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.169058,
+          "delivery_ms": 0.010258401017072273,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.235962468,
+          "frames": 704768,
+          "generation_max_ms": 0.130612,
+          "generation_ms": 0.009141733745005431,
+          "inflight": 0,
+          "packets": 2753,
+          "producer_late_max_ms": 0.316886,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.0008269999999999999,
+          "blocked_ms": 0.05391800000000001,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.060375,
+          "delivery_ms": 0.010790602941176477,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.21583343,
+          "frames": 104448,
+          "generation_max_ms": 0.045766,
+          "generation_ms": 0.009676394607843142,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 0.316886,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-double-repeat-3-0",
+      "pacing": "timer",
+      "fifo": "off",
+      "pump_ms": 4,
+      "double_buffer": false,
+      "summary": {
+        "unique_presentation_count": 1800,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.677,
+        "host_cpu_median": 5.368763557483731,
+        "host_cpu_max": 7.215939687668282,
+        "feedback_flags": {
+          "7": 1800
+        },
+        "wayland_flags": {
+          "7": 1800
+        }
+      },
+      "raf": {
+        "callback_max": 2.0999999940395355,
+        "callback_p95": 0.5,
+        "callback_p99": 0.5999999940395355,
+        "frames": 1800,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999999272,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 42.1,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 842,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704768,
+          "frames_per_s": 20004.882230394654,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.2715116227445833,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2753,
+          "paused": false,
+          "payload_mib_s": 0.22893770863030996,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 59.97763257245492,
+          "renderer": "webgpu",
+          "seconds": 35.22979999998212,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104704,
+          "frames_per_s": 20036.742192306996,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.283331640624965,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 409,
+          "paused": false,
+          "payload_mib_s": 0.22930231695907968,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 59.89742804660843,
+          "renderer": "webgpu",
+          "seconds": 5.2255999999940395,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2352,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "double-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        138522406625.04886,
+        138552410625.04886
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-double-repeat-3-0",
+        "matched": 1800,
+        "missing": 0,
+        "swap_to_present_p50_ms": 47.197500000000005,
+        "swap_to_present_p95_ms": 47.788,
+        "swap_to_present_max_ms": 48.198
+      },
+      "observed_throttle_limits": [],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.001651,
+          "blocked_ms": 0.27812200000000137,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.649356,
+          "delivery_ms": 0.010910017792302122,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.242615287,
+          "frames": 705024,
+          "generation_max_ms": 0.066432,
+          "generation_ms": 0.008802068990559162,
+          "inflight": 0,
+          "packets": 2754,
+          "producer_late_max_ms": 1.1795950000000002,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000381,
+          "blocked_ms": 0.041246,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.049063,
+          "delivery_ms": 0.010053117359413204,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.22943825,
+          "frames": 104704,
+          "generation_max_ms": 0.041288000000000005,
+          "generation_ms": 0.008777902200489,
+          "inflight": 0,
+          "packets": 409,
+          "producer_late_max_ms": 0.249655,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-double-repeat-4-1",
+      "pacing": "timer",
+      "fifo": "off",
+      "pump_ms": 4,
+      "double_buffer": true,
+      "summary": {
+        "unique_presentation_count": 1799,
+        "presentation_over25": 1,
+        "presentation_max_ms": 50.003,
+        "host_cpu_median": 5.208898534997287,
+        "host_cpu_max": 6.239826370048833,
+        "feedback_flags": {
+          "7": 1799,
+          "16": 2
+        },
+        "wayland_flags": {
+          "7": 1799
+        }
+      },
+      "raf": {
+        "callback_max": 4,
+        "callback_p95": 0.5,
+        "callback_p99": 0.5999999940395355,
+        "frames": 1801,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999999272,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 46.75,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 935,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20004.65678897025,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.7888188377894494,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.22893512865795415,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 59.99875061758229,
+          "renderer": "webgpu",
+          "seconds": 35.21740000000596,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20044.907593920503,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 0.7888188377894494,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.229395762564703,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 59.876791985516206,
+          "renderer": "webgpu",
+          "seconds": 5.210700000017882,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "double-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        138574482212.95117,
+        138604488812.95117
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-double-repeat-4-1",
+        "matched": 1799,
+        "missing": 0,
+        "swap_to_present_p50_ms": 30.535,
+        "swap_to_present_p95_ms": 31.033,
+        "swap_to_present_max_ms": 38.294
+      },
+      "observed_throttle_limits": [
+        1
+      ],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.000675,
+          "blocked_ms": 0.29300300000000157,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.022171000000000003,
+          "delivery_ms": 0.009643576825281518,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.234542193,
+          "frames": 704768,
+          "generation_max_ms": 0.122397,
+          "generation_ms": 0.008415136215038145,
+          "inflight": 0,
+          "packets": 2753,
+          "producer_late_max_ms": 0.229001,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000675,
+          "blocked_ms": 0.04482499999999998,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.020257,
+          "delivery_ms": 0.009626955882352937,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.21718907,
+          "frames": 104448,
+          "generation_max_ms": 0.122397,
+          "generation_ms": 0.008763205882352944,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 0.141487,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-source-repeat-1-wayland",
+      "pacing": "wayland",
+      "fifo": "off",
+      "pump_ms": 4,
+      "double_buffer": false,
+      "summary": {
+        "unique_presentation_count": 1801,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.678,
+        "host_cpu_median": 5.149051490514905,
+        "host_cpu_max": 6.5440778799351005,
+        "feedback_flags": {
+          "7": 1801
+        },
+        "wayland_flags": {
+          "7": 1801
+        }
+      },
+      "raf": {
+        "callback_max": 4,
+        "callback_p95": 0.5,
+        "callback_p99": 0.5999999940395355,
+        "frames": 1799,
+        "over100": 0,
+        "over25": 1,
+        "over50": 0,
+        "raf_max": 33.400000000001455,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.700000000004366,
+        "raf_p99": 16.80000000000291
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 37.2,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 744,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20006.133784651953,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.2389831696164038,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.2289520315321192,
+          "playback_catchups": 1,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000004366,
+          "render_fps": 59.889591876122715,
+          "renderer": "webgpu",
+          "seconds": 35.21480000001192,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20045.67699836868,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.1647811696184365,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.2294045676998369,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 59.49524997600999,
+          "renderer": "webgpu",
+          "seconds": 5.2105,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "source-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        138664007284.9023,
+        138694011384.90234
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-source-repeat-1-wayland",
+        "matched": 1801,
+        "missing": 0,
+        "swap_to_present_p50_ms": 20.197,
+        "swap_to_present_p95_ms": 22.829,
+        "swap_to_present_max_ms": 24.796
+      },
+      "observed_throttle_limits": [],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 2133,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.003877,
+          "blocked_ms": 0.32164900000000146,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.122602,
+          "delivery_ms": 0.010100974563953476,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.226114426,
+          "frames": 704512,
+          "generation_max_ms": 0.130992,
+          "generation_ms": 0.008612105741279064,
+          "inflight": 0,
+          "packets": 2752,
+          "producer_late_max_ms": 1.437816,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.003877,
+          "blocked_ms": 0.05088699999999995,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.035311999999999996,
+          "delivery_ms": 0.009857867647058814,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.213349129,
+          "frames": 104448,
+          "generation_max_ms": 0.130992,
+          "generation_ms": 0.008415855392156862,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 0.186277,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-source-repeat-2-timer",
+      "pacing": "timer",
+      "fifo": "off",
+      "pump_ms": 4,
+      "double_buffer": false,
+      "summary": {
+        "unique_presentation_count": 1798,
+        "presentation_over25": 3,
+        "presentation_max_ms": 33.342,
+        "host_cpu_median": 5.161290322580645,
+        "host_cpu_max": 6.428957320367369,
+        "feedback_flags": {
+          "7": 1798,
+          "16": 2
+        },
+        "wayland_flags": {
+          "7": 1798
+        }
+      },
+      "raf": {
+        "callback_max": 2.699999988079071,
+        "callback_p95": 0.5,
+        "callback_p99": 0.699999988079071,
+        "frames": 1801,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999999272,
+        "raf_p99": 16.80000000000291
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 39.5,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 790,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704512,
+          "frames_per_s": 20000.51100505163,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.995321640624752,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2752,
+          "paused": false,
+          "payload_mib_s": 0.2288876839262196,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999995634,
+          "render_fps": 60.014705590081014,
+          "renderer": "webgpu",
+          "seconds": 35.22470000001788,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104448,
+          "frames_per_s": 20030.68425895225,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 0.9879266346642908,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 408,
+          "paused": false,
+          "payload_mib_s": 0.22923298941366865,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000273,
+          "render_fps": 60.02608162006027,
+          "renderer": "webgpu",
+          "seconds": 5.21440000000596,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2224,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "source-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        138715575927.09766,
+        138745586327.09766
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-source-repeat-2-timer",
+        "matched": 1798,
+        "missing": 0,
+        "swap_to_present_p50_ms": 46.532,
+        "swap_to_present_p95_ms": 47.477,
+        "swap_to_present_max_ms": 63.617
+      },
+      "observed_throttle_limits": [],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.000709,
+          "blocked_ms": 0.31278500000000087,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.537164,
+          "delivery_ms": 0.0101046403922993,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.236280729,
+          "frames": 704768,
+          "generation_max_ms": 0.465972,
+          "generation_ms": 0.008811800581184177,
+          "inflight": 0,
+          "packets": 2753,
+          "producer_late_max_ms": 0.435398,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000431,
+          "blocked_ms": 0.04483999999999998,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.020289,
+          "delivery_ms": 0.010357102941176474,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.218396342,
+          "frames": 104448,
+          "generation_max_ms": 0.028714,
+          "generation_ms": 0.009084573529411772,
+          "inflight": 0,
+          "packets": 408,
+          "producer_late_max_ms": 0.25099299999999997,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-source-repeat-3-timer",
+      "pacing": "timer",
+      "fifo": "off",
+      "pump_ms": 4,
+      "double_buffer": false,
+      "summary": {
+        "unique_presentation_count": 1800,
+        "presentation_over25": 0,
+        "presentation_max_ms": 16.678,
+        "host_cpu_median": 5.135135135135135,
+        "host_cpu_max": 6.415094339622642,
+        "feedback_flags": {
+          "7": 1800
+        },
+        "wayland_flags": {
+          "7": 1800
+        }
+      },
+      "raf": {
+        "callback_max": 3.600000023841858,
+        "callback_p95": 0.5,
+        "callback_p99": 0.6000000238418579,
+        "frames": 1800,
+        "over100": 0,
+        "over25": 0,
+        "over50": 0,
+        "raf_max": 16.80000000000291,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999995634,
+        "raf_p99": 16.80000000000109
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 38.8,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 776,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704256,
+          "frames_per_s": 20000.056797679314,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.019932044619054,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2751,
+          "paused": false,
+          "payload_mib_s": 0.2288824859353559,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000004366,
+          "render_fps": 60.006758925016456,
+          "renderer": "webgpu",
+          "seconds": 35.21270000001788,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104192,
+          "frames_per_s": 20009.21800576936,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.0006910505790074,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 407,
+          "paused": false,
+          "payload_mib_s": 0.22898732764170868,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 60.10907973554409,
+          "renderer": "webgpu",
+          "seconds": 5.207200000017881,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2096,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "source-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        138772256806.09766,
+        138802262206.09766
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-source-repeat-3-timer",
+        "matched": 1800,
+        "missing": 0,
+        "swap_to_present_p50_ms": 47.2025,
+        "swap_to_present_p95_ms": 47.779,
+        "swap_to_present_max_ms": 48.171
+      },
+      "observed_throttle_limits": [
+        2
+      ],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 0,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.00083,
+          "blocked_ms": 0.3224120000000015,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.049746,
+          "delivery_ms": 0.010401661823465316,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.227364006,
+          "frames": 704768,
+          "generation_max_ms": 1.102348,
+          "generation_ms": 0.00925679658554304,
+          "inflight": 0,
+          "packets": 2753,
+          "producer_late_max_ms": 0.966188,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.000482,
+          "blocked_ms": 0.05050699999999999,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.023614,
+          "delivery_ms": 0.010337507352941186,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.211225796,
+          "frames": 104448,
+          "generation_max_ms": 0.023793,
+          "generation_ms": 0.008684843137254903,
+          "inflight": 1,
+          "packets": 408,
+          "producer_late_max_ms": 0.966188,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    },
+    {
+      "tag": "physical-indexer-paused-source-repeat-4-wayland",
+      "pacing": "wayland",
+      "fifo": "off",
+      "pump_ms": 4,
+      "double_buffer": false,
+      "summary": {
+        "unique_presentation_count": 1798,
+        "presentation_over25": 3,
+        "presentation_max_ms": 33.334,
+        "host_cpu_median": 5.072854830005396,
+        "host_cpu_max": 6.666666666666667,
+        "feedback_flags": {
+          "7": 1798,
+          "16": 2
+        },
+        "wayland_flags": {
+          "7": 1798
+        }
+      },
+      "raf": {
+        "callback_max": 3.5999999940395355,
+        "callback_p95": 0.5,
+        "callback_p99": 0.6000000238418579,
+        "frames": 1799,
+        "over100": 0,
+        "over25": 1,
+        "over50": 0,
+        "raf_max": 33.19999999999891,
+        "raf_p50": 16.69999999999891,
+        "raf_p95": 16.799999999999272,
+        "raf_p99": 16.80000000000291
+      },
+      "frontend": {
+        "end": {
+          "buffer_ms": 33.9,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 678,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 704768,
+          "frames_per_s": 20005.563661346725,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.955566808795993,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 2753,
+          "paused": false,
+          "payload_mib_s": 0.22894550698867863,
+          "playback_catchups": 1,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999995634,
+          "render_fps": 59.9796756044906,
+          "renderer": "webgpu",
+          "seconds": 35.22859999999404,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 13.1072,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        },
+        "start": {
+          "buffer_ms": 0,
+          "canvas": [
+            1281,
+            369
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 104704,
+          "frames_per_s": 20046.33263772845,
+          "gpu": " \u00b7 BrowserWebGpu \u00b7 Other",
+          "latency_p95_ms": 1.1714428028353725,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 409,
+          "paused": false,
+          "payload_mib_s": 0.22941207089685575,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000273,
+          "render_fps": 60.117554708957954,
+          "renderer": "webgpu",
+          "seconds": 5.22309999999404,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 5.2352,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185792
+        }
+      },
+      "series": "source-repeat",
+      "dpr": 1.350000023841858,
+      "canvas": [
+        1281,
+        369
+      ],
+      "sample_us": [
+        138824059451.95117,
+        138854064751.95117
+      ],
+      "block_ms": 0,
+      "latency": {
+        "tag": "physical-indexer-paused-source-repeat-4-wayland",
+        "matched": 1798,
+        "missing": 0,
+        "swap_to_present_p50_ms": 13.225,
+        "swap_to_present_p95_ms": 20.711,
+        "swap_to_present_max_ms": 23.371
+      },
+      "observed_throttle_limits": [],
+      "fifo_events": 0,
+      "wayland_begin_frame_callbacks": 2133,
+      "capture_control": {
+        "pid": 3566,
+        "start_ticks": "1577",
+        "exe": "/home/okhsunrog/.config/ai-launcher/agentsview-collect-binaries/versions/v1.3.9/agentsview-linux-amd64",
+        "watchdog_seconds": 90,
+        "paused": true,
+        "capture_passed": true,
+        "resumed": true
+      },
+      "trace_data_loss": false,
+      "backend": {
+        "end": {
+          "blocked_max_ms": 0.001001,
+          "blocked_ms": 0.3213039999999995,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.089089,
+          "delivery_ms": 0.010787889615105309,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 35.242631104,
+          "frames": 705024,
+          "generation_max_ms": 0.061994,
+          "generation_ms": 0.008941055192447365,
+          "inflight": 0,
+          "packets": 2754,
+          "producer_late_max_ms": 0.605927,
+          "source_clock": "catchup",
+          "window": 4
+        },
+        "start": {
+          "blocked_max_ms": 0.0006770000000000001,
+          "blocked_ms": 0.04925200000000001,
+          "clock_rebases": 0,
+          "delivery_max_ms": 0.053177,
+          "delivery_ms": 0.010731606356968217,
+          "discarded_clock_ms": 0,
+          "elapsed_s": 5.227080367,
+          "frames": 104704,
+          "generation_max_ms": 0.049193,
+          "generation_ms": 0.009322391198044013,
+          "inflight": 0,
+          "packets": 409,
+          "producer_late_max_ms": 0.394203,
+          "source_clock": "catchup",
+          "window": 4
+        }
+      },
+      "graphics": null,
+      "errors": []
+    }
+  ],
+  "fifo_functional": {
+    "stages": [
+      {
+        "name": "initial",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 39168,
+          "frames_per_s": 20077.91675228574,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.039526472453872,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 153,
+          "paused": false,
+          "payload_mib_s": 0.22977352240317236,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000273,
+          "render_fps": 59.97539471041237,
+          "renderer": "webgpu",
+          "seconds": 1.9507999999821186,
+          "sequence_gaps": 0,
+          "session": 1,
+          "span": 1.9584,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.19999998807907104
+        }
+      },
+      {
+        "name": "restored",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 139264,
+          "frames_per_s": 20035.679346313846,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.9411114843750283,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 544,
+          "paused": false,
+          "payload_mib_s": 0.22929015365196814,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 36.39868792090851,
+          "renderer": "webgpu",
+          "seconds": 6.950799999982118,
+          "sequence_gaps": 0,
+          "session": 1,
+          "span": 6.9632,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.19999998807907104
+        }
+      },
+      {
+        "name": "restart-200000",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 200000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 102912,
+          "frames_per_s": 200023.32361516036,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.49381492187421827,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 402,
+          "paused": false,
+          "payload_mib_s": 2.2890852769679304,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 60.252672497570465,
+          "renderer": "webgpu",
+          "seconds": 0.5145,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 0.51456,
+          "submit_p95_ms": 0.3999999761581421,
+          "visible": 262144,
+          "wasm_p95_ms": 0.09999999403953552
+        }
+      },
+      {
+        "name": "restart-20000",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 9984,
+          "frames_per_s": 20108.761329305136,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.2166030781245354,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 39,
+          "paused": false,
+          "payload_mib_s": 0.23012651057401812,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 60.42296072507553,
+          "renderer": "webgpu",
+          "seconds": 0.4965,
+          "sequence_gaps": 0,
+          "session": 3,
+          "span": 0.4992,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185791
+        }
+      },
+      {
+        "name": "restart-200000",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 200000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 97792,
+          "frames_per_s": 200763.70355408877,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.49964155654015485,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 382,
+          "paused": false,
+          "payload_mib_s": 2.297558252953592,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 59.53602956344665,
+          "renderer": "webgpu",
+          "seconds": 0.4870999999940395,
+          "sequence_gaps": 0,
+          "session": 4,
+          "span": 0.48896,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185791
+        }
+      },
+      {
+        "name": "restart-20000",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 9984,
+          "frames_per_s": 20387.992649056654,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.8770114627895964,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 39,
+          "paused": false,
+          "payload_mib_s": 0.23332205942981707,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 61.26199714259812,
+          "renderer": "webgpu",
+          "seconds": 0.48969999998807906,
+          "sequence_gaps": 0,
+          "session": 5,
+          "span": 0.4992,
+          "submit_p95_ms": 0.30000001192092896,
+          "visible": 262144,
+          "wasm_p95_ms": 0.09999999403953552
+        }
+      },
+      {
+        "name": "zoom",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 29952,
+          "frames_per_s": 20106.061623306494,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.077235450868102,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 117,
+          "paused": false,
+          "payload_mib_s": 0.23009561489074506,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 60.414848627723835,
+          "renderer": "webgpu",
+          "seconds": 1.4896999999880791,
+          "sequence_gaps": 0,
+          "session": 5,
+          "span": 1.4976,
+          "submit_p95_ms": 0.5,
+          "visible": 175720,
+          "wasm_p95_ms": 0.09999999403953552
+        }
+      },
+      {
+        "name": "frozen",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 39936,
+          "frames_per_s": 20071.36754296591,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.9799604449071921,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 156,
+          "paused": true,
+          "payload_mib_s": 0.22969857265051927,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 48.248479670591124,
+          "renderer": "webgpu",
+          "seconds": 1.9896999999880791,
+          "sequence_gaps": 0,
+          "session": 5,
+          "span": 1.5872,
+          "submit_p95_ms": 0.5,
+          "visible": 175720,
+          "wasm_p95_ms": 0.09999999403953552
+        }
+      },
+      {
+        "name": "still-frozen",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 49920,
+          "frames_per_s": 20050.608507145047,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.9710734508680616,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 195,
+          "paused": true,
+          "payload_mib_s": 0.22946100433897074,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 38.55886251374048,
+          "renderer": "webgpu",
+          "seconds": 2.489699999988079,
+          "sequence_gaps": 0,
+          "session": 5,
+          "span": 1.5872,
+          "submit_p95_ms": 0.5,
+          "visible": 175720,
+          "wasm_p95_ms": 0.09999999403953552
+        }
+      },
+      {
+        "name": "resumed",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 79872,
+          "frames_per_s": 20019.550342190803,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.9730444508677465,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 312,
+          "paused": false,
+          "payload_mib_s": 0.22910557184819189,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 39.10068426209141,
+          "renderer": "webgpu",
+          "seconds": 3.989699999988079,
+          "sequence_gaps": 0,
+          "session": 5,
+          "span": 0.9984,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 175720,
+          "wasm_p95_ms": 0.09999999403953552
+        }
+      },
+      {
+        "name": "resize",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1079,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 99840,
+          "frames_per_s": 20009.218991169517,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.9799604449071921,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 390,
+          "paused": false,
+          "payload_mib_s": 0.22898733891871853,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 43.289175702049434,
+          "renderer": "webgpu",
+          "seconds": 4.989699999988079,
+          "sequence_gaps": 0,
+          "session": 5,
+          "span": 1.9968,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 175720,
+          "wasm_p95_ms": 0.09999999403953552
+        }
+      },
+      {
+        "name": "worker-after-reload",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 49152,
+          "frames_per_s": 20021.181262729122,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.8654956897553348,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 192,
+          "paused": false,
+          "payload_mib_s": 0.22912423625254583,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000273,
+          "render_fps": 59.877800407331975,
+          "renderer": "webgpu",
+          "seconds": 2.455,
+          "sequence_gaps": 0,
+          "session": 7,
+          "span": 2.4576,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185791
+        }
+      }
+    ],
+    "passed": true
+  },
+  "wayland_functional": {
+    "stages": [
+      {
+        "name": "initial",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 39168,
+          "frames_per_s": 20075.858534085084,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.8904081190395345,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 153,
+          "paused": false,
+          "payload_mib_s": 0.22974996796514607,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999955,
+          "render_fps": 57.406458226550484,
+          "renderer": "webgpu",
+          "seconds": 1.951,
+          "sequence_gaps": 0,
+          "session": 1,
+          "span": 1.9584,
+          "submit_p95_ms": 0.5999999940395355,
+          "visible": 262144,
+          "wasm_p95_ms": 0.19999998807907104
+        }
+      },
+      {
+        "name": "restored",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 139008,
+          "frames_per_s": 20005.46880621717,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.4607951071184289,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 543,
+          "paused": false,
+          "payload_mib_s": 0.2289444214578686,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999955,
+          "render_fps": 35.835072317766425,
+          "renderer": "webgpu",
+          "seconds": 6.9485,
+          "sequence_gaps": 0,
+          "session": 1,
+          "span": 6.9504,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185791
+        }
+      },
+      {
+        "name": "restart-200000",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 200000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 138752,
+          "frames_per_s": 200132.69868399572,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.599536757408714,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 542,
+          "paused": false,
+          "payload_mib_s": 2.2903369752959715,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 60.579835567976104,
+          "renderer": "webgpu",
+          "seconds": 0.6933000000119209,
+          "sequence_gaps": 0,
+          "session": 2,
+          "span": 0.69376,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185791
+        }
+      },
+      {
+        "name": "restart-20000",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 13824,
+          "frames_per_s": 20084.265581520525,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.5391512693295226,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 54,
+          "paused": false,
+          "payload_mib_s": 0.22984617898773793,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 61.019904110522425,
+          "renderer": "webgpu",
+          "seconds": 0.6883000000119209,
+          "sequence_gaps": 0,
+          "session": 3,
+          "span": 0.6912,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185791
+        }
+      },
+      {
+        "name": "restart-200000",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 200000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 135680,
+          "frames_per_s": 199823.26951399114,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 0.749437950868014,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 530,
+          "paused": false,
+          "payload_mib_s": 2.2867958394698085,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 60.382916053019144,
+          "renderer": "webgpu",
+          "seconds": 0.679,
+          "sequence_gaps": 0,
+          "session": 4,
+          "span": 0.6784,
+          "submit_p95_ms": 0.4000000059604645,
+          "visible": 262144,
+          "wasm_p95_ms": 0.09999999403953552
+        }
+      },
+      {
+        "name": "restart-20000",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 13568,
+          "frames_per_s": 20193.48117351012,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.4835579136579327,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 53,
+          "paused": false,
+          "payload_mib_s": 0.23109605224811694,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.799999999999272,
+          "render_fps": 61.020985267829815,
+          "renderer": "webgpu",
+          "seconds": 0.6718999999761581,
+          "sequence_gaps": 0,
+          "session": 5,
+          "span": 0.6784,
+          "submit_p95_ms": 0.5,
+          "visible": 262144,
+          "wasm_p95_ms": 0.09999999403953552
+        }
+      },
+      {
+        "name": "zoom",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 23552,
+          "frames_per_s": 20078.431372549017,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.1826339196177287,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 92,
+          "paused": false,
+          "payload_mib_s": 0.22977941176470587,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 60.528559249786866,
+          "renderer": "webgpu",
+          "seconds": 1.173,
+          "sequence_gaps": 0,
+          "session": 5,
+          "span": 1.1776,
+          "submit_p95_ms": 0.5,
+          "visible": 175720,
+          "wasm_p95_ms": 0.10000002384185791
+        }
+      },
+      {
+        "name": "frozen",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 43520,
+          "frames_per_s": 20038.67759478696,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.1826339196177287,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 170,
+          "paused": true,
+          "payload_mib_s": 0.22932446588272432,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 44.202965282618294,
+          "renderer": "webgpu",
+          "seconds": 2.1717999999821185,
+          "sequence_gaps": 0,
+          "session": 5,
+          "span": 1.5872,
+          "submit_p95_ms": 0.5,
+          "visible": 175720,
+          "wasm_p95_ms": 0.10000002384185791
+        }
+      },
+      {
+        "name": "still-frozen",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 53504,
+          "frames_per_s": 20026.200546557895,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.1628019375002623,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 209,
+          "paused": true,
+          "payload_mib_s": 0.22918167739743683,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 35.9321780141589,
+          "renderer": "webgpu",
+          "seconds": 2.6716999999880793,
+          "sequence_gaps": 0,
+          "session": 5,
+          "span": 1.5872,
+          "submit_p95_ms": 0.5,
+          "visible": 175720,
+          "wasm_p95_ms": 0.10000002384185791
+        }
+      },
+      {
+        "name": "resumed",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 73472,
+          "frames_per_s": 20009.804455677815,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.1754169255782472,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 287,
+          "paused": false,
+          "payload_mib_s": 0.22899403902829532,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 37.03905441490885,
+          "renderer": "webgpu",
+          "seconds": 3.6717999999821185,
+          "sequence_gaps": 0,
+          "session": 5,
+          "span": 0.6784,
+          "submit_p95_ms": 0.5,
+          "visible": 175720,
+          "wasm_p95_ms": 0.10000002384185791
+        }
+      },
+      {
+        "name": "resize",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1079,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 93440,
+          "frames_per_s": 20000.856201112558,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.1791739255786524,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 365,
+          "paused": false,
+          "payload_mib_s": 0.22889163438162868,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000728,
+          "render_fps": 41.95385076432,
+          "renderer": "webgpu",
+          "seconds": 4.6717999999821185,
+          "sequence_gaps": 0,
+          "session": 5,
+          "span": 1.6768,
+          "submit_p95_ms": 0.5,
+          "visible": 175720,
+          "wasm_p95_ms": 0.10000002384185791
+        }
+      },
+      {
+        "name": "worker-after-reload",
+        "snapshot": {
+          "buffer_ms": 0,
+          "canvas": [
+            1727,
+            512
+          ],
+          "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+          "config": {
+            "amplitude": 1,
+            "batch": 256,
+            "frequency": 7,
+            "mode": "ws",
+            "rate": 20000
+          },
+          "display_offset_frames": 0,
+          "dpr": 1.350000023841858,
+          "errors": [],
+          "execution": "worker",
+          "frames": 49408,
+          "frames_per_s": 20074.76027963567,
+          "gpu": "intel xe-lpg \u00b7 WebGPU \u00b7 hardware adapter \u00b7 Worker",
+          "latency_p95_ms": 1.1099860528338468,
+          "mode": "ws",
+          "motion": "clocked",
+          "packets": 193,
+          "paused": false,
+          "payload_mib_s": 0.22973739944041063,
+          "playback_catchups": 0,
+          "playback_underruns": 0,
+          "raf_p95_ms": 16.700000000000273,
+          "render_fps": 60.13326832468586,
+          "renderer": "webgpu",
+          "seconds": 2.461199999988079,
+          "sequence_gaps": 0,
+          "session": 7,
+          "span": 2.4704,
+          "submit_p95_ms": 0.5999999940395355,
+          "visible": 262144,
+          "wasm_p95_ms": 0.10000002384185791
+        }
+      }
+    ],
+    "passed": true
+  }
+}

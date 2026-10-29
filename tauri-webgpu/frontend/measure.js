@@ -70,18 +70,33 @@
     }
     const startText = document.querySelector('.telemetry').innerText;
     const reclaimStart = window.__wavebenchReclaim.stats();
-    const frontendStart = window.__wavebenchSnapshot?.();
+    const worker = window.__wavebenchRenderWorker?.enabled ? window.__wavebenchRenderWorker : null;
+    const frontendStart = worker ? await worker.probeStart() : window.__wavebenchSnapshot?.();
     const backendStart = frontendStart?.session == null ? null : await window.__TAURI__.core.invoke('stream_stats',{session:frontendStart.session});
     probe.active = true;
-    const start = performance.now();
-    await sleep(Number(query.get('seconds') || 30)*1000);
+    let start = performance.now();
+    const blockMs=Number(query.get('block_ms')||0);
+    if(!Number.isFinite(blockMs)||blockMs<0||blockMs>200)throw Error('Invalid diagnostic block duration');
+    const blocks=[];
+    const blocker=blockMs?setInterval(()=>{const at=performance.now();while(performance.now()-at<blockMs){}blocks.push([at,performance.now()]);},1000):null;
+    try {await sleep(Number(query.get('seconds') || 30)*1000);} finally {if(blocker!==null)clearInterval(blocker);}
+
     probe.active = false;
-    const end = performance.now();
-    const frontendEnd = window.__wavebenchSnapshot?.();
+    let end = performance.now();
+    const mainFrames=probe.frames.slice();
+    let frontendEnd;
+    if(worker){
+      const data=await worker.probeEnd();start=data.start;end=data.end;
+      probe.frames=data.frames;probe.motion=data.motion;
+      const first=data.motion[0],last=data.motion.at(-1);
+      probe.receivedFirst=first?.[2];probe.receivedLast=last?.[2];probe.receivedStart=first?.[0];probe.receivedEnd=last?.[0];
+      frontendEnd=worker.snapshot();
+    }else frontendEnd=window.__wavebenchSnapshot?.();
     const backendEnd = frontendEnd?.session == null ? null : await window.__TAURI__.core.invoke('stream_stats',{session:frontendEnd.session});
     const intervals = probe.frames.slice(1).map((f,i) => f[0]-probe.frames[i][0]);
     const cpu = probe.frames.map(f => f[2]-f[1]);
     const report = {
+      execution:worker?'worker':'main', mainFrames, blocks,
       tag:query.get('measure'), query:location.search, transport, start, end, timeOrigin:performance.timeOrigin,
       reclaim:{start:reclaimStart,end:window.__wavebenchReclaim.stats()},
       frontend:{start:frontendStart,end:frontendEnd}, backend:{start:backendStart,end:backendEnd},flow:probe.flow,
@@ -89,7 +104,7 @@
         frames_per_s:probe.receivedEnd > probe.receivedStart ? (probe.receivedLast-probe.receivedFirst)*1000/(probe.receivedEnd-probe.receivedStart) : null},
       motion:probe.motion, frames:probe.frames, longtasks:probe.longtasks, errors:probe.errors,
       longtaskSupported:probe.longtaskSupported, graphics,
-      viewport:[innerWidth,innerHeight],canvas:[canvas.width,canvas.height],dpr:devicePixelRatio,visibility:document.visibilityState,
+      viewport:[innerWidth,innerHeight],canvas:worker?frontendEnd.canvas:[canvas.width,canvas.height],dpr:devicePixelRatio,visibility:document.visibilityState,
       startText,endText:document.querySelector('.telemetry').innerText,
       status:document.querySelector('footer').innerText,
       summary:{frames:probe.frames.length,raf_p50:percentile(intervals,.5),raf_p95:percentile(intervals,.95),raf_p99:percentile(intervals,.99),raf_max:intervals.length ? Math.max(...intervals) : null,

@@ -2,6 +2,7 @@ mod gpu;
 mod playback;
 mod renderer;
 mod webgl;
+mod worker;
 use leptos::{mount::mount_to_body, prelude::*};
 use plot_wire::{Batch, CAPACITY, CHANNELS, Config};
 use serde_json::{Value, json};
@@ -11,6 +12,12 @@ use wasm_bindgen_futures::{JsFuture, spawn_local};
 
 #[wasm_bindgen(inline_js = "
 const channels = new Map();
+export function worker_enabled(){return window.__wavebenchRenderWorker?.enabled===true;}
+export function remote_init(){return window.__wavebenchRenderWorker.init();}
+export function remote_start(config){return window.__wavebenchRenderWorker.start(config);}
+export function remote_control(command,a,b,c){window.__wavebenchRenderWorker.control(command,a,b,c);}
+export function remote_snapshot(){return JSON.stringify(window.__wavebenchRenderWorker.snapshot());}
+export function switch_execution(value){const url=new URL(location.href);url.searchParams.set('execution',value);url.searchParams.delete('renderer');location.href=url.href;}
 export function init_reclaim() { return window.__wavebenchReclaim.init(); }
 export function ws_ack(buffer,socket,seq) { window.__wavebenchReclaim.acknowledge(buffer,socket,seq); }
 export function rpc(command,args) { return window.__TAURI__.core.invoke(command,args); }
@@ -28,6 +35,12 @@ export async function adapter_details() {
 }
 ")]
 extern "C" {
+    fn worker_enabled() -> bool;
+    fn remote_init() -> js_sys::Promise;
+    fn remote_start(config: &str) -> js_sys::Promise;
+    fn remote_control(command: &str, a: f64, b: f64, c: f64);
+    fn remote_snapshot() -> String;
+    fn switch_execution(value: &str);
     fn init_reclaim() -> js_sys::Promise;
     #[wasm_bindgen(catch)]
     fn ws_ack(buffer: &JsValue, socket: &web_sys::WebSocket, seq: u32) -> Result<(), JsValue>;
@@ -167,6 +180,9 @@ pub fn fail(message: String) {
     });
 }
 fn snapshot(e: &Engine) -> Value {
+    if worker_enabled() {
+        return serde_json::from_str(&remote_snapshot()).unwrap_or(Value::Null);
+    }
     let seconds = ((now() - e.metrics.since) / 1000.).max(0.001);
     let m = &e.metrics;
     json!({"session":e.session,"mode":e.config.mode,"config":e.config,"seconds":seconds,"frames":m.frames,"packets":m.packets,
@@ -244,6 +260,19 @@ fn receive(generation: u32, value: JsValue, json_mode: bool) -> Option<(u32, u32
 }
 async fn start_stream(config: Config) -> Result<(), String> {
     config.validate()?;
+    if worker_enabled() {
+        JsFuture::from(remote_start(&serde_json::to_string(&config).unwrap()))
+            .await
+            .map_err(|e| format!("Worker start: {e:?}"))?;
+        engine(|e| {
+            e.config = config.clone();
+            e.ui.status.set(format!(
+                "Streaming {} · {} frames/s · render worker",
+                config.mode, config.rate
+            ));
+        });
+        return Ok(());
+    }
     if let Some(select) = web_sys::window()
         .unwrap()
         .document()
@@ -465,9 +494,11 @@ fn switch_renderer(webgl: bool) {
     }
 }
 async fn initialize() -> Result<(), String> {
-    JsFuture::from(init_reclaim())
-        .await
-        .map_err(|e| format!("Buffer reclaimer: {e:?}"))?;
+    if !worker_enabled() {
+        JsFuture::from(init_reclaim())
+            .await
+            .map_err(|e| format!("Buffer reclaimer: {e:?}"))?;
+    }
     let runtime = invoke("runtime_info", json!({})).await?;
     let runtime: Value = serde_wasm_bindgen::from_value(runtime).map_err(|e| e.to_string())?;
     engine(|e| {
@@ -477,6 +508,21 @@ async fn initialize() -> Result<(), String> {
             runtime["version"].as_str().unwrap_or("unknown")
         ))
     });
+    if worker_enabled() {
+        let info = JsFuture::from(remote_init())
+            .await
+            .map_err(|e| format!("Render worker: {e:?}"))?;
+        let info: Value =
+            serde_json::from_str(&info.as_string().unwrap()).map_err(|e| e.to_string())?;
+        engine(|e| {
+            e.ui.gpu
+                .set(info["gpu"].as_str().unwrap_or_default().into());
+            e.ui.check
+                .set(info["compute_check"].as_str().unwrap_or_default().into());
+        });
+        start_stream(selected_config(None)).await?;
+        return Ok(());
+    }
     let webgl = webgl_selected();
     let mut gpu = renderer::Renderer::new(webgl).await?;
     if !webgl {
@@ -523,6 +569,10 @@ async fn initialize() -> Result<(), String> {
     Ok(())
 }
 fn toggle_pause() {
+    if worker_enabled() {
+        remote_control("pause", 0., 0., 0.);
+        return;
+    }
     engine(|e| {
         e.paused = !e.paused;
         e.ui.paused.set(e.paused);
@@ -546,6 +596,10 @@ fn toggle_pause() {
     });
 }
 fn zoom(delta: f64) {
+    if worker_enabled() {
+        remote_control("zoom", delta, 0., 0.);
+        return;
+    }
     engine(|e| {
         e.visible = ((e.visible as f64) * delta.exp())
             .round()
@@ -648,6 +702,10 @@ async fn save_results() -> Result<(), String> {
     Ok(())
 }
 async fn compare() {
+    if worker_enabled() {
+        fail("Transport comparison requires main-thread mode".into());
+        return;
+    }
     if engine(|e| e.ui.busy.get_untracked()) {
         return;
     }
@@ -735,8 +793,8 @@ fn App() -> impl IntoView {
             session: 0,
             config: Config {
                 mode: "binary".into(),
-                rate: 1_000_000,
-                batch: 16384,
+                rate: 20_000,
+                batch: 256,
                 frequency: 7.,
                 amplitude: 1.,
             },
@@ -782,11 +840,12 @@ fn App() -> impl IntoView {
         <main>
             <header><div><h1>"Wavebench"</h1><p>"Rust source → WASM → GPU"</p></div><div class="legend"><span class="a">"● Phase A"</span><span class="b">"● Phase B"</span><span class="c">"● Phase C"</span></div></header>
             <section class="toolbar" aria-label="Stream settings">
-                <label>"Renderer"<select id="renderer" disabled=move||ui.busy.get() on:change=move|_|switch_renderer(value("renderer")=="webgl")><option value="webgpu" selected=!webgl_selected()>"WebGPU / compute"</option><option value="webgl" selected=webgl_selected()>"WebGL2 / no compute"</option></select></label>
-                <label>"Scrolling"<select id="motion" disabled=move||ui.busy.get() on:change=move|_|switch_motion()><option value="clocked" selected=!packet_motion()>"Clocked / buffered"</option><option value="packet" selected=packet_motion()>"Packet head"</option></select></label>
-                <label>"Transport"<select id="transport" disabled=move||ui.busy.get()><option value="binary">"Binary Channel"</option><option value="json">"JSON Channel"</option><option value="invoke">"Binary invoke pull"</option><option value="ws" selected>"Binary WebSocket"</option><option value="protocol">"Custom protocol fetch"</option></select></label>
-                <label>"Frames / second"<select id="rate" disabled=move||ui.busy.get()><option value="20000">"20,000"</option><option value="200000">"200,000"</option><option value="1000000" selected>"1,000,000"</option><option value="4000000">"4,000,000"</option><option value="8000000">"8,000,000"</option></select></label>
-                <label>"Frames / batch"<select id="batch" disabled=move||ui.busy.get()><option value="256">"256"</option><option value="1024">"1,024"</option><option value="4096">"4,096"</option><option value="16384" selected>"16,384"</option><option value="65536">"65,536"</option></select></label>
+                <label>"Execution"<select id="execution" disabled=move||ui.busy.get() on:change=move|_|switch_execution(&value("execution"))><option value="main" selected=!worker_enabled()>"Main thread"</option><option value="worker" selected=worker_enabled()>"Render worker (experimental)"</option></select></label>
+                <label>"Renderer"<select id="renderer" disabled=move||ui.busy.get()||worker_enabled() on:change=move|_|switch_renderer(value("renderer")=="webgl")><option value="webgpu" selected=!webgl_selected()>"WebGPU / compute"</option><option value="webgl" selected=webgl_selected()>"WebGL2 / no compute"</option></select></label>
+                <label>"Scrolling"<select id="motion" disabled=move||ui.busy.get()||worker_enabled() on:change=move|_|switch_motion()><option value="clocked" selected=!packet_motion()>"Clocked / buffered"</option><option value="packet" selected=packet_motion()>"Packet head"</option></select></label>
+                <label>"Transport"<select id="transport" disabled=move||ui.busy.get()||worker_enabled()><option value="binary">"Binary Channel"</option><option value="json">"JSON Channel"</option><option value="invoke">"Binary invoke pull"</option><option value="ws" selected>"Binary WebSocket"</option><option value="protocol">"Custom protocol fetch"</option></select></label>
+                <label>"Frames / second"<select id="rate" disabled=move||ui.busy.get()><option value="20000" selected>"20,000"</option><option value="200000">"200,000"</option><option value="1000000">"1,000,000"</option><option value="4000000">"4,000,000"</option><option value="8000000">"8,000,000"</option></select></label>
+                <label>"Frames / batch"<select id="batch" disabled=move||ui.busy.get()><option value="256" selected>"256"</option><option value="1024">"1,024"</option><option value="4096">"4,096"</option><option value="16384">"16,384"</option><option value="65536">"65,536"</option></select></label>
                 <label>"Frequency, Hz"<input id="frequency" type="number" min="0.1" max="1000" step="0.1" value="7" disabled=move||ui.busy.get()/></label>
                 <label>"Amplitude"<input id="amplitude" type="number" min="0.1" max="10" step="0.1" value="1" disabled=move||ui.busy.get()/></label>
                 <button class="primary" disabled=move||ui.busy.get() on:click=move|_|spawn_local(apply_settings())>"Apply / restart"</button>
@@ -799,11 +858,11 @@ fn App() -> impl IntoView {
                     on:pointerdown=move|event:web_sys::PointerEvent|{engine(|e|if e.paused{e.drag=Some((event.client_x() as f64,e.offset));});}
                     on:pointerup=move|_|engine(|e|e.drag=None)
                     on:pointerleave=move|_|engine(|e|e.drag=None)
-                    on:pointermove=move|event:web_sys::PointerEvent|{engine(|e|if let Some((x,offset))=e.drag{let width=e.gpu.as_ref().map(|g|g.borrow().canvas.client_width()).unwrap_or(1).max(1) as f64;e.offset=(offset as f64+(event.client_x() as f64-x)*e.visible as f64/width).clamp(0.,e.filled.saturating_sub(e.visible) as f64) as usize;e.dirty=true;});}></canvas></div>
+                    on:pointermove=move|event:web_sys::PointerEvent|{if worker_enabled(){engine(|e|if let Some((x,_))=e.drag{let width=web_sys::window().unwrap().document().unwrap().get_element_by_id("plot").unwrap().client_width() as f64;remote_control("pan",x-event.client_x() as f64,width,0.);e.drag=Some((event.client_x() as f64,0));});return;}engine(|e|if let Some((x,offset))=e.drag{let width=e.gpu.as_ref().map(|g|g.borrow().canvas.client_width()).unwrap_or(1).max(1) as f64;e.offset=(offset as f64+(event.client_x() as f64-x)*e.visible as f64/width).clamp(0.,e.filled.saturating_sub(e.visible) as f64) as usize;e.dirty=true;});}></canvas></div>
                 <div class="plotfoot"><span>"Wheel to zoom · double-click to freeze · drag frozen history"</span><span>"3 × f32 · 1,048,576-frame ring · GPU min/max"</span></div>
             </section>
             <section class="telemetry"><pre>{move||ui.stats.get()}</pre><div class="device"><strong>{move||ui.runtime.get()}</strong><strong>{move||ui.gpu.get()}</strong><span>{move||ui.check.get()}</span><button disabled=move||ui.runtime.get().starts_with("WebKitGTK") on:click=move|_|spawn_local(async{if let Err(e)=invoke("open_gpu",json!({})).await{fail(e);}})>"GPU diagnostics"</button></div></section>
-            <section class="comparison"><div class="comparison-head"><div><h2>"Transport comparison"</h2><p>"Same source and load. Two passes, reverse order; 2 s warmup + 6 s per run."</p></div><div><button class="primary" disabled=move||ui.busy.get() on:click=move|_|spawn_local(compare())>{move||if ui.busy.get(){"Measuring…"}else{"Compare all · 80 s"}}</button><button on:click=move|_|spawn_local(async{if let Err(e)=save_results().await{fail(e);}})>"Save report"</button></div></div>
+            <section class="comparison"><div class="comparison-head"><div><h2>"Transport comparison"</h2><p>"Same source and load. Two passes, reverse order; 2 s warmup + 6 s per run."</p></div><div><button class="primary" disabled=move||ui.busy.get()||worker_enabled() on:click=move|_|spawn_local(compare())>{move||if ui.busy.get(){"Measuring…"}else{"Compare all · 80 s"}}</button><button on:click=move|_|spawn_local(async{if let Err(e)=save_results().await{fail(e);}})>"Save report"</button></div></div>
                 <div class="table-scroll"><table><thead><tr><th>"Transport / pass"</th><th>"Payload MiB/s"</th><th>"Delivery p95 ms"</th><th>"WASM p95 ms"</th><th>"Frame p95 ms"</th><th>"Avg render fps"</th><th>"Gaps"</th></tr></thead><tbody>{move||ui.rows.get().into_iter().map(row_view).collect_view()}</tbody></table></div>
                 <p class="method">"Delivery: packet creation → WASM entry, calibrated clocks. WASM: decode + ring copy + GPU upload call. Submit is CPU time, not GPU execution. Payload excludes transport encoding. Four packets in flight; invoke/protocol pulls are sequential."</p>
             </section>
@@ -811,8 +870,37 @@ fn App() -> impl IntoView {
         </main>
     }
 }
+#[wasm_bindgen]
+pub fn worker_ui_update(data: &str) {
+    let Ok(s) = serde_json::from_str::<Value>(data) else {
+        return;
+    };
+    engine(|e| {
+        let n = |key: &str| s[key].as_f64().unwrap_or_default();
+        e.session = s["session"].as_u64().unwrap_or_default() as u32;
+        e.paused = s["paused"].as_bool().unwrap_or(false);
+        e.ui.paused.set(e.paused);
+        e.ui.gpu.set(s["gpu"].as_str().unwrap_or_default().into());
+        e.ui.check
+            .set(s["compute_check"].as_str().unwrap_or_default().into());
+        e.ui.stats.set(format!("{:.1} MiB/s   |   {:.2} Mframes/s   |   {:.1} avg fps\nDelivery p95 {:.2} ms   |   WASM p95 {:.2} ms\nFrame p95 {:.2} ms   |   CPU submit p95 {:.2} ms   |   Gaps {}",n("payload_mib_s"),n("frames_per_s")/1e6,n("render_fps"),n("latency_p95_ms"),n("wasm_p95_ms"),n("raf_p95_ms"),n("submit_p95_ms"),s["sequence_gaps"]));
+        e.ui.view.set(format!(
+            "{:.3} s across screen · {} frames · {:.2}× DPR · Worker · {:.1} ms buffer",
+            n("span"),
+            s["visible"],
+            n("dpr"),
+            n("buffer_ms")
+        ));
+    });
+}
+#[wasm_bindgen]
+pub fn worker_ui_error(message: &str) {
+    fail(format!("Render worker: {message}"));
+}
 #[wasm_bindgen(start)]
 pub fn main() {
     console_error_panic_hook::set_once();
-    mount_to_body(App);
+    if web_sys::window().is_some() {
+        mount_to_body(App);
+    }
 }

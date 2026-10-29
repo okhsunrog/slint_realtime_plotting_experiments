@@ -21,7 +21,7 @@ impl Renderer {
         } else {
             let g = Gpu::new().await?;
             Ok(Self {
-                canvas: g.canvas.clone(),
+                canvas: g.canvas.as_ref().unwrap().clone(),
                 description: g.description.clone(),
                 backend: Backend::WebGpu(g),
             })

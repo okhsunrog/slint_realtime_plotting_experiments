@@ -1,0 +1,1592 @@
+{
+  "raw_directory": "/home/okhsunrog/tmp_zfs/codex_tmp/cef-frame-pacing",
+  "captures": [
+    {
+      "tag": "physical-indexer-paused-pipeline-4",
+      "native_frames": 1801,
+      "native_gaps": 0,
+      "native_max_ms": 16.678,
+      "markers": [
+        {
+          "ts": 142116626254,
+          "event": "tracing_mark_write: BEGIN_PIPELINE"
+        },
+        {
+          "ts": 142147630529,
+          "event": "tracing_mark_write: END_PIPELINE"
+        }
+      ],
+      "kernel_overruns": 0,
+      "trace_data_loss": false,
+      "indexer_resumed": true,
+      "gaps": [],
+      "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+      "sequence_gaps": 0
+    },
+    {
+      "tag": "physical-indexer-paused-pipeline-5",
+      "native_frames": 1798,
+      "native_gaps": 3,
+      "native_max_ms": 33.334,
+      "markers": [
+        {
+          "ts": 142224676602,
+          "event": "tracing_mark_write: BEGIN_PIPELINE"
+        },
+        {
+          "ts": 142255679458,
+          "event": "tracing_mark_write: END_PIPELINE"
+        }
+      ],
+      "kernel_overruns": 0,
+      "trace_data_loss": false,
+      "indexer_resumed": true,
+      "gaps": [
+        {
+          "start": 142233132489,
+          "end": 142233165823,
+          "ms": 33.334,
+          "gc_overlap_ms": 0,
+          "v8_gc_overlap_ms": 0.0,
+          "gc_task_max_ms": 0,
+          "backend_delays": [],
+          "resumed_buffer_sent_relative_ms": -3.378,
+          "kernel_events": [
+            {
+              "relative_ms": -34.78,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=849555, scanline=1415, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -34.754,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=849555, scanline=1417"
+            },
+            {
+              "relative_ms": -33.785,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930136, time=142233099155141, high-prec=true"
+            },
+            {
+              "relative_ms": -18.114,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=849556, scanline=1415, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -18.088,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=849556, scanline=1416"
+            },
+            {
+              "relative_ms": -17.125,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930137, time=142233115820103, high-prec=true"
+            },
+            {
+              "relative_ms": -1.359,
+              "pid": 2780837,
+              "cpu": 8,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=849557, scanline=1423, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -1.333,
+              "pid": 2780837,
+              "cpu": 8,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=849557, scanline=1425"
+            },
+            {
+              "relative_ms": -0.451,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930138, time=142233132489175, high-prec=true"
+            },
+            {
+              "relative_ms": 16.238,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930139, time=142233149154683, high-prec=true"
+            },
+            {
+              "relative_ms": 16.281,
+              "pid": 2780837,
+              "cpu": 8,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=849559, scanline=1513, min=1495, max=1504"
+            },
+            {
+              "relative_ms": 16.318,
+              "pid": 2780837,
+              "cpu": 8,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=849559, scanline=1516"
+            },
+            {
+              "relative_ms": 32.883,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930140, time=142233165823999, high-prec=true"
+            },
+            {
+              "relative_ms": 47.748,
+              "pid": 2780837,
+              "cpu": 8,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=849560, scanline=1340, min=1495, max=1504"
+            },
+            {
+              "relative_ms": 47.774,
+              "pid": 2780837,
+              "cpu": 8,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=849560, scanline=1342"
+            },
+            {
+              "relative_ms": 49.554,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930141, time=142233182492596, high-prec=true"
+            }
+          ],
+          "kernel_window_complete": true
+        },
+        {
+          "start": 142236632552,
+          "end": 142236665879,
+          "ms": 33.327,
+          "gc_overlap_ms": 0,
+          "v8_gc_overlap_ms": 0.0,
+          "gc_task_max_ms": 0,
+          "backend_delays": [],
+          "resumed_buffer_sent_relative_ms": -3.184,
+          "kernel_events": [
+            {
+              "relative_ms": -34.906,
+              "pid": 2823851,
+              "cpu": 4,
+              "event": "sched_switch: prev_comm=wavebench-cef prev_pid=2823851 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": -34.823,
+              "pid": 3770,
+              "cpu": 4,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=wavebench-cef next_pid=2823851 next_prio=120"
+            },
+            {
+              "relative_ms": -34.783,
+              "pid": 2780837,
+              "cpu": 1,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=849765, scanline=1415, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -34.756,
+              "pid": 2780837,
+              "cpu": 1,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=849765, scanline=1417"
+            },
+            {
+              "relative_ms": -33.789,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930346, time=142236599214769, high-prec=true"
+            },
+            {
+              "relative_ms": -18.093,
+              "pid": 2780837,
+              "cpu": 1,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=849766, scanline=1417, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -18.067,
+              "pid": 2780837,
+              "cpu": 1,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=849766, scanline=1419"
+            },
+            {
+              "relative_ms": -17.129,
+              "pid": 1331192,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930347, time=142236615886071, high-prec=true"
+            },
+            {
+              "relative_ms": -1.433,
+              "pid": 2780837,
+              "cpu": 2,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=849767, scanline=1416, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -1.407,
+              "pid": 2780837,
+              "cpu": 2,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=849767, scanline=1418"
+            },
+            {
+              "relative_ms": -0.466,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930348, time=142236632552998, high-prec=true"
+            },
+            {
+              "relative_ms": 16.229,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930349, time=142236649210650, high-prec=true"
+            },
+            {
+              "relative_ms": 16.286,
+              "pid": 2780837,
+              "cpu": 2,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=849769, scanline=1514, min=1495, max=1504"
+            },
+            {
+              "relative_ms": 16.333,
+              "pid": 2780837,
+              "cpu": 2,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=849769, scanline=1518"
+            },
+            {
+              "relative_ms": 32.874,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930350, time=142236665879002, high-prec=true"
+            },
+            {
+              "relative_ms": 47.628,
+              "pid": 2780837,
+              "cpu": 4,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=849770, scanline=1329, min=1495, max=1504"
+            },
+            {
+              "relative_ms": 47.653,
+              "pid": 2780837,
+              "cpu": 4,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=849770, scanline=1331"
+            },
+            {
+              "relative_ms": 49.54,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930351, time=142236682544811, high-prec=true"
+            }
+          ],
+          "kernel_window_complete": true
+        },
+        {
+          "start": 142243949339,
+          "end": 142243982673,
+          "ms": 33.334,
+          "gc_overlap_ms": 0,
+          "v8_gc_overlap_ms": 0.0,
+          "gc_task_max_ms": 0,
+          "backend_delays": [],
+          "resumed_buffer_sent_relative_ms": -3.647,
+          "kernel_events": [
+            {
+              "relative_ms": -34.789,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=850204, scanline=1414, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -34.764,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=850204, scanline=1416"
+            },
+            {
+              "relative_ms": -33.793,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930785, time=142243915998508, high-prec=true"
+            },
+            {
+              "relative_ms": -18.158,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=850205, scanline=1411, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -18.133,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=850205, scanline=1413"
+            },
+            {
+              "relative_ms": -17.134,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930786, time=142243932672430, high-prec=true"
+            },
+            {
+              "relative_ms": -1.433,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=850206, scanline=1416, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -1.408,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=850206, scanline=1418"
+            },
+            {
+              "relative_ms": -0.466,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930787, time=142243949339468, high-prec=true"
+            },
+            {
+              "relative_ms": 16.046,
+              "pid": 3770,
+              "cpu": 4,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=wavebench-cef next_pid=2823851 next_prio=120"
+            },
+            {
+              "relative_ms": 16.091,
+              "pid": 2780837,
+              "cpu": 9,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=850207, scanline=1496, min=1495, max=1504"
+            },
+            {
+              "relative_ms": 16.235,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930788, time=142243966002044, high-prec=true"
+            },
+            {
+              "relative_ms": 16.311,
+              "pid": 2780837,
+              "cpu": 9,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=850208, scanline=1516"
+            },
+            {
+              "relative_ms": 32.868,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930789, time=142243982673858, high-prec=true"
+            },
+            {
+              "relative_ms": 47.728,
+              "pid": 2823851,
+              "cpu": 4,
+              "event": "sched_switch: prev_comm=wavebench-cef prev_pid=2823851 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": 48.528,
+              "pid": 3770,
+              "cpu": 4,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=wavebench-cef next_pid=2823851 next_prio=120"
+            },
+            {
+              "relative_ms": 48.599,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=850209, scanline=1420, min=1495, max=1504"
+            },
+            {
+              "relative_ms": 48.648,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=850209, scanline=1423"
+            },
+            {
+              "relative_ms": 49.587,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298930790, time=142243999337969, high-prec=true"
+            }
+          ],
+          "kernel_window_complete": true
+        }
+      ],
+      "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+      "sequence_gaps": 0
+    },
+    {
+      "tag": "physical-indexer-paused-pipeline-6",
+      "native_frames": 1799,
+      "native_gaps": 2,
+      "native_max_ms": 33.338,
+      "markers": [
+        {
+          "ts": 142365606987,
+          "event": "tracing_mark_write: BEGIN_PIPELINE"
+        },
+        {
+          "ts": 142396611334,
+          "event": "tracing_mark_write: END_PIPELINE"
+        }
+      ],
+      "kernel_overruns": 0,
+      "trace_data_loss": false,
+      "indexer_resumed": true,
+      "gaps": [
+        {
+          "start": 142370103280,
+          "end": 142370136613,
+          "ms": 33.333,
+          "gc_overlap_ms": 0,
+          "v8_gc_overlap_ms": 0.0,
+          "gc_task_max_ms": 0,
+          "backend_delays": [],
+          "resumed_buffer_sent_relative_ms": -5.831,
+          "kernel_events": [
+            {
+              "relative_ms": -42.312,
+              "pid": 3707,
+              "cpu": 1,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -42.306,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -42.303,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": -42.297,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep(which_clock: 0, flags: 0, rqtp: 0x797e48ff8550, rmtp: 0x797e48ff8550)"
+            },
+            {
+              "relative_ms": -42.293,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": -34.926,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -34.924,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -34.919,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": -34.917,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep -> 0x0"
+            },
+            {
+              "relative_ms": -34.915,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll(ufds: 0x797e48ff8430, nfds: 1, timeout_msecs: 0)"
+            },
+            {
+              "relative_ms": -34.909,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll -> 0x1"
+            },
+            {
+              "relative_ms": -34.904,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl(fd: 0x34, cmd: 0xc03864bc, arg: 0x797e48ff82f0)"
+            },
+            {
+              "relative_ms": -34.847,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl -> 0x0"
+            },
+            {
+              "relative_ms": -34.842,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": -34.79,
+              "pid": 2780837,
+              "cpu": 9,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=857770, scanline=1413, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -34.765,
+              "pid": 2780837,
+              "cpu": 9,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=857770, scanline=1415"
+            },
+            {
+              "relative_ms": -33.784,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298938350, time=142370069946634, high-prec=true"
+            },
+            {
+              "relative_ms": -25.6,
+              "pid": 3707,
+              "cpu": 1,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -25.594,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -25.591,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": -25.584,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep(which_clock: 0, flags: 0, rqtp: 0x797e48ff8550, rmtp: 0x797e48ff8550)"
+            },
+            {
+              "relative_ms": -25.58,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": -18.26,
+              "pid": 2823543,
+              "cpu": 2,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -18.258,
+              "pid": 2823543,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -18.256,
+              "pid": 2823543,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=z_wr_iss prev_pid=2823543 prev_prio=101 prev_state=R+ ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": -18.254,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep -> 0x0"
+            },
+            {
+              "relative_ms": -18.248,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll(ufds: 0x797e48ff8430, nfds: 1, timeout_msecs: 0)"
+            },
+            {
+              "relative_ms": -18.24,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll -> 0x1"
+            },
+            {
+              "relative_ms": -18.232,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl(fd: 0x34, cmd: 0xc03864bc, arg: 0x797e48ff82f0)"
+            },
+            {
+              "relative_ms": -18.159,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl -> 0x0"
+            },
+            {
+              "relative_ms": -18.152,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=z_wr_iss next_pid=2823543 next_prio=101"
+            },
+            {
+              "relative_ms": -18.009,
+              "pid": 2780837,
+              "cpu": 8,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=857771, scanline=1424, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -17.983,
+              "pid": 2780837,
+              "cpu": 8,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=857771, scanline=1426"
+            },
+            {
+              "relative_ms": -17.119,
+              "pid": 589,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298938351, time=142370086614069, high-prec=true"
+            },
+            {
+              "relative_ms": -8.843,
+              "pid": 3707,
+              "cpu": 1,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -8.839,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -8.837,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": -8.83,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep(which_clock: 0, flags: 0, rqtp: 0x797e48ff8550, rmtp: 0x797e48ff8550)"
+            },
+            {
+              "relative_ms": -8.828,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": -1.59,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -1.588,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -1.586,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": -1.583,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep -> 0x0"
+            },
+            {
+              "relative_ms": -1.579,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll(ufds: 0x797e48ff8430, nfds: 1, timeout_msecs: 0)"
+            },
+            {
+              "relative_ms": -1.571,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll -> 0x1"
+            },
+            {
+              "relative_ms": -1.564,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl(fd: 0x34, cmd: 0xc03864bc, arg: 0x797e48ff82f0)"
+            },
+            {
+              "relative_ms": -1.495,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl -> 0x0"
+            },
+            {
+              "relative_ms": -1.491,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": -1.449,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=857772, scanline=1414, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -1.422,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=857772, scanline=1416"
+            },
+            {
+              "relative_ms": -0.451,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298938352, time=142370103280480, high-prec=true"
+            },
+            {
+              "relative_ms": 7.695,
+              "pid": 3707,
+              "cpu": 1,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 7.699,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 7.7,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": 7.704,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep(which_clock: 0, flags: 0, rqtp: 0x797e48ff8550, rmtp: 0x797e48ff8550)"
+            },
+            {
+              "relative_ms": 7.706,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": 15.091,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 15.113,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 15.14,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": 15.162,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep -> 0x0"
+            },
+            {
+              "relative_ms": 15.188,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll(ufds: 0x797e48ff8430, nfds: 1, timeout_msecs: 0)"
+            },
+            {
+              "relative_ms": 15.256,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll -> 0x1"
+            },
+            {
+              "relative_ms": 15.297,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl(fd: 0x34, cmd: 0xc03864bc, arg: 0x797e48ff82f0)"
+            },
+            {
+              "relative_ms": 15.933,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl -> 0x0"
+            },
+            {
+              "relative_ms": 16.008,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": 16.149,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=857773, scanline=1501, min=1495, max=1504"
+            },
+            {
+              "relative_ms": 16.245,
+              "pid": 2827779,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298938353, time=142370119946571, high-prec=true"
+            },
+            {
+              "relative_ms": 16.307,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=857774, scanline=1515"
+            },
+            {
+              "relative_ms": 25.156,
+              "pid": 3707,
+              "cpu": 1,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 25.162,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 25.165,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": 25.175,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": 32.877,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298938354, time=142370136613862, high-prec=true"
+            },
+            {
+              "relative_ms": 32.952,
+              "pid": 3707,
+              "cpu": 1,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 32.954,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 32.954,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": 32.959,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep(which_clock: 0, flags: 0, rqtp: 0x797e48ff8550, rmtp: 0x797e48ff8550)"
+            },
+            {
+              "relative_ms": 32.964,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": 47.648,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 47.651,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 47.653,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": 47.656,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep -> 0x0"
+            },
+            {
+              "relative_ms": 47.661,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll(ufds: 0x797e48ff8390, nfds: 1, timeout_msecs: 0)"
+            },
+            {
+              "relative_ms": 47.663,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll -> 0x1"
+            },
+            {
+              "relative_ms": 47.664,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll(ufds: 0x797e48ff8390, nfds: 1, timeout_msecs: 0)"
+            },
+            {
+              "relative_ms": 47.67,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll -> 0x1"
+            },
+            {
+              "relative_ms": 47.685,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl(fd: 0x34, cmd: 0xc03864bc, arg: 0x797e48ff82f0)"
+            },
+            {
+              "relative_ms": 47.75,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl -> 0x0"
+            },
+            {
+              "relative_ms": 47.757,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": 47.794,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=857775, scanline=1344, min=1495, max=1504"
+            },
+            {
+              "relative_ms": 47.818,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=857775, scanline=1346"
+            },
+            {
+              "relative_ms": 49.554,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298938355, time=142370153284792, high-prec=true"
+            },
+            {
+              "relative_ms": 57.197,
+              "pid": 3707,
+              "cpu": 1,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 57.202,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 57.204,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": 57.209,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep(which_clock: 0, flags: 0, rqtp: 0x797e48ff8550, rmtp: 0x797e48ff8550)"
+            },
+            {
+              "relative_ms": 57.212,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            }
+          ],
+          "kernel_window_complete": true
+        },
+        {
+          "start": 142396003706,
+          "end": 142396037044,
+          "ms": 33.338,
+          "gc_overlap_ms": 0,
+          "v8_gc_overlap_ms": 0.0,
+          "gc_task_max_ms": 0,
+          "backend_delays": [],
+          "resumed_buffer_sent_relative_ms": -4.24,
+          "kernel_events": [
+            {
+              "relative_ms": -38.457,
+              "pid": 3707,
+              "cpu": 3,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -38.453,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -38.45,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": -38.443,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep(which_clock: 0, flags: 0, rqtp: 0x797e48ff8550, rmtp: 0x797e48ff8550)"
+            },
+            {
+              "relative_ms": -38.44,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": -34.93,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -34.927,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -34.922,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": -34.919,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep -> 0x0"
+            },
+            {
+              "relative_ms": -34.915,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll(ufds: 0x797e48ff8430, nfds: 1, timeout_msecs: 0)"
+            },
+            {
+              "relative_ms": -34.913,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll -> 0x1"
+            },
+            {
+              "relative_ms": -34.906,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl(fd: 0x34, cmd: 0xc03864bc, arg: 0x797e48ff82f0)"
+            },
+            {
+              "relative_ms": -34.83,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl -> 0x0"
+            },
+            {
+              "relative_ms": -34.825,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": -34.773,
+              "pid": 2780837,
+              "cpu": 4,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=859324, scanline=1415, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -34.746,
+              "pid": 2780837,
+              "cpu": 4,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=859324, scanline=1417"
+            },
+            {
+              "relative_ms": -33.78,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298939904, time=142395970375329, high-prec=true"
+            },
+            {
+              "relative_ms": -22.497,
+              "pid": 3707,
+              "cpu": 3,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -22.492,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -22.49,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": -22.486,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep(which_clock: 0, flags: 0, rqtp: 0x797e48ff8550, rmtp: 0x797e48ff8550)"
+            },
+            {
+              "relative_ms": -22.479,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=Chrome_ChildIOT next_pid=2827748 next_prio=120"
+            },
+            {
+              "relative_ms": -18.264,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -18.261,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -18.256,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": -18.254,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep -> 0x0"
+            },
+            {
+              "relative_ms": -18.25,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll(ufds: 0x797e48ff8430, nfds: 1, timeout_msecs: 0)"
+            },
+            {
+              "relative_ms": -18.248,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll -> 0x1"
+            },
+            {
+              "relative_ms": -18.243,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl(fd: 0x34, cmd: 0xc03864bc, arg: 0x797e48ff82f0)"
+            },
+            {
+              "relative_ms": -18.188,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl -> 0x0"
+            },
+            {
+              "relative_ms": -18.184,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": -18.146,
+              "pid": 2780837,
+              "cpu": 4,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=859325, scanline=1411, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -18.119,
+              "pid": 2780837,
+              "cpu": 4,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=859325, scanline=1413"
+            },
+            {
+              "relative_ms": -17.081,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298939905, time=142395987047927, high-prec=true"
+            },
+            {
+              "relative_ms": -6.117,
+              "pid": 3707,
+              "cpu": 3,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -6.113,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -6.111,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": -6.105,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep(which_clock: 0, flags: 0, rqtp: 0x797e48ff8550, rmtp: 0x797e48ff8550)"
+            },
+            {
+              "relative_ms": -6.102,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": -1.59,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -1.588,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": -1.587,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": -1.585,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep -> 0x0"
+            },
+            {
+              "relative_ms": -1.579,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll(ufds: 0x797e48ff8430, nfds: 1, timeout_msecs: 0)"
+            },
+            {
+              "relative_ms": -1.577,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll -> 0x1"
+            },
+            {
+              "relative_ms": -1.571,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl(fd: 0x34, cmd: 0xc03864bc, arg: 0x797e48ff82f0)"
+            },
+            {
+              "relative_ms": -1.506,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl -> 0x0"
+            },
+            {
+              "relative_ms": -1.5,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": -1.467,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=859326, scanline=1412, min=1495, max=1504"
+            },
+            {
+              "relative_ms": -1.442,
+              "pid": 2780837,
+              "cpu": 5,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=859326, scanline=1414"
+            },
+            {
+              "relative_ms": -0.455,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298939906, time=142396003706011, high-prec=true"
+            },
+            {
+              "relative_ms": 10.623,
+              "pid": 3707,
+              "cpu": 3,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 10.628,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 10.63,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": 10.636,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep(which_clock: 0, flags: 0, rqtp: 0x797e48ff8550, rmtp: 0x797e48ff8550)"
+            },
+            {
+              "relative_ms": 10.639,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": 15.09,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 15.117,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 15.149,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": 15.171,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep -> 0x0"
+            },
+            {
+              "relative_ms": 15.196,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll(ufds: 0x797e48ff8430, nfds: 1, timeout_msecs: 0)"
+            },
+            {
+              "relative_ms": 15.27,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll -> 0x1"
+            },
+            {
+              "relative_ms": 15.359,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl(fd: 0x34, cmd: 0xc03864bc, arg: 0x797e48ff82f0)"
+            },
+            {
+              "relative_ms": 15.952,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl -> 0x0"
+            },
+            {
+              "relative_ms": 16.032,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": 16.166,
+              "pid": 2780837,
+              "cpu": 4,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=859327, scanline=1502, min=1495, max=1504"
+            },
+            {
+              "relative_ms": 16.243,
+              "pid": 2827804,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298939907, time=142396020381009, high-prec=true"
+            },
+            {
+              "relative_ms": 16.314,
+              "pid": 2780837,
+              "cpu": 4,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=859328, scanline=1515"
+            },
+            {
+              "relative_ms": 27.569,
+              "pid": 3707,
+              "cpu": 3,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 27.573,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 27.575,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": 27.587,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": 32.886,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298939908, time=142396037044334, high-prec=true"
+            },
+            {
+              "relative_ms": 32.931,
+              "pid": 3707,
+              "cpu": 3,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 32.935,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 32.936,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": 32.941,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep(which_clock: 0, flags: 0, rqtp: 0x797e48ff8550, rmtp: 0x797e48ff8550)"
+            },
+            {
+              "relative_ms": 32.943,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": 47.63,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_waking: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 47.634,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_wakeup: comm=eDP-1 pid=3770 prio=98 target_cpu=002"
+            },
+            {
+              "relative_ms": 47.64,
+              "pid": 0,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=eDP-1 next_pid=3770 next_prio=98"
+            },
+            {
+              "relative_ms": 47.643,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_clock_nanosleep -> 0x0"
+            },
+            {
+              "relative_ms": 47.648,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll(ufds: 0x797e48ff8390, nfds: 1, timeout_msecs: 0)"
+            },
+            {
+              "relative_ms": 47.65,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll -> 0x1"
+            },
+            {
+              "relative_ms": 47.652,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll(ufds: 0x797e48ff8390, nfds: 1, timeout_msecs: 0)"
+            },
+            {
+              "relative_ms": 47.653,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_poll -> 0x1"
+            },
+            {
+              "relative_ms": 47.67,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl(fd: 0x34, cmd: 0xc03864bc, arg: 0x797e48ff82f0)"
+            },
+            {
+              "relative_ms": 47.719,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sys_ioctl -> 0x0"
+            },
+            {
+              "relative_ms": 47.729,
+              "pid": 3770,
+              "cpu": 2,
+              "event": "sched_switch: prev_comm=eDP-1 prev_pid=3770 prev_prio=98 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120"
+            },
+            {
+              "relative_ms": 47.767,
+              "pid": 2780837,
+              "cpu": 4,
+              "event": "intel_pipe_update_start: dev 0000:00:02.0, pipe A, frame=859329, scanline=1341, min=1495, max=1504"
+            },
+            {
+              "relative_ms": 47.792,
+              "pid": 2780837,
+              "cpu": 4,
+              "event": "intel_pipe_update_end: dev 0000:00:02.0, pipe A, frame=859329, scanline=1343"
+            },
+            {
+              "relative_ms": 49.547,
+              "pid": 0,
+              "cpu": 9,
+              "event": "drm_vblank_event: crtc=0, seq=3298939909, time=142396053706934, high-prec=true"
+            }
+          ],
+          "kernel_window_complete": true
+        }
+      ],
+      "compute_check": "PASS \u00b7 102 extrema \u00b7 wrapped ring + spike",
+      "sequence_gaps": 0
+    }
+  ],
+  "mitigation_installed": true,
+  "mitigation_status": "2000 us service environment installed after captures; current compositor unchanged; pending fresh login and A/B validation"
+}

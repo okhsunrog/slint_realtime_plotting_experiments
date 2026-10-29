@@ -311,6 +311,9 @@ closure. Its `nix-support/pacing-provenance.json` identifies the source patches.
 
 The preset selects a 4 ms maximum message-pump timer delay, early yield to GLib,
 the timer-based frame source, GTK reader, `motion=clocked` and `reclaim=worker`.
+The CEF application starts with hardware WebGPU and compute reduction,
+20,000 samples/s and 256 samples per packet. Higher throughput and WebGL2
+remain selectable in the toolbar.
 These are settings to compare, not a claim that every source of stutter is fixed.
 Overrides remain available:
 
@@ -336,3 +339,27 @@ needed to verify which native path executed.
 
 See [external pump measurements](diagnostics/EXTERNAL_PUMP_VALIDATION.md) for
 what improved, what remains unresolved and the limitations of virtual tests.
+
+### Experimental render worker
+
+**Execution → Render worker (experimental)** moves the binary WebSocket,
+Rust/WASM decoding and playback, and WebGPU/compute rendering onto a dedicated
+Worker using OffscreenCanvas. The default remains Main thread. Both start at
+20k samples/s and 256 samples per packet. Worker mode retains zoom, freeze/resume
+and resize; other transports and WebGL2 can be compared in Main thread mode.
+
+The worker reduced visible delays under deliberately long main-thread JavaScript
+blocks, but did not establish a quiet-state pacing or CPU advantage. See
+[the controlled comparison](diagnostics/OFFSCREEN_VALIDATION.md) for actual
+compositor timing, functional checks and limitations.
+
+Further [presentation queue experiments](diagnostics/PRESENTATION_QUEUE_VALIDATION.md)
+compare FIFO, pump intervals, double buffering and Wayland frame scheduling at
+DPR 1.35. They measure native swap-to-presentation latency as well as frame gaps;
+smooth worker callbacks alone do not establish smooth physical presentation.
+
+The [synchronized kernel/native diagnosis](diagnostics/NATIVE_DEADLINE_DIAGNOSIS.md)
+localizes five remaining gaps to late KWin/i915 display commits. A larger KWin
+safety margin is active at 2000 µs. The [follow-up validation](diagnostics/KWIN_MARGIN_VALIDATION.md)
+shows earlier DRM updates and two quiet 30-second runs without presentation gaps,
+while a separate worker garbage-collection stall remains. The override is temporary.
